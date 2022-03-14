@@ -15,6 +15,6 @@ private:
 	int depth;
 	int hyperDepth;
 	//i'm not bothering with higher than 4D here, bytes are fine
-	std::vector mazeData;
+	std::vector<char> mazeData;
 };
 
