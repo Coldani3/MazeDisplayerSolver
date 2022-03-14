@@ -7,8 +7,12 @@ Maze::Maze() {
 
 }
 
-Maze::~Maze() {
+Maze::Maze(int dimensions[]) {
 
+}
+
+Maze::~Maze() {
+	delete mazeData;
 }
 
 void Maze::loadFromFile(std::string fileName) {
