@@ -4,6 +4,7 @@
 class RenderManager
 {
 public:
+	RenderManager();
 	RenderManager(int width, int height);
 	~RenderManager();
 	void setup();

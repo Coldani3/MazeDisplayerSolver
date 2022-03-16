@@ -12,6 +12,10 @@ RenderManager::RenderManager(int width, int height) {
     this->height = height;
 }
 
+RenderManager::RenderManager() {
+
+}
+
 RenderManager::~RenderManager() {
 
 }
@@ -23,7 +27,7 @@ void RenderManager::framebufferSizeCallback(GLFWwindow* window, int width, int h
 }
 
 void RenderManager::setup() {
-    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    
 
     //setup buffers and shader programs
 }
