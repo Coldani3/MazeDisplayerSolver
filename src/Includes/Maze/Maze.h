@@ -6,10 +6,10 @@
 
 //The flags each bit of each maze cell contain.
 enum MazeDirections {
-	RIGHT = 1,
-	LEFT = 2,
-	UP = 4,
-	DOWN = 8,
+	UP = 1,
+	DOWN = 2,
+	RIGHT = 4,
+	LEFT = 8,
 	FORWARD = 16,
 	BACKWARD = 32,
 	ANA = 64,
@@ -24,16 +24,24 @@ public:
 	int depth = 0;
 	int hyperDepth = 0;
 	int dimensions;
+	std::vector<int> mazeEntrance;
+	std::vector<int> mazeExit;
 	std::vector<int> sizes;
 
 	Maze(std::vector<int> dimensions);
 	~Maze();
 	void loadFromFile(std::string fileName);
-	//access individual bytes
+	//Read the byte representing the cell at coordinates
 	char operator[] (std::vector<int> coordinates) const;
+	//Provide the byte representing the cell at coordinates as a reference to modify
 	char& operator[](std::vector<int> coordinates);
 
-protected:
+public:
 	//The data that makes up the maze.
 	std::vector<char> mazeData;
+
+	//C++ doesn't like this[] with header separated classes :/
+
+	char getCell(std::vector<int> coordinates) const;
+	void setCell(std::vector<int> coordinates, char to);
 };
