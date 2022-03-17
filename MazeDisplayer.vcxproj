@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\Src\Render\RenderManager.cpp" />
     <ClCompile Include="src\Src\Maze\Maze.cpp" />
     <ClCompile Include="src\main.cpp" />
