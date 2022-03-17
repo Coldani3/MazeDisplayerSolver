@@ -32,16 +32,16 @@ public:
 	~Maze();
 	void loadFromFile(std::string fileName);
 	//Read the byte representing the cell at coordinates
-	char operator[] (std::vector<int> coordinates) const;
+	unsigned char operator[] (std::vector<int> coordinates) const;
 	//Provide the byte representing the cell at coordinates as a reference to modify
-	char& operator[](std::vector<int> coordinates);
+	unsigned char& operator[](std::vector<int> coordinates);
 
 public:
 	//The data that makes up the maze.
-	std::vector<char> mazeData;
+	std::vector<unsigned char> mazeData;
 
 	//C++ doesn't like this[] with header separated classes :/
 
-	char getCell(std::vector<int> coordinates) const;
+	unsigned char getCell(std::vector<int> coordinates) const;
 	void setCell(std::vector<int> coordinates, char to);
 };

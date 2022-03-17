@@ -14,7 +14,7 @@ int charToNum(char character) {
 	return character - 48;
 }
 
-char Maze::getCell(std::vector<int> coordinates) const {
+unsigned char Maze::getCell(std::vector<int> coordinates) const {
 	std::array<int, 4> coordsToFour = { 0, 0, 0, 0 };
 
 	for (int i = 0; i < coordinates.size(); i++) {
@@ -34,11 +34,11 @@ void Maze::setCell(std::vector<int> coordinates, char to) {
 	mazeData[(height * width * depth * coordsToFour[3]) + (height * width * coordsToFour[2]) + (height * coordsToFour[1]) + coordsToFour[0]] = to;
 }
 
-char Maze::operator[](std::vector<int> coordinates) const {
+unsigned char Maze::operator[](std::vector<int> coordinates) const {
 	return getCell(coordinates);
 }
 
-char& Maze::operator[](std::vector<int> coordinates) {
+unsigned char& Maze::operator[](std::vector<int> coordinates) {
 	std::array<int, 4> coordsToFour = { 0, 0, 0, 0 };
 
 	for (int i = 0; i < coordinates.size(); i++) {
@@ -80,7 +80,7 @@ Maze::Maze(std::vector<int> dimensionsVec) {
 		dimensions = 4;
 	}
 
-	mazeData = std::vector<char>(length);
+	mazeData = std::vector<unsigned char>(length);
 	sizes = dimensionsVec;
 }
 
