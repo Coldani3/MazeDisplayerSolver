@@ -143,6 +143,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Src\Solvers\NeuralNetworkSolver.cpp" />
+    <ClCompile Include="src\Src\Solvers\Solver.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\Src\Render\RenderManager.cpp" />
     <ClCompile Include="src\Src\Maze\Maze.cpp" />
@@ -156,6 +158,9 @@
     <ClInclude Include="include\glfw3\glfw3.h" />
     <ClInclude Include="include\glfw3\glfw3native.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
+    <ClInclude Include="src\Includes\Math\Matrix.h" />
+    <ClInclude Include="src\Includes\Solvers\NeuralNetworkSolver.h" />
+    <ClInclude Include="src\Includes\Solvers\Solver.h" />
     <ClInclude Include="src\Includes\Render\RenderManager.h" />
     <ClInclude Include="src\Includes\Maze\Maze.h" />
   </ItemGroup>
