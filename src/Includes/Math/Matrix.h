@@ -43,7 +43,7 @@ public:
 						temp += matrix[thisRow][i] * by[i][byColumn];
 					}
 
-					out[thisRow, byColumn] = temp;
+					out[thisRow][byColumn] = temp;
 				}
 			}
 		}
@@ -56,7 +56,7 @@ public:
 
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
-				out[row, column] = matrix[row][column] * by;
+				out[row][column] = matrix[row][column] * by;
 			}
 		}
 
@@ -68,7 +68,7 @@ public:
 
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
-				out[row, column] = matrix[row][column] + by[row, column];
+				out[row][column] = matrix[row][column] + by[row][column];
 			}
 		}
 
@@ -80,7 +80,7 @@ public:
 
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
-				out[row, column] = matrix[row][column] - by[row, column];
+				out[row][column] = matrix[row][column] - by[row][column];
 			}
 		}
 
@@ -92,19 +92,19 @@ public:
 
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
-				out[row, column] = matrix[row][column] - by[row, column];
+				out[row][column] = matrix[row][column] - by;
 			}
 		}
 
 		return out;
 	}
 
-	T operator[](int row, int column) const {
-		return matrix[row][column];
+	std::vector<T> operator[](int row) const {
+		return matrix[row];
 	}
 
-	T& operator[](int row, int column) {
-		return matrix[row][column];
+	std::vector<T> &operator[](int row) {
+		return matrix[row];
 	}
 #pragma endregion
 
@@ -113,7 +113,7 @@ public:
 
 		for (int thisRow = 0; thisRow < rows; thisRow++) {
 			for (int thisColumn = 0; thisColumn < columns; thisColumn++) {
-				out[thisColumn, thisRow] = matrix[thisRow][thisColumn];
+				out[thisColumn][thisRow] = matrix[thisRow][thisColumn];
 			}
 		}
 
@@ -122,10 +122,10 @@ public:
 
 #pragma region Static utils
 	static Matrix identity(int size) {
-		Matrix identity = new Matrix(size, size);
+		Matrix identity(size, size);
 
 		for (int i = 0; i < size; i++) {
-			identity[i, i] = 1;
+			identity[i][i] = 1;
 		}
 
 		return identity;
