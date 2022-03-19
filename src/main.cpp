@@ -1,14 +1,15 @@
 #include <glad/glad.h>
 #include <glfw3/glfw3.h>
 #include <iostream>
+#include <memory>
 
 #include <Maze/Maze.h>
 #include <Render/RenderManager.h>
 
-RenderManager renderer;
+std::unique_ptr<RenderManager> renderer;
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height) {    
-    renderer.framebufferSizeCallback(window, width, height);
+    renderer->framebufferSizeCallback(window, width, height);
 }
 
 void handleInput(GLFWwindow* window) {
@@ -25,9 +26,10 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    renderer = RenderManager(800, 600);
+    renderer = std::make_unique<RenderManager>(800, 600);
+    //renderer = RenderManager(800, 600);
 
-    if (renderer.getWindow() == NULL) {
+    if (renderer->getWindow() == NULL) {
         std::cerr << "Could not create window" << std::endl;
         glfwTerminate();
         return -1;
@@ -41,23 +43,23 @@ int main() {
     }
 
     //resize viewport
-    glViewport(0, 0, renderer.getWidth(), renderer.getHeight());
+    glViewport(0, 0, renderer->getWidth(), renderer->getHeight());
 
     //adjust viewport based on window resize (we set the callback here because C++ doesn't let you use member methods as callbacks)
-    glfwSetFramebufferSizeCallback(renderer.getWindow(), framebufferSizeCallback);
+    glfwSetFramebufferSizeCallback(renderer->getWindow(), framebufferSizeCallback);
     //set other callbacks
 
-    renderer.setup();
+    renderer->setup();
 
     //setup solvers thread
 
     //main render loop
-    while (!glfwWindowShouldClose(renderer.getWindow())) {
-        handleInput(renderer.getWindow());
+    while (!glfwWindowShouldClose(renderer->getWindow())) {
+        handleInput(renderer->getWindow());
 
-        renderer.draw();
+        renderer->draw();
 
-        glfwSwapBuffers(renderer.getWindow());
+        glfwSwapBuffers(renderer->getWindow());
         glfwPollEvents();
     }
 

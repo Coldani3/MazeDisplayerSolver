@@ -1,4 +1,6 @@
 #include <vector>
+#include <Maths/Consts.h>
+#include <cmath>
 
 #pragma once
 template <class T>
@@ -133,6 +135,28 @@ public:
 
 	static Matrix transpose(Matrix transposing) {
 		return transposing.transpose();
+	}
+
+	static std::vector<std::vector<T>> inputArrayToRow(std::vector<T> inputVec) {
+		std::vector<std::vector<T>> out(inputVec.size());
+
+		for (int i = 0; i < inputVec.size(); i++) {
+			out[i][0] = inputVec[i];
+		}
+
+		return out;
+	}
+
+	static Matrix sigmoid(Matrix input) {
+		Matrix out(input.rows, input.columns);
+
+		for (int row = 0; row < input.rows; row++) {
+			for (int col = 0; col < input.columns; col++) {
+				out[row][col] = 1 / (1 + std::pow(M_E, -input[row][col]))
+			}
+		}
+
+		return out;
 	}
 #pragma endregion
 
