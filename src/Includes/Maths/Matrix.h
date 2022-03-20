@@ -33,7 +33,7 @@ public:
 
 
 #pragma region Operator overloads
-	Matrix operator*(Matrix by) {
+	Matrix<T> operator*(Matrix<T> by) {
 		Matrix<T> out(columns, by.rows);
 
 		if (rows == by.columns) {
@@ -53,8 +53,8 @@ public:
 		return out;
 	}
 
-	Matrix operator*(T by) {
-		Matrix out(rows, columns);
+	Matrix<T> operator*(T by) {
+		Matrix<T> out(rows, columns);
 
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
@@ -65,8 +65,20 @@ public:
 		return out;
 	}
 
-	Matrix operator+(Matrix by) {
-		Matrix out(rows, columns);
+	friend Matrix<T> operator*(T value, Matrix<T> by) {
+		Matrix<T> out(by.rows, by.columns);
+
+		for (int row = 0; row < by.rows; row++) {
+			for (int col = 0; col < by.columns; col++) {
+				out[row][col] = by[row][col] * value;
+			}
+		}
+
+		return out;
+	}
+
+	Matrix<T> operator+(Matrix<T> by) {
+		Matrix<T> out(rows, columns);
 
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
@@ -77,8 +89,8 @@ public:
 		return out;
 	}
 
-	Matrix operator-(Matrix by) {
-		Matrix out(rows, by.columns);
+	Matrix<T> operator-(Matrix<T> by) {
+		Matrix<T> out(rows, by.columns);
 
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
@@ -89,12 +101,24 @@ public:
 		return out;
 	}
 
-	Matrix operator-(T by) {
-		Matrix out(rows, columns);
+	Matrix<T> operator-(T by) {
+		Matrix<T> out(rows, columns);
 
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
 				out[row][column] = matrix[row][column] - by;
+			}
+		}
+
+		return out;
+	}
+
+	friend Matrix operator-(T value, Matrix<T> by) {
+		Matrix<T> out(by.rows, by.columns);
+
+		for (int row = 0; row < by.rows; row++) {
+			for (int col = 0; col < by.columns; col++) {
+				out[row][col] = value - by[row][col];
 			}
 		}
 
@@ -110,8 +134,8 @@ public:
 	}
 #pragma endregion
 
-	Matrix transpose() {
-		Matrix out(columns, rows);
+	Matrix<T> transpose() {
+		Matrix<T> out(columns, rows);
 
 		for (int thisRow = 0; thisRow < rows; thisRow++) {
 			for (int thisColumn = 0; thisColumn < columns; thisColumn++) {
@@ -123,8 +147,8 @@ public:
 	}
 
 #pragma region Static utils
-	static Matrix identity(int size) {
-		Matrix identity(size, size);
+	static Matrix<T> identity(int size) {
+		Matrix<T> identity(size, size);
 
 		for (int i = 0; i < size; i++) {
 			identity[i][i] = 1;
@@ -133,7 +157,7 @@ public:
 		return identity;
 	}
 
-	static Matrix transpose(Matrix transposing) {
+	static Matrix<T> transpose(Matrix<T> transposing) {
 		return transposing.transpose();
 	}
 
@@ -147,12 +171,26 @@ public:
 		return out;
 	}
 
-	static Matrix sigmoid(Matrix input) {
+	static Matrix<T> sigmoid(Matrix<T> input) {
 		Matrix out(input.rows, input.columns);
 
 		for (int row = 0; row < input.rows; row++) {
 			for (int col = 0; col < input.columns; col++) {
-				out[row][col] = 1 / (1 + std::pow(M_E, -input[row][col]))
+				out[row][col] = 1 / (1 + std::pow(M_E, -input[row][col]));
+			}
+		}
+
+		return out;
+	}
+
+	static std::vector<T> flatten(Matrix<T> input) {
+		std::vector<T> out(input.rows * input.columns);
+		int counter;
+
+		for (int row = 0; row < input.rows; row++) {
+			for (int col = 0; col < input.columns; col++) {
+				out[counter] = input[row][col];
+				counter++;
 			}
 		}
 

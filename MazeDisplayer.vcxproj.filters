@@ -33,6 +33,9 @@
     <ClCompile Include="src\Src\Solvers\NeuralNetworkSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Src\Solvers\NeuralNetwork\NeuralNetwork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw3\glfw3.lib" />
@@ -62,7 +65,13 @@
     <ClInclude Include="src\Includes\Solvers\NeuralNetworkSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Math\Matrix.h">
+    <ClInclude Include="src\Includes\Maths\Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Includes\Solvers\NeuralNetwork\NeuralNetwork.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Includes\Maths\Consts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
