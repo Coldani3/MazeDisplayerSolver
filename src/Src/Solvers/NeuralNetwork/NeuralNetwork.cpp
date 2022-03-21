@@ -5,8 +5,16 @@
 #include <memory>
 #include <random>
 
-NeuralNetwork::NeuralNetwork(int inputNodes, std::vector<int> hiddenLayerNodes, int outputNodes, float learnRate) {
+//nodesForLayers[0] = input layer nodes
+NeuralNetwork::NeuralNetwork(std::vector<int> nodesForLayers, float learnRate) {
+	weightsBetweenLayers = std::vector<Matrix<float>>(nodesForLayers.size());
 
+	for (int i = 0; i < nodesForLayers.size() - 1; i++) {
+		weightsBetweenLayers[i] = Matrix<float>(nodesForLayers[i + 1], nodesForLayers[i]);
+		//TODO: randomise weights
+	}
+
+	this->learnRate = learnRate;
 }
 
 NeuralNetwork::~NeuralNetwork() {
