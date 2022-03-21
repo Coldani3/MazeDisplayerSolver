@@ -1,4 +1,5 @@
 #include <vector>
+#include <memory>
 #include <Maths/Matrix.h>
 
 #pragma once
@@ -11,7 +12,7 @@ public:
 	void Train(std::vector<float> inputs, std::vector<float> expected);
 
 private:
-	std::vector<Matrix<float>> weightsBetweenLayers;
+	std::vector<std::unique_ptr<Matrix<float>>> weightsBetweenLayers;
 	float learnRate;
 };
 

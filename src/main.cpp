@@ -27,7 +27,6 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     renderer = std::make_unique<RenderManager>(800, 600);
-    //renderer = RenderManager(800, 600);
 
     if (renderer->getWindow() == NULL) {
         std::cerr << "Could not create window" << std::endl;
