@@ -4,14 +4,23 @@
 #include <vector>
 #include <memory>
 #include <random>
+#include <iostream>
 
 //nodesForLayers[0] = input layer nodes
 NeuralNetwork::NeuralNetwork(std::vector<int> nodesForLayers, float learnRate) {
 	weightsBetweenLayers = std::vector<Matrix<float>>(nodesForLayers.size());
 
+	srand((unsigned)time(0));
+
 	for (int i = 0; i < nodesForLayers.size() - 1; i++) {
 		weightsBetweenLayers[i] = Matrix<float>(nodesForLayers[i + 1], nodesForLayers[i]);
 		//TODO: randomise weights
+
+		for (int row = 0; row < weightsBetweenLayers[i].rows; row++) {
+			for (int col = 0; col < weightsBetweenLayers[i].columns; col++) {
+				weightsBetweenLayers[i][row][col] = ((float)rand() / (float)(RAND_MAX + 1.0)) - 0.5;
+			}
+		}
 	}
 
 	this->learnRate = learnRate;
