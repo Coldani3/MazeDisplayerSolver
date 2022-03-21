@@ -160,6 +160,7 @@
     <ClInclude Include="include\glfw3\glfw3native.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
     <ClInclude Include="src\Includes\Maths\Consts.h" />
+    <ClInclude Include="src\Includes\Render\Shaders.h" />
     <ClInclude Include="src\Includes\Solvers\NeuralNetwork\NeuralNetwork.h" />
     <ClInclude Include="src\Includes\Maths\Matrix.h" />
     <ClInclude Include="src\Includes\Solvers\NeuralNetworkSolver.h" />

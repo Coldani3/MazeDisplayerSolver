@@ -74,5 +74,8 @@
     <ClInclude Include="src\Includes\Maths\Consts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Includes\Render\Shaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
