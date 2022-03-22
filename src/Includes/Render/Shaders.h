@@ -6,7 +6,7 @@ const char *genericCubeVertexShader = R"glsl(
 layout (location = 0) in vec3 cubeVec;
 
 void main() {
-	gl_Position = cubeVec;
+	gl_Position = vec4(cubeVec, 1.0);
 }
 )glsl";
 
@@ -19,7 +19,7 @@ const char *mazeCellCenterCubeVertexShader = R"glsl(
 layout (location = 0) in vec3 cubeCoord;
 
 void main() {
-	gl_Position = cubeCoord;
+	gl_Position = vec4(cubeCoord, 1.0);
 }
 
 )glsl";
@@ -32,7 +32,7 @@ out vec4 FragColor;
 uniform vec3 cellColour;
 
 void main() {
-	FragColor = cellColour;
+	FragColor = vec4(cellColour, 1.0);
 }
 
 )glsl";

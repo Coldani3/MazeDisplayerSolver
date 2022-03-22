@@ -1,7 +1,6 @@
+#include <glad/glad.h>
 #include <Render/RenderManager.h>
 #include <Render/Shaders.h>
-#include <glad/glad.h>
-#include <glfw3/glfw3.h>
 #include <iostream>
 
 /*unsigned int genericCubeShaderVert;
@@ -26,7 +25,9 @@ RenderManager::RenderManager(int width, int height) {
 }
 
 RenderManager::~RenderManager() {
-
+    //I think openGL clears these automatically but it's better to be safe than sorry
+    glDeleteProgram(genericCubeProgram);
+    glDeleteProgram(cellCenterProgram);
 }
 
 void RenderManager::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
@@ -43,7 +44,7 @@ void checkShaderCompileSuccess(unsigned int shader) {
 
     if (!success) {
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        std::cout << "SHADER ERROR: " << infoLog << std::endl;
+        std::cerr << "SHADER ERROR: " << infoLog << std::endl;
     }
 }
 
@@ -55,7 +56,7 @@ void checkProgramCompileSuccess(unsigned int program) {
 
     if (!success) {
         glGetShaderInfoLog(program, 512, NULL, infoLog);
-        std::cout << "PROGRAM ERROR: " << infoLog << std::endl;
+        std::cerr << "PROGRAM ERROR: " << infoLog << std::endl;
     }
 }
 
