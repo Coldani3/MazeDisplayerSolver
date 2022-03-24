@@ -7,8 +7,7 @@ layout (location = 0) in vec3 cubeVec;
 
 void main() {
 	gl_Position = vec4(cubeVec, 1.0);
-}
-)glsl";
+})glsl";
 
 //stride = sizeof(float) * 3
 // size: 3
@@ -20,9 +19,7 @@ layout (location = 0) in vec3 cubeCoord;
 
 void main() {
 	gl_Position = vec4(cubeCoord, 1.0);
-}
-
-)glsl";
+})glsl";
 
 const char *mazeCellCenterCubeFragmentShader = R"glsl(
 #version 330 core
@@ -33,9 +30,7 @@ uniform vec3 cellColour;
 
 void main() {
 	FragColor = vec4(cellColour, 1.0);
-}
-
-)glsl";
+})glsl";
 
 const char *mazeCubeFragmentShader = R"glsl(
 #version 330 core
@@ -44,7 +39,5 @@ out vec4 FragColor;
 
 void main() {
 	FragColor = vec4(0.54f, 0.54f, 0.54f, 1.0f);
-}
-
-)glsl";
+})glsl";
 

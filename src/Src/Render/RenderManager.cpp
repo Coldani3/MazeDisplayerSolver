@@ -25,9 +25,12 @@ RenderManager::RenderManager(int width, int height) {
 }
 
 RenderManager::~RenderManager() {
-    //I think openGL clears these automatically but it's better to be safe than sorry
+    std::cout << "Beginning Renderer Cleanup..." << std::endl;
+    std::cout << "Clearing GL Programs..." << std::endl;
+    //I think openGL deletes these automatically but it's better to be safe than sorry
     glDeleteProgram(genericCubeProgram);
     glDeleteProgram(cellCenterProgram);
+    std::cout << "Renderer Cleanup done." << std::endl;
 }
 
 void RenderManager::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
@@ -55,7 +58,7 @@ void checkProgramCompileSuccess(unsigned int program) {
     glGetProgramiv(program, GL_LINK_STATUS, &success);
 
     if (!success) {
-        glGetShaderInfoLog(program, 512, NULL, infoLog);
+        glGetProgramInfoLog(program, 512, NULL, infoLog);
         std::cerr << "PROGRAM ERROR: " << infoLog << std::endl;
     }
 }
@@ -119,4 +122,12 @@ int RenderManager::getWidth() {
 
 int RenderManager::getHeight() {
     return height;
+}
+
+void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW = 0) {
+
+}
+
+void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ = 0, int mazeW = 0) {
+
 }

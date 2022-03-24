@@ -50,6 +50,7 @@ void NeuralNetwork::Train(std::vector<float> inputs, std::vector<float> expected
 
 	layerOutputs[0] = std::make_unique<Matrix<float>>(Matrix<float>::sigmoid(*weightsBetweenLayers[0] * inputsMatrix));
 
+	//get the outputs for each layer so we can calculate the errors
 	//skip first layer weights
 	for (int i = 1; i < weightsBetweenLayers.size(); i++) {
 		layerOutputs[i] = std::make_unique<Matrix<float>>(Matrix<float>::sigmoid(*weightsBetweenLayers[i] * *layerOutputs[i - 1]));
@@ -65,6 +66,9 @@ void NeuralNetwork::Train(std::vector<float> inputs, std::vector<float> expected
 	std::vector<std::unique_ptr<Matrix<float>>> errorPerLayer(weightsBetweenLayers.size());
 	int index = weightsBetweenLayers.size() - 1;
 
+	/*calculate each layer's errors by multiplying that layer's weights by the total errors
+	  (TODO: should we be using the previous layer's error per layer? this feels like it shouldn't work with matrix multiplication because
+	  sizes and all that)*/
 	for (auto iter = weightsBetweenLayers.end(); iter != weightsBetweenLayers.begin(); iter--) {
 		errorPerLayer[index] = std::make_unique<Matrix<float>>(Matrix<float>::transpose(**iter) * errors);
 		index--;
@@ -76,7 +80,7 @@ void NeuralNetwork::Train(std::vector<float> inputs, std::vector<float> expected
 	*weightsBetweenLayers.back() = *weightsBetweenLayers.back() + (learnRate * errors * finalOutput * (1.0 - finalOutput) * Matrix<float>::transpose(*layerOutputs[layerOutputs.size() - 2]));
 
 	for (int i = weightsBetweenLayers.size() - 2; i > 0; i--) {
-		*weightsBetweenLayers[i] = *weightsBetweenLayers[i] + (learnRate * /*layerErrors */ layerErrors * *layerOutputs[i] * (1.0 - *layerOutputs[i]) * Matrix<float>::transpose(*layerOutputs[i - 1]));
+		*weightsBetweenLayers[i] = *weightsBetweenLayers[i] + (learnRate * layerErrors * *layerOutputs[i] * (1.0 - *layerOutputs[i]) * Matrix<float>::transpose(*layerOutputs[i - 1]));
 		layerErrors = *errorPerLayer[i];
 	}
 
