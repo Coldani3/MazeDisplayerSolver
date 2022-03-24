@@ -125,7 +125,23 @@ int RenderManager::getHeight() {
 }
 
 void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW = 0) {
+    int vertices[] = {
+        0.5, 0.5, 0.5,
+        0.5, 0.5, -0.5,
+        0.5, -0.5, 0.5,
+        0.5, -0.5, -0.5,
+        -0.5, 0.5, 0.5,
+        -0.5, 0.5, -0.5,
+        -0.5, -0.5, 0.5,
+        0.5, -0.5, -0.5
+    };
+    unsigned int VBO;
+    unsigned int VAO;
 
+    glGenBuffers(1, &VBO);
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
 }
 
 void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ = 0, int mazeW = 0) {
