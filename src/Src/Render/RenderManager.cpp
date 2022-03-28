@@ -11,8 +11,46 @@ unsigned int cellCenterShaderFrag;*/
 unsigned int genericCubeProgram;
 unsigned int cellCenterProgram;
 
+unsigned int cubeVBO;
+unsigned int cubeVAO;
+
 unsigned int cuboidEBO;
 
+unsigned int cuboidIndices[] = {
+        0, 1, 3, //right face upper triangle
+        0, 2, 3, //right face lower triangle
+        0, 4, 6, //front face upper triangle
+        0, 2, 6, //front face lower triangle
+        0, 1, 5, //top face furthest triangle
+        0, 4, 5, //top face closest triangle
+        2, 6, 7, //bottom face closest triangle
+        2, 3, 7, //bottom face furthest tirangle
+        3, 7, 5, //back face bottom triangle
+        3, 1, 5, //back face top triangle
+        6, 7, 5, //left face bottom face
+        6, 4, 5  //left face top face
+    };
+
+float cubeVertices[] = {
+        0.5, 0.5, 0.5, //top right front - 0
+        0.5, 0.5, -0.5, //top right back - 1
+        0.5, -0.5, 0.5, //bottom right front - 2
+        0.5, -0.5, -0.5, //bottom right back - 3
+        -0.5, 0.5, 0.5, //top left front - 4
+        -0.5, 0.5, -0.5, //top left back - 5
+        -0.5, -0.5, 0.5, //bottom left front - 6
+        -0.5, -0.5, -0.5 //bottom left back - 7
+    };
+float mazePathVertices[] = {
+        0.25, 0.25, 0.5,
+        0.25, 0.25, -0.5,
+        0.25, -0.25, 0.5,
+        0.25, -0.25, -0.5,
+        -0.25, 0.25, 0.5,
+        -0.25, 0.25, -0.5,
+        -0.25, -0.25, 0.5,
+        -0.25, -0.25, -0.5
+    };
 
 RenderManager::RenderManager(int width, int height) {
     //create the window
@@ -106,7 +144,18 @@ void RenderManager::setup() {
     glDeleteShader(cellCenterCubeShaderVert);
     glDeleteShader(cellCenterCubeShaderFrag);
 
-    //setup buffers and shader programs
+// we will transform the cubes into the appropriate positions in the shader
+    glGenBuffers(1, &cuboidEBO);
+    glGenBuffers(1, &cubeVBO);
+    glGenVertexArrays(1, &cubeVAO);
+    glBindVertexArray(cubeVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cuboidEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cuboidIndices), cuboidIndices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 }
 
 void RenderManager::draw() {
@@ -127,45 +176,6 @@ int RenderManager::getHeight() {
 }
 
 void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW = 0) {
-    float vertices[] = {
-        0.5, 0.5, 0.5, //top right front - 0
-        0.5, 0.5, -0.5, //top right back - 1
-        0.5, -0.5, 0.5, //bottom right front - 2
-        0.5, -0.5, -0.5, //bottom right back - 3
-        -0.5, 0.5, 0.5, //top left front - 4
-        -0.5, 0.5, -0.5, //top left back - 5
-        -0.5, -0.5, 0.5, //bottom left front - 6
-        -0.5, -0.5, -0.5 //bottom left back - 7
-    };
-
-    unsigned int indices[] = {
-        0, 1, 3, //right face upper triangle
-        0, 2, 3, //right face lower triangle
-        0, 4, 6, //front face upper triangle
-        0, 2, 6, //front face lower triangle
-        0, 1, 5, //top face furthest triangle
-        0, 4, 5, //top face closest triangle
-        2, 6, 7, //bottom face closest triangle
-        2, 3, 7, //bottom face furthest tirangle
-        3, 7, 5, //back face bottom triangle
-        3, 1, 5, //back face top triangle
-        6, 7, 5, //left face bottom face
-        6, 4, 5  //left face top face
-    };
-    unsigned int cubeVBO;
-    unsigned int cubeVAO;
-
-    glGenBuffers(1, &cubeVBO);
-    glGenVertexArrays(1, &cubeVAO);
-    glGenBuffers(1, &cuboidEBO);
-    glBindVertexArray(cubeVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cuboidEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
 
     //TODO: move above to setup and rename the buffers to more fitting names.
 
@@ -177,5 +187,5 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
 }
 
 void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ = 0, int mazeW = 0) {
-
+    
 }
