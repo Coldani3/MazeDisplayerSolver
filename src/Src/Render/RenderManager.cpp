@@ -3,17 +3,25 @@
 #include <Render/Shaders.h>
 #include <iostream>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 /*unsigned int genericCubeShaderVert;
 unsigned int cellCenterShaderVert;
 unsigned int genericCubeShaderFrag;
 unsigned int cellCenterShaderFrag;*/
+
+int currentW = 0;
 
 unsigned int genericCubeProgram;
 unsigned int cellCenterProgram;
 
 unsigned int cubeVBO;
 unsigned int rectangleCubeVBO;
+
 unsigned int cubeVAO;
+unsigned int rectangleCubeVAO;
 
 unsigned int cuboidEBO;
 
@@ -167,6 +175,8 @@ void RenderManager::setup() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    glGenVertexArrays(1, &rectangleCubeVAO);
+    glBindVertexArray(rectangleCubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, rectangleCubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mazePathVertices), mazePathVertices, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cuboidEBO);
@@ -195,18 +205,48 @@ int RenderManager::getHeight() {
     return height;
 }
 
-void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
-    glUseProgram(cellCenterProgram);
+void RenderManager::setWViewing(int w) {
+    currentW = w;
+}
+
+void drawProgram(int program) {
+    glUseProgram(program);
     glBindVertexArray(cubeVAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-    //unbind VA
     glBindVertexArray(0);
+}
 
+glm::mat4 translateModel(glm::vec3 translation) {
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, translation);
+    return model;
+}
+
+glm::mat4 translateModel(int x, int y, int z) {
+    return translateModel(glm::vec3(x, y, z));
+}
+
+void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
+    
+    if (mazeW == currentW) {
+        //TODO: store these vecs in a lookup buffer to save performance and memory
+        glm::vec3 coords = glm::vec3(mazeX, mazeY, mazeZ);
+        glm::mat4 model = translateModel(coords);
+
+
+        glUseProgram(cellCenterProgram);
+        glBindVertexArray(cubeVAO);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        //unbind VA
+        glBindVertexArray(0);
+    }
 }
 
 void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW) {
-    glUseProgram(genericCubeProgram);
-    glBindVertexArray(cubeVAO);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    if (mazeW == currentW) {
+        glUseProgram(genericCubeProgram);
+        glBindVertexArray(rectangleCubeVAO);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+    }
 }
