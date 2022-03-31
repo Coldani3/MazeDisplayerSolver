@@ -71,6 +71,8 @@ RenderManager::RenderManager(int width, int height) {
     defaultHeight = height;
     this->width = width;
     this->height = height;
+
+    projection = glm::perspective(glm::radians(45.0f), (float) this->width / (float) this->height, 0.1f, 100.0f);
 }
 
 RenderManager::~RenderManager() {
@@ -114,6 +116,7 @@ void checkProgramCompileSuccess(unsigned int program) {
 
 void RenderManager::setup() {
     std::cout << "Setting up OpenGL..." << std::endl;
+    
     //create shaders
     std::cout << "Initialising Shaders..." << std::endl;
     unsigned int genericCubeShaderVert = glCreateShader(GL_VERTEX_SHADER);
@@ -209,13 +212,6 @@ void RenderManager::setWViewing(int w) {
     currentW = w;
 }
 
-void drawProgram(int program) {
-    glUseProgram(program);
-    glBindVertexArray(cubeVAO);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-}
-
 glm::mat4 translateModel(glm::vec3 translation) {
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, translation);
@@ -233,6 +229,8 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
         glm::vec3 coords = glm::vec3(mazeX, mazeY, mazeZ);
         glm::mat4 model = translateModel(coords);
 
+        glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         glUseProgram(cellCenterProgram);
         glBindVertexArray(cubeVAO);
@@ -244,6 +242,10 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
 
 void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW) {
     if (mazeW == currentW) {
+        glm::vec3 coords = glm::vec3(mazeX, mazeY, mazeZ);
+        glm::mat4 model = translateModel(coords);
+
+
         glUseProgram(genericCubeProgram);
         glBindVertexArray(rectangleCubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
