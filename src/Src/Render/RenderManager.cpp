@@ -12,6 +12,7 @@ unsigned int genericCubeProgram;
 unsigned int cellCenterProgram;
 
 unsigned int cubeVBO;
+unsigned int rectangleCubeVBO;
 unsigned int cubeVAO;
 
 unsigned int cuboidEBO;
@@ -104,7 +105,9 @@ void checkProgramCompileSuccess(unsigned int program) {
 }
 
 void RenderManager::setup() {
+    std::cout << "Setting up OpenGL..." << std::endl;
     //create shaders
+    std::cout << "Initialising Shaders..." << std::endl;
     unsigned int genericCubeShaderVert = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(genericCubeShaderVert, 1, &genericCubeVertexShader, NULL);
     glCompileShader(genericCubeShaderVert);
@@ -124,8 +127,10 @@ void RenderManager::setup() {
     glShaderSource(cellCenterCubeShaderFrag, 1, &mazeCellCenterCubeFragmentShader, NULL);
     glCompileShader(cellCenterCubeShaderFrag);
     checkShaderCompileSuccess(cellCenterCubeShaderFrag);
+    std::cout << "Done." << std::endl;
 
     //create programs
+    std::cout << "Creating OpenGL Programs..." << std::endl;
     genericCubeProgram = glCreateProgram();
     glAttachShader(genericCubeProgram, genericCubeShaderVert);
     glAttachShader(genericCubeProgram, genericCubeShaderFrag);
@@ -137,16 +142,21 @@ void RenderManager::setup() {
     glAttachShader(cellCenterProgram, cellCenterCubeShaderFrag);
     glLinkProgram(cellCenterProgram);
     checkProgramCompileSuccess(cellCenterProgram);
+    std::cout << "Done." << std::endl;
 
+    std::cout << "Cleaning up Shaders..." << std::endl;
     //clean up unecessary shaders
     glDeleteShader(genericCubeShaderVert);
     glDeleteShader(genericCubeShaderFrag);
     glDeleteShader(cellCenterCubeShaderVert);
     glDeleteShader(cellCenterCubeShaderFrag);
+    std::cout << "Done." << std::endl;
 
 // we will transform the cubes into the appropriate positions in the shader
+    std::cout << "Creating and populating buffers..." << std::endl;
     glGenBuffers(1, &cuboidEBO);
     glGenBuffers(1, &cubeVBO);
+    glGenBuffers(1, &rectangleCubeVBO);
     glGenVertexArrays(1, &cubeVAO);
     glBindVertexArray(cubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
@@ -156,6 +166,16 @@ void RenderManager::setup() {
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, rectangleCubeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(mazePathVertices), mazePathVertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cuboidEBO);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    std::cout << "Done." << std::endl;
+
+    std::cout << "Finished setting up OpenGL." << std::endl;
 }
 
 void RenderManager::draw() {
@@ -175,17 +195,18 @@ int RenderManager::getHeight() {
     return height;
 }
 
-void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW = 0) {
-
-    //TODO: move above to setup and rename the buffers to more fitting names.
-
+void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
     glUseProgram(cellCenterProgram);
     glBindVertexArray(cubeVAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    //unbind VA
     glBindVertexArray(0);
 
 }
 
-void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ = 0, int mazeW = 0) {
-    
+void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW) {
+    glUseProgram(genericCubeProgram);
+    glBindVertexArray(cubeVAO);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 }

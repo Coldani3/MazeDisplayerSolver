@@ -19,6 +19,7 @@ void handleInput(GLFWwindow* window) {
 }
 
 int main() {
+    std::cout << "Initialising GLFW..." << std::endl;
     //initialise glfw
     glfwInit();
     //tell glfw we're using opengl 3.3 with the core profile, instead of the old method
@@ -47,11 +48,13 @@ int main() {
     //adjust viewport based on window resize (we set the callback here because C++ doesn't let you use member methods as callbacks)
     glfwSetFramebufferSizeCallback(renderer->getWindow(), framebufferSizeCallback);
     //set other callbacks
+    std::cout << "Done." << std::endl;
 
     renderer->setup();
 
     //setup solvers thread
 
+    std::cout << "Entering main loop..." << std::endl;
     //main render loop
     while (!glfwWindowShouldClose(renderer->getWindow())) {
         handleInput(renderer->getWindow());
@@ -62,6 +65,7 @@ int main() {
         glfwPollEvents();
     }
 
+    std::cout << "Closing program..." << std::endl;
     glfwTerminate();
 
 	return 0;
