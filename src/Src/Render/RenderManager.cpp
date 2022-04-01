@@ -222,6 +222,12 @@ glm::mat4 translateModel(int x, int y, int z) {
     return translateModel(glm::vec3(x, y, z));
 }
 
+glm::mat4 getViewMatrix() {
+    //TODO: translate and rotate based on camera position
+    //remember that +Z is towards the camera, not away
+    return glm::mat4(1.0f);
+}
+
 void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
     
     if (mazeW == currentW) {
@@ -230,6 +236,7 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
         glm::mat4 model = translateModel(coords);
 
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "view"), 1, GL_FALSE, glm::value_ptr(getViewMatrix()));
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         glUseProgram(cellCenterProgram);
