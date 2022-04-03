@@ -1,5 +1,20 @@
 #include <Render/Camera.h>
 
+Camera::Camera(int xPos, int yPos, int zPos) : Camera(xPos, yPos, zPos, 0.0f, 0.0f, 0.0f) {
+}
+
+Camera::Camera(int xPos, int yPos, int zPos, float xRotation, float yRotation, float zRotation) {
+	this->xPos = xPos;
+	this->yPos = yPos;
+	this->zPos = zPos;
+	this->xRotation = xRotation;
+	this->yRotation = yRotation;
+	this->zRotation = zRotation;
+}
+
+Camera::~Camera() {
+}
+
 int Camera::getXPos() {
 	return xPos;
 }
@@ -12,15 +27,15 @@ int Camera::getZPos() {
 	return zPos;
 }
 
-int Camera::getXRotation() {
+float Camera::getXRotation() {
 	return xRotation;
 }
 
-int Camera::getYRotation() {
+float Camera::getYRotation() {
 	return yRotation;
 }
 
-int Camera::getZRotation() {
+float Camera::getZRotation() {
 	return zRotation;
 }
 
@@ -42,19 +57,19 @@ void Camera::setPos(int x, int y, int z) {
 	zPos = z;
 }
 
-void Camera::setXRotation(int xRot) {
+void Camera::setXRotation(float xRot) {
 	xRotation = xRot;
 }
 
-void Camera::setYRotation(int yRot) {
+void Camera::setYRotation(float yRot) {
 	yRotation = yRot;
 }
 
-void Camera::setZRotation(int zRot) {
+void Camera::setZRotation(float zRot) {
 	zRotation = zRot;
 }
 
-int Camera::setRotation(int xRot, int yRot, int zRot) {
+void Camera::setRotation(float xRot, float yRot, float zRot) {
 	xRotation = xRot;
 	yRotation = yRot;
 	zRotation = zRot;

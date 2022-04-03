@@ -2,6 +2,8 @@
 #include <Render/RenderManager.h>
 #include <Render/Shaders.h>
 #include <iostream>
+#include <memory>
+#include <vector>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -61,6 +63,16 @@ float mazePathVertices[] = {
         -0.25, -0.25, -0.5
     };
 
+//xRot, yRot, xTrans, yTrans, zTrans
+std::vector<std::vector<float>> cellPathTransformations = {
+    {0.0f, 90.0f, 0.0f, 0.5f, 0.0f}, //up
+    {}, //down
+    {}, //right
+    {}, //left
+    {}, //front
+    {}  //back
+};
+
 RenderManager::RenderManager(int width, int height) {
     //create the window
     window = glfwCreateWindow(width, height, "Maze Displayer and Solver", NULL, NULL);
@@ -73,6 +85,7 @@ RenderManager::RenderManager(int width, int height) {
     this->height = height;
 
     projection = glm::perspective(glm::radians(45.0f), (float) this->width / (float) this->height, 0.1f, 100.0f);
+    camera = std::make_unique<Camera>(Camera(5.0f, 0.5f, -5.0f));
 }
 
 RenderManager::~RenderManager() {
@@ -81,6 +94,9 @@ RenderManager::~RenderManager() {
     //I think openGL deletes these automatically but it's better to be safe than sorry
     glDeleteProgram(genericCubeProgram);
     glDeleteProgram(cellCenterProgram);
+    delete cuboidIndices;
+    delete cubeVertices;
+    delete mazePathVertices;
     std::cout << "Renderer Cleanup done." << std::endl;
 }
 
@@ -222,10 +238,20 @@ glm::mat4 translateModel(int x, int y, int z) {
     return translateModel(glm::vec3(x, y, z));
 }
 
-glm::mat4 getViewMatrix() {
+glm::mat4 RenderManager::getViewMatrixFromCamera() {
     //TODO: translate and rotate based on camera position
     //remember that +Z is towards the camera, not away
-    return glm::mat4(1.0f);
+    glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(camera->getXPos(), camera->getYPos(), -(camera->getZPos())));
+    glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), glm::radians(camera->getYRotation()), glm::vec3(0, 1.0f, 0));
+    rotate = glm::rotate(rotate, glm::radians(camera->getXRotation()), glm::vec3(1.0f, 0, 0));
+    rotate = glm::rotate(rotate, glm::radians(camera->getZRotation()), glm::vec3(0, 0, 1.0f));
+
+    return translate * rotate;
+}
+
+//translate is always last so we do that after this
+glm::mat4 RenderManager::mazeCellPathTransform(float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ) {
+
 }
 
 void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
@@ -236,7 +262,7 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
         glm::mat4 model = translateModel(coords);
 
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "view"), 1, GL_FALSE, glm::value_ptr(getViewMatrix()));
+        glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "view"), 1, GL_FALSE, glm::value_ptr(getViewMatrixFromCamera()));
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         glUseProgram(cellCenterProgram);
@@ -250,11 +276,22 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
 void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW) {
     if (mazeW == currentW) {
         glm::vec3 coords = glm::vec3(mazeX, mazeY, mazeZ);
-        glm::mat4 model = translateModel(coords);
+        //translation to get it to the same coords as the center piece, from which we then translate it again into the proper position
+        glm::mat4 initialTranslate = translateModel(coords);
+        float wLerp = 1.0f;
 
 
         glUseProgram(genericCubeProgram);
         glBindVertexArray(rectangleCubeVAO);
+
+        for (unsigned int i = 0; i < 8; i++) {
+            unsigned int bitChecking = 1 << i;
+
+            if ((mazeCellData & bitChecking) > 0) {
+
+            }
+        }
+
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
