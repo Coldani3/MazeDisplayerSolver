@@ -63,14 +63,14 @@ float mazePathVertices[] = {
         -0.25, -0.25, -0.5
     };
 
-//xRot, yRot, xTrans, yTrans, zTrans
+//xRot, yRot, xTrans, yTrans, zTrans - front = 0 deg
 std::vector<std::vector<float>> cellPathTransformations = {
     {0.0f, 90.0f, 0.0f, 0.5f, 0.0f}, //up
-    {}, //down
-    {}, //right
-    {}, //left
-    {}, //front
-    {}  //back
+    {0.0f, -90.0f, 0.0f, -0.5f, 0.0f}, //down
+    {90.0f, 0.0f, 0.5f, 0.0f, 0.0f}, //right
+    {270.0f, 0.0f, -0.5f, 0.0f, 0.0f}, //left
+    {0.0f, 0.0f, 0.0f, 0.0f, -0.5f}, //front
+    {180.0f, 0.0f, 0.0f, 0.0f, 0.5f}  //back
 };
 
 RenderManager::RenderManager(int width, int height) {
@@ -94,9 +94,11 @@ RenderManager::~RenderManager() {
     //I think openGL deletes these automatically but it's better to be safe than sorry
     glDeleteProgram(genericCubeProgram);
     glDeleteProgram(cellCenterProgram);
-    delete cuboidIndices;
-    delete cubeVertices;
-    delete mazePathVertices;
+
+    /*delete[] cuboidIndices;
+    delete[] cubeVertices;
+    delete[] mazePathVertices;*/
+
     std::cout << "Renderer Cleanup done." << std::endl;
 }
 
@@ -133,6 +135,8 @@ void checkProgramCompileSuccess(unsigned int program) {
 void RenderManager::setup() {
     std::cout << "Setting up OpenGL..." << std::endl;
     
+    glEnable(GL_DEPTH_TEST);
+
     //create shaders
     std::cout << "Initialising Shaders..." << std::endl;
     unsigned int genericCubeShaderVert = glCreateShader(GL_VERTEX_SHADER);
@@ -208,8 +212,9 @@ void RenderManager::setup() {
 }
 
 void RenderManager::draw() {
+    drawMazeCellCenter(0, 0, 0, 0);
     glClearColor(0.8470f, 0.8823f, 0.9098f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 GLFWwindow* RenderManager::getWindow() {
@@ -251,7 +256,11 @@ glm::mat4 RenderManager::getViewMatrixFromCamera() {
 
 //translate is always last so we do that after this
 glm::mat4 RenderManager::mazeCellPathTransform(float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ) {
+    glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), glm::radians(rotateAngleY), glm::vec3(0.0f, 1.0f, 0.0f));
+    rotate = glm::rotate(rotate, glm::radians(rotateAngleX), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(translateX, translateY, translateZ));
 
+    return translate * rotate;
 }
 
 void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
