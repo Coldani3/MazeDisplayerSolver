@@ -2,11 +2,17 @@
 #include <glfw3/glfw3.h>
 #include <iostream>
 #include <memory>
+#include <chrono>
 
 #include <Maze/Maze.h>
 #include <Render/RenderManager.h>
 
 std::unique_ptr<RenderManager> renderer;
+long fps = 0;
+
+float scaleForFPS(float forEverySecond) {
+    return forEverySecond / fps;
+}
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height) {    
     renderer->framebufferSizeCallback(window, width, height);
@@ -15,6 +21,14 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
 void handleInput(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        std::cout << "Rotate by " << scaleForFPS(360.0f) << std::endl;
+        renderer->camera->rotate(scaleForFPS(360.0f), 0.0f, 0.0f);
+    } else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        std::cout << "Rotate by " << scaleForFPS(-360.0f) << std::endl;
+        renderer->camera->rotate(scaleForFPS(-360.0f), 0.0f, 0.0f);
     }
 }
 
@@ -55,13 +69,22 @@ int main() {
     //setup solvers thread
 
     std::cout << "Entering main loop..." << std::endl;
+    double startDraw;
+    double frameDuration;
     //main render loop
     while (!glfwWindowShouldClose(renderer->getWindow())) {
-        handleInput(renderer->getWindow());
+        startDraw = glfwGetTime();
 
         renderer->draw();
-
         glfwSwapBuffers(renderer->getWindow());
+
+        frameDuration = glfwGetTime() - startDraw;
+
+        std::cout << frameDuration << std::endl;
+
+        fps = 1 / frameDuration;
+
+        handleInput(renderer->getWindow());
         glfwPollEvents();
     }
 

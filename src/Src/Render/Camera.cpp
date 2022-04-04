@@ -1,12 +1,12 @@
 #include <Render/Camera.h>
 
-Camera::Camera(int xPos, int yPos, int zPos) : Camera(xPos, yPos, zPos, 0.0f, 0.0f, 0.0f) {
+Camera::Camera(float xPos, float yPos, float zPos) : Camera(xPos, yPos, zPos, 0.0f, 0.0f, 0.0f) {
 }
 
-Camera::Camera(int xPos, int yPos, int zPos, float xRotation, float yRotation, float zRotation) {
-	this->xPos = xPos;
-	this->yPos = yPos;
-	this->zPos = zPos;
+Camera::Camera(float xPos, float yPos, float zPos, float xRotation, float yRotation, float zRotation) {
+	this->xPosition = xPos;
+	this->yPosition = yPos;
+	this->zPosition = zPos;
 	this->xRotation = xRotation;
 	this->yRotation = yRotation;
 	this->zRotation = zRotation;
@@ -15,16 +15,16 @@ Camera::Camera(int xPos, int yPos, int zPos, float xRotation, float yRotation, f
 Camera::~Camera() {
 }
 
-int Camera::getXPos() {
-	return xPos;
+float Camera::getXPos() {
+	return xPosition;
 }
 
-int Camera::getYPos() {
-	return yPos;
+float Camera::getYPos() {
+	return yPosition;
 }
 
-int Camera::getZPos() {
-	return zPos;
+float Camera::getZPos() {
+	return zPosition;
 }
 
 float Camera::getXRotation() {
@@ -39,22 +39,22 @@ float Camera::getZRotation() {
 	return zRotation;
 }
 
-void Camera::setXPos(int x) {
-	xPos = x;
+void Camera::setXPos(float x) {
+	xPosition = x;
 }
 
-void Camera::setYPos(int y) {
-	yPos = y;
+void Camera::setYPos(float y) {
+	yPosition = y;
 }
 
-void Camera::setZPos(int z) {
-	zPos = z;
+void Camera::setZPos(float z) {
+	zPosition = z;
 }
 
-void Camera::setPos(int x, int y, int z) {
-	xPos = x;
-	yPos = y;
-	zPos = z;
+void Camera::setPos(float x, float y, float z) {
+	xPosition = x;
+	yPosition = y;
+	zPosition = z;
 }
 
 void Camera::setXRotation(float xRot) {
@@ -74,3 +74,12 @@ void Camera::setRotation(float xRot, float yRot, float zRot) {
 	yRotation = yRot;
 	zRotation = zRot;
 }
+
+void Camera::rotate(float x, float y, float z) {
+	setRotation(xRotation + x, yRotation + y, zRotation + z);
+}
+
+void Camera::translate(float x, float y, float z) {
+	setPos(xPosition + x, yPosition + y, zPosition + z);
+}
+
