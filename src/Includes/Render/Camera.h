@@ -2,11 +2,11 @@
 class Camera
 {
 private:
-	float xRotation, yRotation, zRotation;
 	float xPosition, yPosition, zPosition;
+	float xLookingAt, yLookingAt, zLookingAt;
 public:
 	Camera(float xPos, float yPos, float zPos);
-	Camera(float xPos, float yPos, float zPos, float xRotation, float yRotation, float zRotation);
+	Camera(float xPos, float yPos, float zPos, float xLookingAt, float yLookingAt, float zLookingAt);
 	~Camera();
 	/*using getters / setters in case I decide to do any funny business like store the positions in a vector to streamline
 	  matrix code or rotations in a Quaternion for if I run into gimbal lock. possibly falls under YAGNI but sources on C++
@@ -14,20 +14,22 @@ public:
 	float getXPos();
 	float getYPos();
 	float getZPos();
-	float getXRotation();
-	float getYRotation();
-	float getZRotation();
+	float getXLookingAt();
+	float getYLookingAt();
+	float getZLookingAt();
 
 	void setXPos(float);
 	void setYPos(float);
 	void setZPos(float);
-	void setPos(float x, float y, float z);
+	void moveTo(float x, float y, float z);
 	void setXRotation(float);
 	void setYRotation(float);
 	void setZRotation(float);
 	void setRotation(float xRot, float yRot, float zRot);
 
 	void rotate(float xRot, float yRot, float zRot);
-	void translate(float xPos, float yPos, float zPos);
+	void moveBy(float xPos, float yPos, float zPos);
+	void lookAt(float xPos, float yPos, float zPos);
+	void rotateAround(float xPos, float yPos, float zPos, float xRot, float yRot, float zRot);
 };
 

@@ -126,7 +126,7 @@ RenderManager::RenderManager(int width, int height) {
     this->height = height;
 
     projection = glm::perspective(glm::radians(45.0f), (float) this->width / (float) this->height, 0.1f, 100.0f);
-    camera = std::make_unique<Camera>(Camera(5.0f, 0.5f, -5.0f));
+    camera = std::make_unique<Camera>(Camera(0.0f, 0.0f, -5.0f));
 }
 
 RenderManager::~RenderManager() {
@@ -168,12 +168,15 @@ void RenderManager::setWViewing(int w) {
 glm::mat4 RenderManager::getViewMatrixFromCamera() {
     //TODO: translate and rotate based on camera position
     //remember that +Z is towards the camera, not away
-    glm::mat4 matrix = glm::translate(glm::mat4(1.0f), glm::vec3(camera->getXPos(), camera->getYPos(), -(camera->getZPos())));
-    matrix = glm::rotate(matrix, glm::radians(camera->getYRotation()), glm::vec3(0, 1.0f, 0));
-    matrix = glm::rotate(matrix, glm::radians(camera->getXRotation()), glm::vec3(1.0f, 0, 0));
-    matrix = glm::rotate(matrix, glm::radians(camera->getZRotation()), glm::vec3(0, 0, 1.0f));
 
-    return matrix;
+
+    //glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos()));
+    ////yxz to minimise chance of gimbal lock.
+    //glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), glm::radians(camera->getYRotation()), glm::vec3(0, 1.0f, 0));
+    //rotate = glm::rotate(rotate, glm::radians(camera->getXRotation()), glm::vec3(1.0f, 0, 0));
+    //rotate = glm::rotate(rotate, glm::radians(camera->getZRotation()), glm::vec3(0, 0, 1.0f));
+
+    return glm::lookAt(glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos()), glm::vec3(camera->getXLookingAt(), camera->getYLookingAt(), camera->getZLookingAt()), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 //translate is always last so we do that after this
@@ -191,10 +194,15 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
         //TODO: store these vecs in a lookup buffer to save performance and memory
         glm::vec3 coords = glm::vec3(mazeX, mazeY, mazeZ);
         glm::mat4 model = translateModel(coords);
+        glm::mat4 view = /*glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f));*/ getViewMatrixFromCamera();
+
+        glm::vec3 cellColour = glm::vec3(0.54f, 0.54f, 0.54f);
 
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "view"), 1, GL_FALSE, glm::value_ptr(getViewMatrixFromCamera()));
+        glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+        glUniform3fv(glGetUniformLocation(cellCenterProgram, "cellColour"), 1, glm::value_ptr(cellColour));
 
         glUseProgram(cellCenterProgram);
         glBindVertexArray(cubeVAO);
@@ -313,6 +321,6 @@ void RenderManager::draw() {
     glClearColor(0.8470f, 0.8823f, 0.9098f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    drawMazeCellCenter(0, 0, 0, 0);
+    drawMazeCellCenter(1, 1, 1, 0);
 }
 #pragma endregion

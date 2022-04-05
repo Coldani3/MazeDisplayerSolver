@@ -24,12 +24,22 @@ void handleInput(GLFWwindow* window) {
     }
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        std::cout << "Rotate by " << scaleForFPS(360.0f) << std::endl;
-        renderer->camera->rotate(scaleForFPS(360.0f), 0.0f, 0.0f);
-    } else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        std::cout << "Rotate by " << scaleForFPS(-360.0f) << std::endl;
-        renderer->camera->rotate(scaleForFPS(-360.0f), 0.0f, 0.0f);
+        //renderer->camera->rotate(scaleForFPS(360.0f), 0.0f, 0.0f);
     }
+
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        //renderer->camera->rotate(scaleForFPS(-360.0f), 0.0f, 0.0f);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+        
+    }
+
+
 }
 
 int main() {
@@ -79,9 +89,6 @@ int main() {
         glfwSwapBuffers(renderer->getWindow());
 
         frameDuration = glfwGetTime() - startDraw;
-
-        std::cout << frameDuration << std::endl;
-
         fps = 1 / frameDuration;
 
         handleInput(renderer->getWindow());

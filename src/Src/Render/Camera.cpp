@@ -1,15 +1,16 @@
 #include <Render/Camera.h>
+#include <cmath>
 
 Camera::Camera(float xPos, float yPos, float zPos) : Camera(xPos, yPos, zPos, 0.0f, 0.0f, 0.0f) {
 }
 
-Camera::Camera(float xPos, float yPos, float zPos, float xRotation, float yRotation, float zRotation) {
+Camera::Camera(float xPos, float yPos, float zPos, float xRotation, float xLookingAt, float yLookingAt, float zLookingAt) {
 	this->xPosition = xPos;
 	this->yPosition = yPos;
 	this->zPosition = zPos;
-	this->xRotation = xRotation;
-	this->yRotation = yRotation;
-	this->zRotation = zRotation;
+	this->xLookingAt = xLookingAt;
+	this->yLookingAt = yLookingAt;
+	this->zLookingAt = zLookingAt;
 }
 
 Camera::~Camera() {
@@ -23,20 +24,16 @@ float Camera::getYPos() {
 	return yPosition;
 }
 
-float Camera::getZPos() {
-	return zPosition;
+float Camera::getXLookingAt() {
+	return xLookingAt;
 }
 
-float Camera::getXRotation() {
-	return xRotation;
+float Camera::getYLookingAt() {
+	return yLookingAt;
 }
 
-float Camera::getYRotation() {
-	return yRotation;
-}
-
-float Camera::getZRotation() {
-	return zRotation;
+float Camera::getZLookingAt() {
+	return zLookingAt;
 }
 
 void Camera::setXPos(float x) {
@@ -51,35 +48,29 @@ void Camera::setZPos(float z) {
 	zPosition = z;
 }
 
-void Camera::setPos(float x, float y, float z) {
+void Camera::moveTo(float x, float y, float z) {
 	xPosition = x;
 	yPosition = y;
 	zPosition = z;
 }
 
-void Camera::setXRotation(float xRot) {
-	xRotation = xRot;
+void Camera::moveBy(float x, float y, float z) {
+	moveTo(xPosition + x, yPosition + y, zPosition + z);
 }
 
-void Camera::setYRotation(float yRot) {
-	yRotation = yRot;
+void Camera::lookAt(float xPos, float yPos, float zPos) {
+	float xDifference = xPosition - xPos;
+	float yDifference = yPosition - yPos;
+	float zDifference = zPosition - zPos;
 }
 
-void Camera::setZRotation(float zRot) {
-	zRotation = zRot;
-}
+void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float yRot, float zRot) {
+	//record distance from the spot so we rotate around it in a sphere
+	float distance = sqrt(pow(xPosition - xPos, 2) + pow(yPosition - yPos, 2) + pow(zPosition - zPos, 2));
+	//YXZ to reduce gimbal lock
 
-void Camera::setRotation(float xRot, float yRot, float zRot) {
-	xRotation = xRot;
-	yRotation = yRot;
-	zRotation = zRot;
-}
-
-void Camera::rotate(float x, float y, float z) {
-	setRotation(xRotation + x, yRotation + y, zRotation + z);
-}
-
-void Camera::translate(float x, float y, float z) {
-	setPos(xPosition + x, yPosition + y, zPosition + z);
+	//the circle rotates around 0,0 by default so translate them by the new positions to put it in the right place
+	float newX = sin(360 / xRot) * distance;
+	float newY = cos(360 / yRot) * distance;
 }
 
