@@ -4,7 +4,7 @@
 Camera::Camera(float xPos, float yPos, float zPos) : Camera(xPos, yPos, zPos, 0.0f, 0.0f, 0.0f) {
 }
 
-Camera::Camera(float xPos, float yPos, float zPos, float xRotation, float xLookingAt, float yLookingAt, float zLookingAt) {
+Camera::Camera(float xPos, float yPos, float zPos, float xLookingAt, float yLookingAt, float zLookingAt) {
 	this->xPosition = xPos;
 	this->yPosition = yPos;
 	this->zPosition = zPos;
@@ -22,6 +22,10 @@ float Camera::getXPos() {
 
 float Camera::getYPos() {
 	return yPosition;
+}
+
+float Camera::getZPos() {
+	return zPosition;
 }
 
 float Camera::getXLookingAt() {
