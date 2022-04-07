@@ -19,24 +19,37 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
 }
 
 void handleInput(GLFWwindow* window) {
+    float camSpeed = 0.05;
+
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        renderer->camera->rotateAround(0.0f, 0.0f, 0.0f, scaleForFPS(360.0f) * camSpeed, 0.0f, 0.0f);
+        std::cout << renderer->camera->getXPos() << ", " << renderer->camera->getYPos() << ", " << renderer->camera->getZPos() << ", " << std::endl;
         //renderer->camera->rotate(scaleForFPS(360.0f), 0.0f, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        renderer->camera->rotateAround(0.0f, 0.0f, 0.0f, scaleForFPS(-360.0f) * camSpeed, 0.0f, 0.0f);
+        std::cout << renderer->camera->getXPos() << ", " << renderer->camera->getYPos() << ", " << renderer->camera->getZPos() << ", " << std::endl;
         //renderer->camera->rotate(scaleForFPS(-360.0f), 0.0f, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        
+        renderer->camera->rotateAround(0.0f, 0.0f, 0.0f, 0.0f, scaleForFPS(360.0f) * camSpeed, 0.0f);
+        std::cout << renderer->camera->getXPos() << ", " << renderer->camera->getYPos() << ", " << renderer->camera->getZPos() << ", " << std::endl;
     }
 
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        
+        renderer->camera->rotateAround(0.0f, 0.0f, 0.0f, 0.0f, scaleForFPS(-360.0f) * camSpeed, 0.0f);
+        std::cout << renderer->camera->getXPos() << ", " << renderer->camera->getYPos() << ", " << renderer->camera->getZPos() << ", " << std::endl;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+        renderer->camera->moveTo(0, 0, -5.0);
+        renderer->camera->lookAt(0, 0, 0);
     }
 
 

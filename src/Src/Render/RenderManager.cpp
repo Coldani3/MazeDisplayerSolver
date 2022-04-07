@@ -44,24 +44,24 @@ unsigned int cuboidIndices[] = {
     };
 
 float cubeVertices[] = {
-        0.5, 0.5, 0.5, //top right front - 0
-        0.5, 0.5, -0.5, //top right back - 1
-        0.5, -0.5, 0.5, //bottom right front - 2
-        0.5, -0.5, -0.5, //bottom right back - 3
-        -0.5, 0.5, 0.5, //top left front - 4
-        -0.5, 0.5, -0.5, //top left back - 5
-        -0.5, -0.5, 0.5, //bottom left front - 6
-        -0.5, -0.5, -0.5 //bottom left back - 7
+        0.25, 0.25, 0.25, //top right front - 0
+        0.25, 0.25, -0.25, //top right back - 1
+        0.25, -0.25, 0.25, //bottom right front - 2
+        0.25, -0.25, -0.25, //bottom right back - 3
+        -0.25, 0.25, 0.25, //top left front - 4
+        -0.25, 0.25, -0.25, //top left back - 5
+        -0.25, -0.25, 0.25, //bottom left front - 6
+        -0.25, -0.25, -0.25 //bottom left back - 7
     };
 float mazePathVertices[] = {
-        0.25, 0.25, 0.5,
-        0.25, 0.25, -0.5,
-        0.25, -0.25, 0.5,
-        0.25, -0.25, -0.5,
-        -0.25, 0.25, 0.5,
-        -0.25, 0.25, -0.5,
-        -0.25, -0.25, 0.5,
-        -0.25, -0.25, -0.5
+        0.125, 0.125, 0.25,
+        0.125, 0.125, -0.25,
+        0.125, -0.125, 0.25,
+        0.125, -0.125, -0.25,
+        -0.125, 0.125, 0.25,
+        -0.125, 0.125, -0.25,
+        -0.125, -0.125, 0.25,
+        -0.125, -0.125, -0.25
     };
 
 //xRot, yRot, xTrans, yTrans, zTrans - front = 0 deg
@@ -321,6 +321,13 @@ void RenderManager::draw() {
     glClearColor(0.8470f, 0.8823f, 0.9098f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    drawMazeCellCenter(1, 1, 1, 0);
+    for (int x = 0; x < 10; x++) {
+        for (int y = 0; y < 10; y++) {
+            for (int z = 0; z < 10; z++) {
+                drawMazeCellCenter(x, y, z, 0);
+            }
+        }
+    }
+    //drawMazeCellCenter(1, 1, 1, 0);
 }
 #pragma endregion
