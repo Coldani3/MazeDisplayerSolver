@@ -17,21 +17,20 @@ const char *mazeCellCenterCubeVertexShader = R"glsl(
 #version 330 core
 
 layout (location = 0) in vec3 cubeCoord;
+layout (location = 1) in vec3 vertexNormal;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-out VS_OUT {
-	vec3 modelVertex;
-} vs_out;
-
-//out vec3 modelVertex;
+out vec3 vecNormal;
+out vec3 modelVertexPassed;
 
 void main() {
-	vec4 cubeCoordVec4 = vec4(cubeCoord, 1.0);
-	gl_Position = projection * view * model * cubeCoordVec4;
-	vs_out.modelVertex = vec3(model * cubeCoordVec4);
+	vec4 cubeVec4 = vec4(cubeCoord, 1.0);
+	vecNormal = vertexNormal;
+	modelVertexPassed = vec3(model * cubeVec4);
+	gl_Position = projection * view * model * cubeVec4;
 })glsl";
 
 #pragma endregion
@@ -39,7 +38,7 @@ void main() {
 #pragma region Geometry Shaders
 
 //normalization code from: https://learnopengl.com/Advanced-OpenGL/Geometry-Shader (accessed 08/04/2022)
-const char* normalsGeometryShader = R"glsl(
+/*const char* normalsGeometryShader = R"glsl(
 #version 330 core
 
 layout (triangles) in;
@@ -75,7 +74,7 @@ void main() {
 	modelVertexPassed = gs_in[2].modelVertex;
 	EmitVertex();
 	EndPrimitive();
-})glsl";
+})glsl";*/
 
 #pragma endregion
 

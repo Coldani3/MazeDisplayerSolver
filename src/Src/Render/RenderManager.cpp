@@ -53,6 +53,57 @@ float cubeVertices[] = {
         -0.175, -0.175, 0.175, //bottom left front - 6
         -0.175, -0.175, -0.175 //bottom left back - 7
     };
+
+float cubeVerticesNormals[] = {
+    //right face
+    0.175, 0.175, 0.175, 1.0, 0.0, 0.0,
+    0.175, 0.175, -0.175, 1.0, 0.0, 0.0,
+    0.175, -0.175, -0.175, 1.0, 0.0, 0.0,
+    0.175, 0.175, 0.175, 1.0, 0.0, 0.0,
+    0.175, -0.175, 0.175, 1.0, 0.0, 0.0,
+    0.175, -0.175, -0.175, 1.0, 0.0, 0.0,
+
+    //front face
+    0.175, 0.175, 0.175, 0.0, 0.0, -1.0,
+    -0.175, 0.175, 0.175, 0.0, 0.0, -1.0,
+    -0.175, -0.175, 0.175, 0.0, 0.0, -1.0,
+    0.175, 0.175, 0.175, 0.0, 0.0, -1.0,
+    0.175, -0.175, 0.175, 0.0, 0.0, -1.0,
+    -0.175, -0.175, 0.175, 0.0, 0.0, -1.0,
+
+    //top face
+    0.175, 0.175, 0.175, 0.0, 1.0, 0.0,
+    0.175, 0.175, -0.175, 0.0, 1.0, 0.0,
+    -0.175, 0.175, -0.175, 0.0, 1.0, 0.0,
+    0.175, 0.175, 0.175, 0.0, 1.0, 0.0,
+    -0.175, 0.175, 0.175, 0.0, 1.0, 0.0,
+    -0.175, 0.175, -0.175, 0.0, 1.0, 0.0,
+
+    //bottom face
+    0.175, -0.175, 0.175, 0.0, -1.0, 0.0,
+    -0.175, -0.175, 0.175, 0.0, -1.0, 0.0,
+    -0.175, -0.175, -0.175, 0.0, -1.0, 0.0,
+    0.175, -0.175, 0.175, 0.0, -1.0, 0.0,
+    0.175, -0.175, -0.175, 0.0, -1.0, 0.0,
+    -0.175, -0.175, -0.175, 0.0, -1.0, 0.0,
+
+    //back face
+    0.175, -0.175, -0.175, 0.0, 0.0, 1.0,
+    -0.175, -0.175, -0.175, 0.0, 0.0, 1.0,
+    -0.175, 0.175, -0.175, 0.0, 0.0, 1.0,
+    0.175, -0.175, -0.175, 0.0, 0.0, 1.0,
+    0.175, 0.175, -0.175, 0.0, 0.0, 1.0,
+    -0.175, 0.175, -0.175, 0.0, 0.0, 1.0,
+
+    //left face
+    -0.175, -0.175, 0.175, -1.0, 0.0, 0.0,
+    -0.175, -0.175, -0.175, -1.0, 0.0, 0.0,
+    -0.175, 0.175, -0.175, -1.0, 0.0, 0.0,
+    -0.175, -0.175, 0.175, -1.0, 0.0, 0.0,
+    -0.175, 0.175, 0.175, -1.0, 0.0, 0.0,
+    -0.175, 0.175, -0.175, -1.0, 0.0, 0.0
+};
+
 float mazePathVertices[] = {
         0.125, 0.125, 0.4125,
         0.125, 0.125, -0.4125,
@@ -203,12 +254,12 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         glUniform3fv(glGetUniformLocation(cellCenterProgram, "cellColour"), 1, glm::value_ptr(cellColour));
-        glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightPos"), 1, glm::value_ptr(glm::vec3(-1.0f, -1.0f, -1.0f)));
+        glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightPos"), 1, glm::value_ptr(glm::vec3(camera->getXPos(), camera->getYPos(), -camera->getZPos())));
         glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightColour"), 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
 
         glUseProgram(cellCenterProgram);
         glBindVertexArray(cubeVAO);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         //unbind VA
         glBindVertexArray(0);
     } else {
@@ -235,6 +286,7 @@ void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int
             }
         }
 
+        //TODO: to drawarray
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
@@ -247,44 +299,48 @@ void RenderManager::setup() {
 
     //create shaders
     std::cout << "Initialising Shaders..." << std::endl;
+    std::cout << "genericCubeShaderVert..." << std::endl;
     unsigned int genericCubeShaderVert = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(genericCubeShaderVert, 1, &genericCubeVertexShader, NULL);
     glCompileShader(genericCubeShaderVert);
     checkShaderCompileSuccess(genericCubeShaderVert);
 
+    std::cout << "genericCubeShaderFrag..." << std::endl;
     unsigned int genericCubeShaderFrag = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(genericCubeShaderFrag, 1, &mazeCubeFragmentShader, NULL);
     glCompileShader(genericCubeShaderFrag);
     checkShaderCompileSuccess(genericCubeShaderFrag);
 
+    std::cout << "cellCenterCubeShaderVert..." << std::endl;
     unsigned int cellCenterCubeShaderVert = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(cellCenterCubeShaderVert, 1, &mazeCellCenterCubeVertexShader, NULL);
     glCompileShader(cellCenterCubeShaderVert);
     checkShaderCompileSuccess(cellCenterCubeShaderVert);
 
+    std::cout << "cellCenterCubeShaderFrag..." << std::endl;
     unsigned int cellCenterCubeShaderFrag = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(cellCenterCubeShaderFrag, 1, &mazeCellCenterCubeFragmentShader, NULL);
     glCompileShader(cellCenterCubeShaderFrag);
     checkShaderCompileSuccess(cellCenterCubeShaderFrag);
 
-    unsigned int genericNormalsGeometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+    /*unsigned int genericNormalsGeometryShader = glCreateShader(GL_GEOMETRY_SHADER);
     glShaderSource(genericNormalsGeometryShader, 1, &normalsGeometryShader, NULL);
     glCompileShader(genericNormalsGeometryShader);
-    checkShaderCompileSuccess(genericNormalsGeometryShader);
+    checkShaderCompileSuccess(genericNormalsGeometryShader);*/
     std::cout << "Done." << std::endl;
 
     //create programs
     std::cout << "Creating OpenGL Programs..." << std::endl;
     genericCubeProgram = glCreateProgram();
     glAttachShader(genericCubeProgram, genericCubeShaderVert);
-    glAttachShader(genericCubeProgram, genericNormalsGeometryShader);
+    //glAttachShader(genericCubeProgram, genericNormalsGeometryShader);
     glAttachShader(genericCubeProgram, genericCubeShaderFrag);
     glLinkProgram(genericCubeProgram);
     checkProgramCompileSuccess(genericCubeProgram);
 
     cellCenterProgram = glCreateProgram();
     glAttachShader(cellCenterProgram, cellCenterCubeShaderVert);
-    glAttachShader(cellCenterProgram, genericNormalsGeometryShader);
+    //glAttachShader(cellCenterProgram, genericNormalsGeometryShader);
     glAttachShader(cellCenterProgram, cellCenterCubeShaderFrag);
     glLinkProgram(cellCenterProgram);
     checkProgramCompileSuccess(cellCenterProgram);
@@ -296,32 +352,35 @@ void RenderManager::setup() {
     glDeleteShader(genericCubeShaderFrag);
     glDeleteShader(cellCenterCubeShaderVert);
     glDeleteShader(cellCenterCubeShaderFrag);
-    glDeleteShader(genericNormalsGeometryShader);
+    //glDeleteShader(genericNormalsGeometryShader);
     std::cout << "Done." << std::endl;
 
     // we will transform the cubes into the appropriate positions in the shader
     std::cout << "Creating and populating buffers..." << std::endl;
-    glGenBuffers(1, &cuboidEBO);
+    
     glGenBuffers(1, &cubeVBO);
     glGenBuffers(1, &rectangleCubeVBO);
     glGenVertexArrays(1, &cubeVAO);
     glBindVertexArray(cubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cuboidEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cuboidIndices), cuboidIndices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVerticesNormals), cubeVerticesNormals, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
+    /* TODO: de-EBO me
+    glGenBuffers(1, &cuboidEBO);
     glGenVertexArrays(1, &rectangleCubeVAO);
     glBindVertexArray(rectangleCubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, rectangleCubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mazePathVertices), mazePathVertices, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cuboidEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cuboidIndices), cuboidIndices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(0);*/
     std::cout << "Done." << std::endl;
 
     std::cout << "Finished setting up OpenGL." << std::endl;
