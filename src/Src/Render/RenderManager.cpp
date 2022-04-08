@@ -29,30 +29,19 @@ unsigned int rectangleCubeVAO;
 unsigned int cuboidEBO;
 
 unsigned int cuboidIndices[] = {
-        0, 1, 3, //right face upper triangle
-        0, 2, 3, //right face lower triangle
-        0, 4, 6, //front face upper triangle
-        0, 2, 6, //front face lower triangle
-        0, 1, 5, //top face furthest triangle
-        0, 4, 5, //top face closest triangle
-        2, 6, 7, //bottom face closest triangle
-        2, 3, 7, //bottom face furthest tirangle
-        3, 7, 5, //back face bottom triangle
-        3, 1, 5, //back face top triangle
-        6, 7, 5, //left face bottom face
-        6, 4, 5  //left face top face
-    };
-
-float cubeVertices[] = {
-        0.175, 0.175, 0.175, //top right front - 0
-        0.175, 0.175, -0.175, //top right back - 1
-        0.175, -0.175, 0.175, //bottom right front - 2
-        0.175, -0.175, -0.175, //bottom right back - 3
-        -0.175, 0.175, 0.175, //top left front - 4
-        -0.175, 0.175, -0.175, //top left back - 5
-        -0.175, -0.175, 0.175, //bottom left front - 6
-        -0.175, -0.175, -0.175 //bottom left back - 7
-    };
+    0, 1, 3, //right face upper triangle
+    0, 2, 3, //right face lower triangle
+    0, 4, 6, //front face upper triangle
+    0, 2, 6, //front face lower triangle
+    0, 1, 5, //top face furthest triangle
+    0, 4, 5, //top face closest triangle
+    2, 6, 7, //bottom face closest triangle
+    2, 3, 7, //bottom face furthest tirangle
+    3, 7, 5, //back face bottom triangle
+    3, 1, 5, //back face top triangle
+    6, 7, 5, //left face bottom face
+    6, 4, 5  //left face top face
+};
 
 float cubeVerticesNormals[] = {
     //right face
@@ -105,15 +94,60 @@ float cubeVerticesNormals[] = {
 };
 
 float mazePathVertices[] = {
-        0.125, 0.125, 0.4125,
-        0.125, 0.125, -0.4125,
-        0.125, -0.125, 0.4125,
-        0.125, -0.125, -0.4125,
-        -0.125, 0.125, 0.4125,
-        -0.125, 0.125, -0.4125,
-        -0.125, -0.125, 0.4125,
-        -0.125, -0.125, -0.4125
-    };
+    0.125, 0.125, 0.4125, //0
+    0.125, 0.125, -0.4125, //1
+    0.125, -0.125, 0.4125, //2
+    0.125, -0.125, -0.4125, //3
+    -0.125, 0.125, 0.4125, //4
+    -0.125, 0.125, -0.4125, //5
+    -0.125, -0.125, 0.4125, //6
+    -0.125, -0.125, -0.4125 //7
+};
+
+float mazePathVerticesNormals[] = {
+    //right
+    0.125, 0.125, 0.4125, 1.0, 0.0, 0.0,
+    0.125, 0.125, -0.4125, 1.0, 0.0, 0.0,
+    0.125, -0.125, -0.4125, 1.0, 0.0, 0.0,
+    0.125, 0.125, 0.4125, 1.0, 0.0, 0.0,
+    0.125, -0.125, 0.4125, 1.0, 0.0, 0.0,
+    0.125, -0.125, -0.4125, 1.0, 0.0, 0.0,
+    //front
+    0.125, 0.125, 0.4125, 0.0, 0.0, -1.0,
+    -0.125, 0.125, 0.4125, 0.0, 0.0, -1.0,
+    -0.125, -0.125, 0.4125, 0.0, 0.0, -1.0,
+    0.125, 0.125, 0.4125, 0.0, 0.0, -1.0,
+    0.125, -0.125, 0.4125, 0.0, 0.0, -1.0,
+    -0.125, -0.125, 0.4125, 0.0, 0.0, -1.0,
+    //top
+    0.125, 0.125, 0.4125, 0.0, 1.0, 0.0,
+    0.125, 0.125, -0.4125, 0.0, 1.0, 0.0,
+    -0.125, 0.125, -0.4125, 0.0, 1.0, 0.0,
+    0.125, 0.125, 0.4125, 0.0, 1.0, 0.0,
+    -0.125, 0.125, 0.4125, 0.0, 1.0, 0.0,
+    -0.125, 0.125, -0.4125, 0.0, 1.0, 0.0,
+    //bottom
+    0.125, -0.125, 0.4125, 0.0, -1.0, 0.0,
+    -0.125, -0.125, 0.4125, 0.0, -1.0, 0.0,
+    -0.125, -0.125, -0.4125, 0.0, -1.0, 0.0,
+    0.125, -0.125, 0.4125, 0.0, -1.0, 0.0,
+    0.125, -0.125, -0.4125, 0.0, -1.0, 0.0,
+    -0.125, -0.125, -0.4125, 0.0, -1.0, 0.0,
+    //back
+    0.125, -0.125, -0.4125, 0.0, 0.0, 1.0,
+    -0.125, -0.125, -0.4125, 0.0, 0.0, 1.0,
+    -0.125, 0.125, -0.4125, 0.0, 0.0, 1.0,
+    0.125, -0.125, -0.4125, 0.0, 0.0, 1.0,
+    0.125, 0.125, -0.4125, 0.0, 0.0, 1.0,
+    -0.125, 0.125, -0.4125, 0.0, 0.0, 1.0,
+    //left
+    -0.125, -0.125, 0.4125, -1.0, 0.0, 0.0,
+    -0.125, -0.125, -0.4125, -1.0, 0.0, 0.0,
+    -0.125, 0.125, -0.4125, -1.0, 0.0, 0.0,
+    -0.125, -0.125, 0.4125, -1.0, 0.0, 0.0,
+    -0.125, 0.125, 0.4125, -1.0, 0.0, 0.0,
+    -0.125, 0.125, -0.4125, -1.0, 0.0, 0.0
+};
 
 //xRot, yRot, xTrans, yTrans, zTrans - front = 0 deg
 std::vector<std::vector<float>> cellPathTransformations = {
@@ -301,13 +335,13 @@ void RenderManager::setup() {
     std::cout << "Initialising Shaders..." << std::endl;
     std::cout << "genericCubeShaderVert..." << std::endl;
     unsigned int genericCubeShaderVert = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(genericCubeShaderVert, 1, &genericCubeVertexShader, NULL);
+    glShaderSource(genericCubeShaderVert, 1, &mazeCellPathVertexShader, NULL);
     glCompileShader(genericCubeShaderVert);
     checkShaderCompileSuccess(genericCubeShaderVert);
 
     std::cout << "genericCubeShaderFrag..." << std::endl;
     unsigned int genericCubeShaderFrag = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(genericCubeShaderFrag, 1, &mazeCubeFragmentShader, NULL);
+    glShaderSource(genericCubeShaderFrag, 1, &mazeCellPathFragmentShader, NULL);
     glCompileShader(genericCubeShaderFrag);
     checkShaderCompileSuccess(genericCubeShaderFrag);
 
@@ -370,17 +404,15 @@ void RenderManager::setup() {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    /* TODO: de-EBO me
-    glGenBuffers(1, &cuboidEBO);
     glGenVertexArrays(1, &rectangleCubeVAO);
     glBindVertexArray(rectangleCubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, rectangleCubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(mazePathVertices), mazePathVertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cuboidEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cuboidIndices), cuboidIndices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(mazePathVerticesNormals), mazePathVerticesNormals, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);*/
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
     std::cout << "Done." << std::endl;
 
     std::cout << "Finished setting up OpenGL." << std::endl;

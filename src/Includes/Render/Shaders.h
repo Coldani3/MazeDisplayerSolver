@@ -1,13 +1,25 @@
 #pragma once
 
 #pragma region Vertex Shaders
-const char *genericCubeVertexShader = R"glsl(
+//TODO: rename to cell paths? also implement shrinking based on transit between two 4d slices
+const char *mazeCellPathVertexShader = R"glsl(
 #version 330 core
 
-layout (location = 0) in vec3 cubeVec;
+layout (location = 0) in vec3 cubeCoord;
+layout (location = 1) in vec3 vertexNormal;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+out vec3 vecNormal;
+out vec3 modelVertexPassed;
 
 void main() {
-	gl_Position = vec4(cubeVec, 1.0);
+	vec4 cubeVec4 = vec4(cubeCoord, 1.0);
+	vecNormal = vertexNormal;
+	modelVertexPassed = vec3(model * cubeVec4);
+	gl_Position = projection * view * model * cubeVec4;
 })glsl";
 
 //stride = sizeof(float) * 3
@@ -100,12 +112,26 @@ void main() {
 	FragColor = vec4((diffuse + ambient) * cellColour, 1.0);
 })glsl";
 
-const char *mazeCubeFragmentShader = R"glsl(
+//pretty much a copy but I'll probably do something with it eventually
+const char *mazeCellPathFragmentShader = R"glsl(
 #version 330 core
 
 out vec4 FragColor;
+in vec3 modelVertexPassed;
+in vec3 vecNormal;
+
+uniform vec3 cellColour;
+uniform vec3 lightPos;
+uniform vec3 lightColour;
 
 void main() {
+	//just in case
+	vec3 normal = normalize(vecNormal);
+	vec3 lightDirection = normalize(lightPos - modelVertexPassed);
+
+	vec3 ambient = 0.1 * lightColour;
+	vec3 diffuse = max(dot(normal, lightDirection), 0.0) * lightColour;
+	FragColor = vec4((diffuse + ambient) * cellColour, 1.0);
 	FragColor = vec4(0.54f, 0.54f, 0.54f, 1.0f);
 })glsl";
 
