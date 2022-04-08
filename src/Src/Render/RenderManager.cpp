@@ -44,24 +44,24 @@ unsigned int cuboidIndices[] = {
     };
 
 float cubeVertices[] = {
-        0.25, 0.25, 0.25, //top right front - 0
-        0.25, 0.25, -0.25, //top right back - 1
-        0.25, -0.25, 0.25, //bottom right front - 2
-        0.25, -0.25, -0.25, //bottom right back - 3
-        -0.25, 0.25, 0.25, //top left front - 4
-        -0.25, 0.25, -0.25, //top left back - 5
-        -0.25, -0.25, 0.25, //bottom left front - 6
-        -0.25, -0.25, -0.25 //bottom left back - 7
+        0.175, 0.175, 0.175, //top right front - 0
+        0.175, 0.175, -0.175, //top right back - 1
+        0.175, -0.175, 0.175, //bottom right front - 2
+        0.175, -0.175, -0.175, //bottom right back - 3
+        -0.175, 0.175, 0.175, //top left front - 4
+        -0.175, 0.175, -0.175, //top left back - 5
+        -0.175, -0.175, 0.175, //bottom left front - 6
+        -0.175, -0.175, -0.175 //bottom left back - 7
     };
 float mazePathVertices[] = {
-        0.125, 0.125, 0.25,
-        0.125, 0.125, -0.25,
-        0.125, -0.125, 0.25,
-        0.125, -0.125, -0.25,
-        -0.125, 0.125, 0.25,
-        -0.125, 0.125, -0.25,
-        -0.125, -0.125, 0.25,
-        -0.125, -0.125, -0.25
+        0.125, 0.125, 0.4125,
+        0.125, 0.125, -0.4125,
+        0.125, -0.125, 0.4125,
+        0.125, -0.125, -0.4125,
+        -0.125, 0.125, 0.4125,
+        -0.125, 0.125, -0.4125,
+        -0.125, -0.125, 0.4125,
+        -0.125, -0.125, -0.4125
     };
 
 //xRot, yRot, xTrans, yTrans, zTrans - front = 0 deg
@@ -203,6 +203,8 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         glUniform3fv(glGetUniformLocation(cellCenterProgram, "cellColour"), 1, glm::value_ptr(cellColour));
+        glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightPos"), 1, glm::value_ptr(glm::vec3(-1.0f, -1.0f, -1.0f)));
+        glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightColour"), 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
 
         glUseProgram(cellCenterProgram);
         glBindVertexArray(cubeVAO);
@@ -264,18 +266,25 @@ void RenderManager::setup() {
     glShaderSource(cellCenterCubeShaderFrag, 1, &mazeCellCenterCubeFragmentShader, NULL);
     glCompileShader(cellCenterCubeShaderFrag);
     checkShaderCompileSuccess(cellCenterCubeShaderFrag);
+
+    unsigned int genericNormalsGeometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+    glShaderSource(genericNormalsGeometryShader, 1, &normalsGeometryShader, NULL);
+    glCompileShader(genericNormalsGeometryShader);
+    checkShaderCompileSuccess(genericNormalsGeometryShader);
     std::cout << "Done." << std::endl;
 
     //create programs
     std::cout << "Creating OpenGL Programs..." << std::endl;
     genericCubeProgram = glCreateProgram();
     glAttachShader(genericCubeProgram, genericCubeShaderVert);
+    glAttachShader(genericCubeProgram, genericNormalsGeometryShader);
     glAttachShader(genericCubeProgram, genericCubeShaderFrag);
     glLinkProgram(genericCubeProgram);
     checkProgramCompileSuccess(genericCubeProgram);
 
     cellCenterProgram = glCreateProgram();
     glAttachShader(cellCenterProgram, cellCenterCubeShaderVert);
+    glAttachShader(cellCenterProgram, genericNormalsGeometryShader);
     glAttachShader(cellCenterProgram, cellCenterCubeShaderFrag);
     glLinkProgram(cellCenterProgram);
     checkProgramCompileSuccess(cellCenterProgram);
@@ -287,6 +296,7 @@ void RenderManager::setup() {
     glDeleteShader(genericCubeShaderFrag);
     glDeleteShader(cellCenterCubeShaderVert);
     glDeleteShader(cellCenterCubeShaderFrag);
+    glDeleteShader(genericNormalsGeometryShader);
     std::cout << "Done." << std::endl;
 
     // we will transform the cubes into the appropriate positions in the shader

@@ -93,7 +93,7 @@ int main() {
 
     std::cout << "Entering main loop..." << std::endl;
     double startDraw;
-    double frameDuration;
+    double delta;
     //main render loop
     while (!glfwWindowShouldClose(renderer->getWindow())) {
         startDraw = glfwGetTime();
@@ -101,8 +101,8 @@ int main() {
         renderer->draw();
         glfwSwapBuffers(renderer->getWindow());
 
-        frameDuration = glfwGetTime() - startDraw;
-        fps = 1 / frameDuration;
+        delta = glfwGetTime() - startDraw;
+        fps = 1 / delta;
 
         handleInput(renderer->getWindow());
         glfwPollEvents();
