@@ -28,6 +28,8 @@ unsigned int rectangleCubeVAO;
 
 unsigned int cuboidEBO;
 
+/* Kept for reference
+
 unsigned int cuboidIndices[] = {
     0, 1, 3, //right face upper triangle
     0, 2, 3, //right face lower triangle
@@ -41,7 +43,7 @@ unsigned int cuboidIndices[] = {
     3, 1, 5, //back face top triangle
     6, 7, 5, //left face bottom face
     6, 4, 5  //left face top face
-};
+};*/
 
 float cubeVerticesNormals[] = {
     //right face
@@ -282,14 +284,16 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
         glm::mat4 view = /*glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f));*/ getViewMatrixFromCamera();
 
         glm::vec3 cellColour = glm::vec3(0.54f, 0.54f, 0.54f);
+        glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), -camera->getZPos());
+        glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
 
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         glUniform3fv(glGetUniformLocation(cellCenterProgram, "cellColour"), 1, glm::value_ptr(cellColour));
-        glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightPos"), 1, glm::value_ptr(glm::vec3(camera->getXPos(), camera->getYPos(), -camera->getZPos())));
-        glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightColour"), 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+        glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightPos"), 1, glm::value_ptr(lightPos));
+        glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightColour"), 1, glm::value_ptr(lightColour));
 
         glUseProgram(cellCenterProgram);
         glBindVertexArray(cubeVAO);
@@ -306,8 +310,19 @@ void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int
         glm::vec3 coords = glm::vec3(mazeX, mazeY, mazeZ);
         //translation to get it to the same coords as the center piece, from which we then translate it again into the proper position
         glm::mat4 initialTranslate = translateModel(coords);
+        glm::mat4 view = getViewMatrixFromCamera();
         float wLerp = 1.0f;
 
+        glm::vec3 cellColour = glm::vec3(0.54f, 0.54f, 0.54f);
+        glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), -camera->getZPos());
+        glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
+
+        glUniform3fv(glGetUniformLocation(genericCubeProgram, "cellColour"), 1, glm::value_ptr(cellColour));
+        glUniform3fv(glGetUniformLocation(genericCubeProgram, "lightPos"), 1, glm::value_ptr(lightPos));
+        glUniform3fv(glGetUniformLocation(genericCubeProgram, "lightColour"), 1, glm::value_ptr(lightColour));
+
+        glUniformMatrix4fv(glGetUniformLocation(genericCubeProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(genericCubeProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         glUseProgram(genericCubeProgram);
         glBindVertexArray(rectangleCubeVAO);
@@ -315,13 +330,19 @@ void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int
         for (unsigned int i = 0; i < 8; i++) {
             unsigned int bitChecking = 1 << i;
 
-            if ((mazeCellData & bitChecking) > 0) {
+            if (i < 6 && (mazeCellData & bitChecking) > 0) {
+                std::vector<float> transformation = cellPathTransformations[i];
+                glm::mat4 model = mazeCellPathTransform(transformation[0], transformation[1], transformation[2], transformation[3], transformation[4]) * initialTranslate;
+                
+                //TODO: move all matrix multiplications into the shaders?
+                glUniformMatrix4fv(glGetUniformLocation(genericCubeProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
+                glDrawArrays(GL_TRIANGLES, 0, 36);
             }
         }
 
         //TODO: to drawarray
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
 }
@@ -395,6 +416,7 @@ void RenderManager::setup() {
     glGenBuffers(1, &cubeVBO);
     glGenBuffers(1, &rectangleCubeVBO);
     glGenVertexArrays(1, &cubeVAO);
+
     glBindVertexArray(cubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVerticesNormals), cubeVerticesNormals, GL_STATIC_DRAW);
@@ -405,11 +427,12 @@ void RenderManager::setup() {
     glEnableVertexAttribArray(1);
 
     glGenVertexArrays(1, &rectangleCubeVAO);
+
     glBindVertexArray(rectangleCubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, rectangleCubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mazePathVerticesNormals), mazePathVerticesNormals, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
@@ -426,9 +449,11 @@ void RenderManager::draw() {
         for (int y = 0; y < 10; y++) {
             for (int z = 0; z < 10; z++) {
                 drawMazeCellCenter(x, y, z, 0);
+                //drawMazeCellPaths(2, x, y, z, 0);
             }
         }
     }
+    drawMazeCellPaths(2, 0, 0, 0, 0);
     //drawMazeCellCenter(1, 1, 1, 0);
 }
 #pragma endregion

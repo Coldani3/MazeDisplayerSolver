@@ -1,7 +1,7 @@
 #pragma once
 
 #pragma region Vertex Shaders
-//TODO: rename to cell paths? also implement shrinking based on transit between two 4d slices
+//TODO: implement shrinking based on transit between two 4d slices
 const char *mazeCellPathVertexShader = R"glsl(
 #version 330 core
 
@@ -132,7 +132,6 @@ void main() {
 	vec3 ambient = 0.1 * lightColour;
 	vec3 diffuse = max(dot(normal, lightDirection), 0.0) * lightColour;
 	FragColor = vec4((diffuse + ambient) * cellColour, 1.0);
-	FragColor = vec4(0.54f, 0.54f, 0.54f, 1.0f);
 })glsl";
 
 #pragma endregion
