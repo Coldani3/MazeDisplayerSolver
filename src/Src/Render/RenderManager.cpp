@@ -9,11 +9,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-/*unsigned int genericCubeShaderVert;
-unsigned int cellCenterShaderVert;
-unsigned int genericCubeShaderFrag;
-unsigned int cellCenterShaderFrag;*/
-
 #pragma region Variables
 int currentW = 0;
 
@@ -25,8 +20,6 @@ unsigned int rectangleCubeVBO;
 
 unsigned int cubeVAO;
 unsigned int rectangleCubeVAO;
-
-unsigned int cuboidEBO;
 
 /* Kept for reference
 
@@ -54,13 +47,13 @@ float cubeVerticesNormals[] = {
     0.175, -0.175, 0.175, 1.0, 0.0, 0.0,
     0.175, -0.175, -0.175, 1.0, 0.0, 0.0,
 
-    //front face
-    0.175, 0.175, 0.175, 0.0, 0.0, -1.0,
-    -0.175, 0.175, 0.175, 0.0, 0.0, -1.0,
-    -0.175, -0.175, 0.175, 0.0, 0.0, -1.0,
-    0.175, 0.175, 0.175, 0.0, 0.0, -1.0,
-    0.175, -0.175, 0.175, 0.0, 0.0, -1.0,
-    -0.175, -0.175, 0.175, 0.0, 0.0, -1.0,
+    //front face [back face?]
+    0.175, 0.175, 0.175, 0.0, 0.0, 1.0,
+    -0.175, 0.175, 0.175, 0.0, 0.0, 1.0,
+    -0.175, -0.175, 0.175, 0.0, 0.0, 1.0,
+    0.175, 0.175, 0.175, 0.0, 0.0, 1.0,
+    -0.175, -0.175, 0.175, 0.0, 0.0, 1.0,
+    0.175, -0.175, 0.175, 0.0, 0.0, 1.0,
 
     //top face
     0.175, 0.175, 0.175, 0.0, 1.0, 0.0,
@@ -75,24 +68,24 @@ float cubeVerticesNormals[] = {
     -0.175, -0.175, 0.175, 0.0, -1.0, 0.0,
     -0.175, -0.175, -0.175, 0.0, -1.0, 0.0,
     0.175, -0.175, 0.175, 0.0, -1.0, 0.0,
-    0.175, -0.175, -0.175, 0.0, -1.0, 0.0,
     -0.175, -0.175, -0.175, 0.0, -1.0, 0.0,
+    0.175, -0.175, -0.175, 0.0, -1.0, 0.0,
 
-    //back face
-    0.175, -0.175, -0.175, 0.0, 0.0, 1.0,
-    -0.175, -0.175, -0.175, 0.0, 0.0, 1.0,
-    -0.175, 0.175, -0.175, 0.0, 0.0, 1.0,
-    0.175, -0.175, -0.175, 0.0, 0.0, 1.0,
-    0.175, 0.175, -0.175, 0.0, 0.0, 1.0,
-    -0.175, 0.175, -0.175, 0.0, 0.0, 1.0,
+    //back face [front face?]
+    0.175, -0.175, -0.175, 0.0, 0.0, -1.0,
+    -0.175, -0.175, -0.175, 0.0, 0.0, -1.0,
+    -0.175, 0.175, -0.175, 0.0, 0.0, -1.0,
+    0.175, -0.175, -0.175, 0.0, 0.0, -1.0,
+    0.175, 0.175, -0.175, 0.0, 0.0, -1.0,
+    -0.175, 0.175, -0.175, 0.0, 0.0, -1.0,
 
     //left face
     -0.175, -0.175, 0.175, -1.0, 0.0, 0.0,
     -0.175, -0.175, -0.175, -1.0, 0.0, 0.0,
     -0.175, 0.175, -0.175, -1.0, 0.0, 0.0,
     -0.175, -0.175, 0.175, -1.0, 0.0, 0.0,
-    -0.175, 0.175, 0.175, -1.0, 0.0, 0.0,
-    -0.175, 0.175, -0.175, -1.0, 0.0, 0.0
+    -0.175, 0.175, -0.175, -1.0, 0.0, 0.0,
+    -0.175, 0.175, 0.175, -1.0, 0.0, 0.0
 };
 
 float mazePathVertices[] = {
@@ -112,19 +105,19 @@ float mazePathVerticesNormals[] = {
     0.125, 0.125, -0.4125, 1.0, 0.0, 0.0,
     0.125, -0.125, -0.4125, 1.0, 0.0, 0.0,
     0.125, 0.125, 0.4125, 1.0, 0.0, 0.0,
-    0.125, -0.125, 0.4125, 1.0, 0.0, 0.0,
     0.125, -0.125, -0.4125, 1.0, 0.0, 0.0,
+    0.125, -0.125, 0.4125, 1.0, 0.0, 0.0,
     //front
     0.125, 0.125, 0.4125, 0.0, 0.0, -1.0,
     -0.125, 0.125, 0.4125, 0.0, 0.0, -1.0,
     -0.125, -0.125, 0.4125, 0.0, 0.0, -1.0,
     0.125, 0.125, 0.4125, 0.0, 0.0, -1.0,
-    0.125, -0.125, 0.4125, 0.0, 0.0, -1.0,
     -0.125, -0.125, 0.4125, 0.0, 0.0, -1.0,
+    0.125, -0.125, 0.4125, 0.0, 0.0, -1.0,
     //top
     0.125, 0.125, 0.4125, 0.0, 1.0, 0.0,
-    0.125, 0.125, -0.4125, 0.0, 1.0, 0.0,
     -0.125, 0.125, -0.4125, 0.0, 1.0, 0.0,
+    0.125, 0.125, -0.4125, 0.0, 1.0, 0.0,
     0.125, 0.125, 0.4125, 0.0, 1.0, 0.0,
     -0.125, 0.125, 0.4125, 0.0, 1.0, 0.0,
     -0.125, 0.125, -0.4125, 0.0, 1.0, 0.0,
@@ -133,12 +126,12 @@ float mazePathVerticesNormals[] = {
     -0.125, -0.125, 0.4125, 0.0, -1.0, 0.0,
     -0.125, -0.125, -0.4125, 0.0, -1.0, 0.0,
     0.125, -0.125, 0.4125, 0.0, -1.0, 0.0,
-    0.125, -0.125, -0.4125, 0.0, -1.0, 0.0,
     -0.125, -0.125, -0.4125, 0.0, -1.0, 0.0,
+    0.125, -0.125, -0.4125, 0.0, -1.0, 0.0,
     //back
     0.125, -0.125, -0.4125, 0.0, 0.0, 1.0,
-    -0.125, -0.125, -0.4125, 0.0, 0.0, 1.0,
     -0.125, 0.125, -0.4125, 0.0, 0.0, 1.0,
+    -0.125, -0.125, -0.4125, 0.0, 0.0, 1.0,
     0.125, -0.125, -0.4125, 0.0, 0.0, 1.0,
     0.125, 0.125, -0.4125, 0.0, 0.0, 1.0,
     -0.125, 0.125, -0.4125, 0.0, 0.0, 1.0,
@@ -147,8 +140,8 @@ float mazePathVerticesNormals[] = {
     -0.125, -0.125, -0.4125, -1.0, 0.0, 0.0,
     -0.125, 0.125, -0.4125, -1.0, 0.0, 0.0,
     -0.125, -0.125, 0.4125, -1.0, 0.0, 0.0,
-    -0.125, 0.125, 0.4125, -1.0, 0.0, 0.0,
-    -0.125, 0.125, -0.4125, -1.0, 0.0, 0.0
+    -0.125, 0.125, -0.4125, -1.0, 0.0, 0.0,
+    -0.125, 0.125, 0.4125, -1.0, 0.0, 0.0
 };
 
 //xRot, yRot, xTrans, yTrans, zTrans - front = 0 deg
@@ -284,7 +277,7 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
         glm::mat4 view = /*glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f));*/ getViewMatrixFromCamera();
 
         glm::vec3 cellColour = glm::vec3(0.54f, 0.54f, 0.54f);
-        glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), -camera->getZPos());
+        glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());
         glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
 
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
@@ -314,7 +307,7 @@ void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int
         float wLerp = 1.0f;
 
         glm::vec3 cellColour = glm::vec3(0.54f, 0.54f, 0.54f);
-        glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), -camera->getZPos());
+        glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());
         glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
 
         glUniform3fv(glGetUniformLocation(genericCubeProgram, "cellColour"), 1, glm::value_ptr(cellColour));
@@ -352,6 +345,7 @@ void RenderManager::setup() {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
+    //glEnable(GL_CULL_FACE);
 
     //create shaders
     std::cout << "Initialising Shaders..." << std::endl;
