@@ -66,10 +66,6 @@ void Camera::moveBy(float x, float y, float z) {
 }
 
 void Camera::lookAt(float xPos, float yPos, float zPos) {
-	float xDifference = xPosition - xPos;
-	float yDifference = yPosition - yPos;
-	float zDifference = zPosition - zPos;
-
 	xLookingAt = xPos;
 	yLookingAt = yPos;
 	zLookingAt = zPos;
@@ -80,7 +76,7 @@ void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float 
 	glm::vec3 aroundVec = glm::vec3(xPos, yPos, zPos);
 	glm::vec3 camVec = glm::vec3(xPosition, yPosition, zPosition);
 
-	glm::mat4 translateToOrigin = glm::translate(identity, glm::vec3(-xPos, -yPos, -zPos));
+	glm::mat4 translateToOrigin = glm::translate(identity, -aroundVec);
 	glm::mat4 translateBack = glm::translate(identity, aroundVec);
 	glm::mat4 rotateY = glm::rotate(identity, glm::radians(yRot), glm::vec3(0.0, 1.0, 0.0));
 	glm::mat4 rotateX = glm::rotate(identity, glm::radians(xRot), glm::vec3(1.0, 0.0, 0.0));
@@ -91,6 +87,10 @@ void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float 
 	//translate to origin, rotate, then translate back
 	glm::vec3 out = translateBack * rotate * translateToOrigin * glm::vec4(camVec, 1.0);
 
+	while (glm::dot(glm::normalize(out), glm::normalize(aroundVec)) > 0.9) {
+		out = glm::vec4(out, 1.0) * glm::rotate(identity, glm::radians(1.0f), glm::vec3(0.0, 1.0, 0.0));
+	}
+
 	xPosition = out.x;
 	yPosition = out.y;
 	zPosition = out.z;
@@ -99,26 +99,18 @@ void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float 
 	yLookingAt = yPos;
 	zLookingAt = zPos;
 
-
-	//rotate around the sphere
-
-	//float newXChange, newYChange, newZChange;
-
-	//newXChange = sin(xRot);
-	//newZChange = cos(xRot);
-
-	//float newX = normalizedX + ((cos(xRot) + cos(yRot)) * distance);
-	//float newY = normalizedY + (sin(yRot) * distance);
-	//float newZ = normalizedZ + ((sin(xRot) + cos(yRot)) * distance);
-
-	//xLookingAt = xPos;
-	//yLookingAt = yPos;
-	//zLookingAt = zPos;
-
-	////translate back to its original coordinates
-	//xPosition = newX + xPos;
-	//yPosition = newY + yPos;
-	//zPosition = newZ + zPos;
 	//std::cout << distance << std::endl;
 }
 
+void Camera::zoom(float magnitude) {
+	glm::vec3 camCoords = glm::vec3(xPosition, yPosition, zPosition);
+	glm::vec3 lookingAtCoords = glm::vec3(xLookingAt, yLookingAt, zLookingAt);
+	glm::vec3 path = camCoords - lookingAtCoords;
+	float lerp = magnitude / glm::length(path);
+
+	glm::vec3 newCamPos = lerp * lookingAtCoords + (1 - lerp) * camCoords;
+
+	xPosition = newCamPos.x;
+	yPosition = newCamPos.y;
+	zPosition = newCamPos.z;
+}

@@ -31,5 +31,7 @@ public:
 	void moveBy(float xPos, float yPos, float zPos);
 	void lookAt(float xPos, float yPos, float zPos);
 	void rotateAround(float xPos, float yPos, float zPos, float xRot, float yRot, float zRot);
+	//Where magnitude is how far along in GL units you move along the path between you and what the camera is set to look at
+	void zoom(float magnitude);
 };
 
