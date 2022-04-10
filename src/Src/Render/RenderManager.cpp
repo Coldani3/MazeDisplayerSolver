@@ -351,6 +351,7 @@ void RenderManager::setup() {
     std::cout << "Setting up OpenGL..." << std::endl;
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
 
     //create shaders
     std::cout << "Initialising Shaders..." << std::endl;
