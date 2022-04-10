@@ -448,7 +448,7 @@ void RenderManager::draw() {
             }
         }
     }
-    drawMazeCellPaths(2, 0, 0, 0, 0);
+    drawMazeCellPaths(63, 0, 0, 0, 0);
     //drawMazeCellCenter(1, 1, 1, 0);
 }
 #pragma endregion

@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 Camera::Camera(float xPos, float yPos, float zPos) : Camera(xPos, yPos, zPos, 0.0f, 0.0f, 0.0f) {
 }
@@ -75,29 +76,49 @@ void Camera::lookAt(float xPos, float yPos, float zPos) {
 }
 
 void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float yRot, float zRot) {
-	//translate cam coords to relative to 0 0 0 so we can treat it as a sphere around 0 0 0 then translate them back again later
-	float normalizedX = xPosition - xPos;
-	float normalizedY = yPosition - yPos;
-	float normalizedZ = zPosition - zPos;
+	glm::mat4 identity = glm::mat4(1.0);
+	glm::vec3 aroundVec = glm::vec3(xPos, yPos, zPos);
+	glm::vec3 camVec = glm::vec3(xPosition, yPosition, zPosition);
 
+	glm::mat4 translateToOrigin = glm::translate(identity, glm::vec3(-xPos, -yPos, -zPos));
+	glm::mat4 translateBack = glm::translate(identity, aroundVec);
+	glm::mat4 rotateY = glm::rotate(identity, glm::radians(yRot), glm::vec3(0.0, 1.0, 0.0));
+	glm::mat4 rotateX = glm::rotate(identity, glm::radians(xRot), glm::vec3(1.0, 0.0, 0.0));
+	glm::mat4 rotateZ = glm::rotate(identity, glm::radians(zRot), glm::vec3(0.0, 0.0, 1.0));
 
-	//record distance from the spot so we rotate around it in a sphere
-	float distance = sqrt(pow(normalizedX, 2) + pow(normalizedY, 2) + pow(normalizedZ, 2));
 	//YXZ to reduce gimbal lock
+	glm::mat4 rotate = rotateZ * rotateX * rotateY;
+	//translate to origin, rotate, then translate back
+	glm::vec3 out = translateBack * rotate * translateToOrigin * glm::vec4(camVec, 1.0);
 
-	//rotate around the sphere
-	float newX = normalizedX + (sin(xRot) * distance);
-	float newY = normalizedY + (sin(yRot) * distance);
-	float newZ = normalizedZ + (cos(zRot) * distance);
+	xPosition = out.x;
+	yPosition = out.y;
+	zPosition = out.z;
 
 	xLookingAt = xPos;
 	yLookingAt = yPos;
 	zLookingAt = zPos;
 
-	//translate back to its original coordinates
-	xPosition = newX + xPos;
-	yPosition = newY + yPos;
-	zPosition = newZ + zPos;
-	std::cout << distance << std::endl;
+
+	//rotate around the sphere
+
+	//float newXChange, newYChange, newZChange;
+
+	//newXChange = sin(xRot);
+	//newZChange = cos(xRot);
+
+	//float newX = normalizedX + ((cos(xRot) + cos(yRot)) * distance);
+	//float newY = normalizedY + (sin(yRot) * distance);
+	//float newZ = normalizedZ + ((sin(xRot) + cos(yRot)) * distance);
+
+	//xLookingAt = xPos;
+	//yLookingAt = yPos;
+	//zLookingAt = zPos;
+
+	////translate back to its original coordinates
+	//xPosition = newX + xPos;
+	//yPosition = newY + yPos;
+	//zPosition = newZ + zPos;
+	//std::cout << distance << std::endl;
 }
 

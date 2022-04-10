@@ -8,10 +8,11 @@
 #include <Render/RenderManager.h>
 
 std::unique_ptr<RenderManager> renderer;
-long fps = 0;
+double delta = 0;
+int fps = 0;
 
-float scaleForFPS(float forEverySecond) {
-    return forEverySecond / fps;
+float scaleForDelta(float forEverySecond) {
+    return forEverySecond / delta;
 }
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height) {    
@@ -19,31 +20,31 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
 }
 
 void handleInput(GLFWwindow* window) {
-    float camSpeed = 0.05;
+    float camSpeed = 0.000005;
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        renderer->camera->rotateAround(0.0f, 0.0f, 0.0f, scaleForFPS(360.0f) * camSpeed, 0.0f, 0.0f);
+        renderer->camera->rotateAround(0.0f, 0.0f, 0.0f, scaleForDelta(360.0f * camSpeed), 0.0f, 0.0f);
         std::cout << renderer->camera->getXPos() << ", " << renderer->camera->getYPos() << ", " << renderer->camera->getZPos() << ", " << std::endl;
-        //renderer->camera->rotate(scaleForFPS(360.0f), 0.0f, 0.0f);
+        //renderer->camera->rotate(scaleForDelta(360.0f), 0.0f, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        renderer->camera->rotateAround(0.0f, 0.0f, 0.0f, scaleForFPS(-360.0f) * camSpeed, 0.0f, 0.0f);
+        renderer->camera->rotateAround(0.0f, 0.0f, 0.0f, scaleForDelta(-360.0f * camSpeed), 0.0f, 0.0f);
         std::cout << renderer->camera->getXPos() << ", " << renderer->camera->getYPos() << ", " << renderer->camera->getZPos() << ", " << std::endl;
-        //renderer->camera->rotate(scaleForFPS(-360.0f), 0.0f, 0.0f);
+        //renderer->camera->rotate(scaleForDelta(-360.0f), 0.0f, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        renderer->camera->rotateAround(0.0f, 0.0f, 0.0f, 0.0f, scaleForFPS(360.0f) * camSpeed, 0.0f);
+        renderer->camera->rotateAround(0.0f, 0.0f, 0.0f, 0.0f, scaleForDelta(360.0f * camSpeed), 0.0f);
         std::cout << renderer->camera->getXPos() << ", " << renderer->camera->getYPos() << ", " << renderer->camera->getZPos() << ", " << std::endl;
     }
 
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        renderer->camera->rotateAround(0.0f, 0.0f, 0.0f, 0.0f, scaleForFPS(-360.0f) * camSpeed, 0.0f);
+        renderer->camera->rotateAround(0.0f, 0.0f, 0.0f, 0.0f, scaleForDelta(-360.0f * camSpeed), 0.0f);
         std::cout << renderer->camera->getXPos() << ", " << renderer->camera->getYPos() << ", " << renderer->camera->getZPos() << ", " << std::endl;
     }
 
@@ -94,7 +95,6 @@ int main() {
 
     std::cout << "Entering main loop..." << std::endl;
     double startDraw;
-    double delta;
     //main render loop
     while (!glfwWindowShouldClose(renderer->getWindow())) {
         startDraw = glfwGetTime();
