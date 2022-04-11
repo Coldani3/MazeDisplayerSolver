@@ -15,7 +15,7 @@ public:
 	static NeuralNetwork load(std::string fileLocation);
 
 private:
-	std::vector<std::unique_ptr<Matrix<float>>> weightsBetweenLayers;
+	std::vector<Matrix<float>> weightsBetweenLayers;
 	float learnRate;
 	std::vector<unsigned int> nodesForLayers;
 };

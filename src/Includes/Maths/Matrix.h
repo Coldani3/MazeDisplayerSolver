@@ -10,6 +10,9 @@ public:
 	int rows;
 	int columns;
 
+	//please don't actually use this constructor, it's just here so I can initialise a vector of these and it won't let me make it private
+	Matrix() {};
+
 	Matrix(int rows, int columns) {
 		matrix = std::vector<std::vector<T>>(rows);
 
@@ -200,5 +203,6 @@ public:
 
 protected:
 	std::vector<std::vector<T>> matrix;
+
 };
 

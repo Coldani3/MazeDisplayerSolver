@@ -9,18 +9,18 @@
 
 //nodesForLayers[0] = input layer nodes
 NeuralNetwork::NeuralNetwork(std::vector<unsigned int> nodesForLayers, float learnRate) {
-	weightsBetweenLayers = std::vector<std::unique_ptr<Matrix<float>>>(nodesForLayers.size());
+	weightsBetweenLayers = std::vector<Matrix<float>>(nodesForLayers.size());
 	this->nodesForLayers = nodesForLayers;
 
 	srand((unsigned)time(0));
 
 	for (int i = 0; i < nodesForLayers.size() - 1; i++) {
-		weightsBetweenLayers[i] = std::make_unique<Matrix<float>>(Matrix<float>(nodesForLayers[i + 1], nodesForLayers[i]));
+		weightsBetweenLayers[i] = Matrix<float>(nodesForLayers[i + 1], nodesForLayers[i]);
 		//TODO: randomise weights
 
-		for (int row = 0; row < weightsBetweenLayers[i]->rows; row++) {
-			for (int col = 0; col < weightsBetweenLayers[i]->columns; col++) {
-				(*weightsBetweenLayers[i])[row][col] = ((float)rand() / (float)(RAND_MAX + 1.0)) - 0.5;
+		for (int row = 0; row < weightsBetweenLayers[i].rows; row++) {
+			for (int col = 0; col < weightsBetweenLayers[i].columns; col++) {
+				weightsBetweenLayers[i][row][col] = ((float)rand() / (float)(RAND_MAX + 1.0)) - 0.5;
 			}
 		}
 	}
@@ -35,10 +35,10 @@ NeuralNetwork::~NeuralNetwork() {
 std::vector<float> NeuralNetwork::query(std::vector<float> inputs) {
 	Matrix<float> inputsMatrix(Matrix<float>::inputArrayToRow(inputs));
 
-	Matrix<float> layerOutput = Matrix<float>::sigmoid(*weightsBetweenLayers[0] * inputsMatrix);
+	Matrix<float> layerOutput = Matrix<float>::sigmoid(weightsBetweenLayers[0] * inputsMatrix);
 
 	for (int i = 1; i < weightsBetweenLayers.size(); i++) {
-		layerOutput = Matrix<float>::sigmoid(*weightsBetweenLayers[i] * layerOutput);
+		layerOutput = Matrix<float>::sigmoid(weightsBetweenLayers[i] * layerOutput);
 	}
 
 	return Matrix<float>::flatten(layerOutput);
@@ -50,12 +50,12 @@ void NeuralNetwork::train(std::vector<float> inputs, std::vector<float> expected
 
 	std::vector<std::unique_ptr<Matrix<float>>> layerOutputs(weightsBetweenLayers.size());
 
-	layerOutputs[0] = std::make_unique<Matrix<float>>(Matrix<float>::sigmoid(*weightsBetweenLayers[0] * inputsMatrix));
+	layerOutputs[0] = std::make_unique<Matrix<float>>(Matrix<float>::sigmoid(weightsBetweenLayers[0] * inputsMatrix));
 
 	//get the outputs for each layer so we can calculate the errors
 	//skip first layer weights
 	for (int i = 1; i < weightsBetweenLayers.size(); i++) {
-		layerOutputs[i] = std::make_unique<Matrix<float>>(Matrix<float>::sigmoid(*weightsBetweenLayers[i] * *layerOutputs[i - 1]));
+		layerOutputs[i] = std::make_unique<Matrix<float>>(Matrix<float>::sigmoid(weightsBetweenLayers[i] * *layerOutputs[i - 1]));
 	}
 
 	Matrix<float> finalOutput = *layerOutputs.back();
@@ -72,30 +72,31 @@ void NeuralNetwork::train(std::vector<float> inputs, std::vector<float> expected
 	  (TODO: should we be using the previous layer's error per layer? this feels like it shouldn't work with matrix multiplication because
 	  sizes and all that)*/
 	for (auto iter = weightsBetweenLayers.end(); iter != weightsBetweenLayers.begin(); iter--) {
-		errorPerLayer[index] = std::make_unique<Matrix<float>>(Matrix<float>::transpose(**iter) * errors);
+		errorPerLayer[index] = std::make_unique<Matrix<float>>(Matrix<float>::transpose(*iter) * errors);
 		index--;
 	}
 
 	Matrix<float> layerErrors = *errorPerLayer.back();
 
 	//+= doesn't work for some reason so we do this instead
-	*weightsBetweenLayers.back() = *weightsBetweenLayers.back() + (learnRate * errors * finalOutput * (1.0 - finalOutput) * Matrix<float>::transpose(*layerOutputs[layerOutputs.size() - 2]));
+	weightsBetweenLayers.back() = weightsBetweenLayers.back() + (learnRate * errors * finalOutput * (1.0 - finalOutput) * Matrix<float>::transpose(*layerOutputs[layerOutputs.size() - 2]));
 
 	for (int i = weightsBetweenLayers.size() - 2; i > 0; i--) {
-		*weightsBetweenLayers[i] = *weightsBetweenLayers[i] + (learnRate * layerErrors * *layerOutputs[i] * (1.0 - *layerOutputs[i]) * Matrix<float>::transpose(*layerOutputs[i - 1]));
+		weightsBetweenLayers[i] = weightsBetweenLayers[i] + (learnRate * layerErrors * *layerOutputs[i] * (1.0 - *layerOutputs[i]) * Matrix<float>::transpose(*layerOutputs[i - 1]));
 		layerErrors = *errorPerLayer[i];
 	}
 
 	//TODO: figure out if we should be using some calculated errors value from a closer to output layer
 	Matrix<float> inputLayerErrors = *errorPerLayer.front();
 
-	*weightsBetweenLayers.front() = *weightsBetweenLayers.front() + (learnRate * inputLayerErrors * *layerOutputs[0] * (1.0 - *layerOutputs[0]) * Matrix<float>::transpose(inputsMatrix));
+	weightsBetweenLayers.front() = weightsBetweenLayers.front() + (learnRate * inputLayerErrors * *layerOutputs[0] * (1.0 - *layerOutputs[0]) * Matrix<float>::transpose(inputsMatrix));
 	//note: for 1.0 - matrix, create new Matrix with defaultValue parameter of 1.0 and same size as matrix and subtract matrix from the 1.0 matrix
 
+	//learn rate * errors of layer above (closer to out) * outputs of layer above * (1.0 - outputs of layer above) * outputs of this layer transposed
 	
 }
 
-// <layersCount> <nodesForLayers (length layersCount)> <layer1Weights (length layersSize 1)> ... <layerNWeights (length layersSize N)> <learnRate>
+// <layersCount> <nodesForLayers (length layersCount)> <learnRate> <layer1Weights (length layersSize 1)> ... <layerNWeights (length layersSize N)>
 void NeuralNetwork::save(std::string fileName) {
 	std::ofstream outStream;
 	outStream.open(fileName);
@@ -106,8 +107,10 @@ void NeuralNetwork::save(std::string fileName) {
 		outStream << (char) nodesForLayers[i];
 	}
 
+	outStream << learnRate;
+
 	for (int i = 0; i < weightsBetweenLayers.size(); i++) {
-		Matrix<float> layer = *weightsBetweenLayers[i];
+		Matrix<float> layer = weightsBetweenLayers[i];
 
 		for (int row = 0; row < layer.rows; row++) {
 			for (int col = 0; col < layer.columns; col++) {
@@ -115,8 +118,6 @@ void NeuralNetwork::save(std::string fileName) {
 			}
 		}
 	}
-
-	outStream << learnRate;
 
 	outStream.close();
 }
@@ -136,13 +137,25 @@ NeuralNetwork NeuralNetwork::load(std::string fileName) {
 		inStream.read((char*) &nodesForLayers[i], sizeof(unsigned int));
 	}
 
-	for (int i = 0; i < nodesForLayers.size(); i++) {
-		for (int j = 0; j < nodesForLayers[i]; j++) {
+	float learnRate;
+	inStream.read((char*)&learnRate, sizeof(float));
 
+	NeuralNetwork out(nodesForLayers, learnRate);
+
+	for (int i = 0; i < out.weightsBetweenLayers.size() - 1; i++) {
+		//int weight = 0;
+
+		//out.weightsBetweenLayers[i] = std::make_unique<Matrix<float>>(Matrix<float>(nodesForLayers[i + 1], nodesForLayers[i]));
+		Matrix<float> matrix = out.weightsBetweenLayers[i];
+
+		for (int row = 0; row < matrix.rows; row++) {
+			for (int col = 0; col < matrix.columns; col++) {
+				inStream.read((char*) &matrix[row][col], sizeof(float));
+			}
 		}
 	}
 
-
-
 	inStream.close();
+
+	return out;
 }
