@@ -5,10 +5,12 @@
 #include <memory>
 #include <random>
 #include <iostream>
+#include <fstream>
 
 //nodesForLayers[0] = input layer nodes
-NeuralNetwork::NeuralNetwork(std::vector<int> nodesForLayers, float learnRate) {
+NeuralNetwork::NeuralNetwork(std::vector<unsigned int> nodesForLayers, float learnRate) {
 	weightsBetweenLayers = std::vector<std::unique_ptr<Matrix<float>>>(nodesForLayers.size());
+	this->nodesForLayers = nodesForLayers;
 
 	srand((unsigned)time(0));
 
@@ -30,7 +32,7 @@ NeuralNetwork::~NeuralNetwork() {
 
 }
 
-std::vector<float> NeuralNetwork::Query(std::vector<float> inputs) {
+std::vector<float> NeuralNetwork::query(std::vector<float> inputs) {
 	Matrix<float> inputsMatrix(Matrix<float>::inputArrayToRow(inputs));
 
 	Matrix<float> layerOutput = Matrix<float>::sigmoid(*weightsBetweenLayers[0] * inputsMatrix);
@@ -42,7 +44,7 @@ std::vector<float> NeuralNetwork::Query(std::vector<float> inputs) {
 	return Matrix<float>::flatten(layerOutput);
 }
 
-void NeuralNetwork::Train(std::vector<float> inputs, std::vector<float> expected) {
+void NeuralNetwork::train(std::vector<float> inputs, std::vector<float> expected) {
 	Matrix<float> inputsMatrix(Matrix<float>::inputArrayToRow(inputs));
 	Matrix<float> targetdOutputsMatrix(Matrix<float>::inputArrayToRow(expected));
 
@@ -91,4 +93,56 @@ void NeuralNetwork::Train(std::vector<float> inputs, std::vector<float> expected
 	//note: for 1.0 - matrix, create new Matrix with defaultValue parameter of 1.0 and same size as matrix and subtract matrix from the 1.0 matrix
 
 	
+}
+
+// <layersCount> <nodesForLayers (length layersCount)> <layer1Weights (length layersSize 1)> ... <layerNWeights (length layersSize N)> <learnRate>
+void NeuralNetwork::save(std::string fileName) {
+	std::ofstream outStream;
+	outStream.open(fileName);
+
+	outStream << (char)nodesForLayers.size();
+
+	for (int i = 0; i < nodesForLayers.size(); i++) {
+		outStream << (char) nodesForLayers[i];
+	}
+
+	for (int i = 0; i < weightsBetweenLayers.size(); i++) {
+		Matrix<float> layer = *weightsBetweenLayers[i];
+
+		for (int row = 0; row < layer.rows; row++) {
+			for (int col = 0; col < layer.columns; col++) {
+				outStream << layer[row][col];
+			}
+		}
+	}
+
+	outStream << learnRate;
+
+	outStream.close();
+}
+
+NeuralNetwork NeuralNetwork::load(std::string fileName) {
+	std::ifstream inStream;
+	inStream.open(fileName);
+	char currentChar;
+	char* readBytes;
+	inStream.get(currentChar);
+
+	int layers = currentChar;
+
+	std::vector<unsigned int> nodesForLayers = std::vector<unsigned int>(layers);
+
+	for (int i = 0; i < layers; i++) {
+		inStream.read((char*) &nodesForLayers[i], sizeof(unsigned int));
+	}
+
+	for (int i = 0; i < nodesForLayers.size(); i++) {
+		for (int j = 0; j < nodesForLayers[i]; j++) {
+
+		}
+	}
+
+
+
+	inStream.close();
 }
