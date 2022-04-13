@@ -28,6 +28,7 @@ public:
 	std::vector<int> mazeExit;
 	std::vector<int> sizes;
 
+	Maze();
 	Maze(std::vector<int> dimensions);
 	~Maze();
 	void loadFromFile(std::string fileName);
@@ -44,4 +45,5 @@ public:
 
 	unsigned char getCell(std::vector<int> coordinates) const;
 	void setCell(std::vector<int> coordinates, char to);
+	unsigned int getSize();
 };

@@ -239,3 +239,13 @@ void Maze::loadFromFile(std::string fileName) {
 
 	inFile.close();
 }
+
+unsigned int Maze::getSize() {
+	unsigned int total = 1;
+
+	for (int i = 0; i < sizes.size(); i++) {
+		total *= sizes[i];
+	}
+
+	return total;
+}
