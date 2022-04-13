@@ -21,7 +21,7 @@ public:
 	void drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ = 0, int mazeW = 0);
 	void setWViewing(int w);
 	std::unique_ptr<Camera> getCamera();
-	glm::mat4 mazeCellPathTransform(float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ);
+	glm::mat4 mazeCellPathTransform(glm::vec3 initialCoords, float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ);
 	glm::mat4 getViewMatrixFromCamera();
 
 	glm::mat4 projection;

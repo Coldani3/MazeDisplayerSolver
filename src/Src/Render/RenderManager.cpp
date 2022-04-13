@@ -89,69 +89,75 @@ float cubeVerticesNormals[] = {
 };
 
 float mazePathVertices[] = {
-    0.0625, 0.0625, 0.4125, //0
-    0.0625, 0.0625, -0.4125, //1
-    0.0625, -0.0625, 0.4125, //2
-    0.0625, -0.0625, -0.4125, //3
-    -0.0625, 0.0625, 0.4125, //4
-    -0.0625, 0.0625, -0.4125, //5
-    -0.0625, -0.0625, 0.4125, //6
-    -0.0625, -0.0625, -0.4125 //7
+    0.0625, 0.0625, 0.1625, //0
+    0.0625, 0.0625, -0.1625, //1
+    0.0625, -0.0625, 0.1625, //2
+    0.0625, -0.0625, -0.1625, //3
+    -0.0625, 0.0625, 0.1625, //4
+    -0.0625, 0.0625, -0.1625, //5
+    -0.0625, -0.0625, 0.1625, //6
+    -0.0625, -0.0625, -0.1625 //7
 };
 
+//0.175 = half of cube
+//0.175 * 2 for top and bottom of division = 0.35
+//1 - 0.35 = 0.65 = length of path in total
+//0.65 / 2 = 0.325 = length of each individual path piece
+//0.325 / 2 = 0.1625
 float mazePathVerticesNormals[] = {
     //right
-    0.0625, 0.0625, 0.4125, 1.0, 0.0, 0.0,
-    0.0625, 0.0625, -0.4125, 1.0, 0.0, 0.0,
-    0.0625, -0.0625, -0.4125, 1.0, 0.0, 0.0,
-    0.0625, 0.0625, 0.4125, 1.0, 0.0, 0.0,
-    0.0625, -0.0625, -0.4125, 1.0, 0.0, 0.0,
-    0.0625, -0.0625, 0.4125, 1.0, 0.0, 0.0,
+    0.0625, 0.0625, 0.1625, 1.0, 0.0, 0.0,
+    0.0625, 0.0625, -0.1625, 1.0, 0.0, 0.0,
+    0.0625, -0.0625, -0.1625, 1.0, 0.0, 0.0,
+    0.0625, 0.0625, 0.1625, 1.0, 0.0, 0.0,
+    0.0625, -0.0625, -0.1625, 1.0, 0.0, 0.0,
+    0.0625, -0.0625, 0.1625, 1.0, 0.0, 0.0,
     //front
-    0.0625, 0.0625, 0.4125, 0.0, 0.0, -1.0,
-    -0.0625, 0.0625, 0.4125, 0.0, 0.0, -1.0,
-    -0.0625, -0.0625, 0.4125, 0.0, 0.0, -1.0,
-    0.0625, 0.0625, 0.4125, 0.0, 0.0, -1.0,
-    -0.0625, -0.0625, 0.4125, 0.0, 0.0, -1.0,
-    0.0625, -0.0625, 0.4125, 0.0, 0.0, -1.0,
+    0.0625, 0.0625, 0.1625, 0.0, 0.0, -1.0,
+    -0.0625, 0.0625, 0.1625, 0.0, 0.0, -1.0,
+    -0.0625, -0.0625, 0.1625, 0.0, 0.0, -1.0,
+    0.0625, 0.0625, 0.1625, 0.0, 0.0, -1.0,
+    -0.0625, -0.0625, 0.1625, 0.0, 0.0, -1.0,
+    0.0625, -0.0625, 0.1625, 0.0, 0.0, -1.0,
     //top
-    0.0625, 0.0625, 0.4125, 0.0, 1.0, 0.0,
-    -0.0625, 0.0625, -0.4125, 0.0, 1.0, 0.0,
-    0.0625, 0.0625, -0.4125, 0.0, 1.0, 0.0,
-    0.0625, 0.0625, 0.4125, 0.0, 1.0, 0.0,
-    -0.0625, 0.0625, 0.4125, 0.0, 1.0, 0.0,
-    -0.0625, 0.0625, -0.4125, 0.0, 1.0, 0.0,
+    0.0625, 0.0625, 0.1625, 0.0, 1.0, 0.0,
+    -0.0625, 0.0625, -0.1625, 0.0, 1.0, 0.0,
+    0.0625, 0.0625, -0.1625, 0.0, 1.0, 0.0,
+    0.0625, 0.0625, 0.1625, 0.0, 1.0, 0.0,
+    -0.0625, 0.0625, 0.1625, 0.0, 1.0, 0.0,
+    -0.0625, 0.0625, -0.1625, 0.0, 1.0, 0.0,
     //bottom
-    0.0625, -0.0625, 0.4125, 0.0, -1.0, 0.0,
-    -0.0625, -0.0625, 0.4125, 0.0, -1.0, 0.0,
-    -0.0625, -0.0625, -0.4125, 0.0, -1.0, 0.0,
-    0.0625, -0.0625, 0.4125, 0.0, -1.0, 0.0,
-    -0.0625, -0.0625, -0.4125, 0.0, -1.0, 0.0,
-    0.0625, -0.0625, -0.4125, 0.0, -1.0, 0.0,
+    0.0625, -0.0625, 0.1625, 0.0, -1.0, 0.0,
+    -0.0625, -0.0625, 0.1625, 0.0, -1.0, 0.0,
+    -0.0625, -0.0625, -0.1625, 0.0, -1.0, 0.0,
+    0.0625, -0.0625, 0.1625, 0.0, -1.0, 0.0,
+    -0.0625, -0.0625, -0.1625, 0.0, -1.0, 0.0,
+    0.0625, -0.0625, -0.1625, 0.0, -1.0, 0.0,
     //back
-    0.0625, -0.0625, -0.4125, 0.0, 0.0, 1.0,
-    -0.0625, 0.0625, -0.4125, 0.0, 0.0, 1.0,
-    -0.0625, -0.0625, -0.4125, 0.0, 0.0, 1.0,
-    0.0625, -0.0625, -0.4125, 0.0, 0.0, 1.0,
-    0.0625, 0.0625, -0.4125, 0.0, 0.0, 1.0,
-    -0.0625, 0.0625, -0.4125, 0.0, 0.0, 1.0,
+    0.0625, -0.0625, -0.1625, 0.0, 0.0, 1.0,
+    -0.0625, 0.0625, -0.1625, 0.0, 0.0, 1.0,
+    -0.0625, -0.0625, -0.1625, 0.0, 0.0, 1.0,
+    0.0625, -0.0625, -0.1625, 0.0, 0.0, 1.0,
+    0.0625, 0.0625, -0.1625, 0.0, 0.0, 1.0,
+    -0.0625, 0.0625, -0.1625, 0.0, 0.0, 1.0,
     //left
-    -0.0625, -0.0625, 0.4125, -1.0, 0.0, 0.0,
-    -0.0625, -0.0625, -0.4125, -1.0, 0.0, 0.0,
-    -0.0625, 0.0625, -0.4125, -1.0, 0.0, 0.0,
-    -0.0625, -0.0625, 0.4125, -1.0, 0.0, 0.0,
-    -0.0625, 0.0625, -0.4125, -1.0, 0.0, 0.0,
-    -0.0625, 0.0625, 0.4125, -1.0, 0.0, 0.0
+    -0.0625, -0.0625, 0.1625, -1.0, 0.0, 0.0,
+    -0.0625, -0.0625, -0.1625, -1.0, 0.0, 0.0,
+    -0.0625, 0.0625, -0.1625, -1.0, 0.0, 0.0,
+    -0.0625, -0.0625, 0.1625, -1.0, 0.0, 0.0,
+    -0.0625, 0.0625, -0.1625, -1.0, 0.0, 0.0,
+    -0.0625, 0.0625, 0.1625, -1.0, 0.0, 0.0
 };
 
 //xRot, yRot, xTrans, yTrans, zTrans - front = 0 deg
+//0.175 + 0.1625 = 0.3375
 std::vector<std::vector<float>> cellPathTransformations = {
-    {0.0f, 90.0f, 0.0f, 0.5f, 0.0f}, //up
-    {0.0f, -90.0f, 0.0f, -0.5f, 0.0f}, //down
-    {90.0f, 0.0f, 0.5f, 0.0f, 0.0f}, //right
-    {270.0f, 0.0f, -0.5f, 0.0f, 0.0f}, //left
-    {0.0f, 0.0f, 0.0f, 0.0f, -0.5f}, //front
-    {180.0f, 0.0f, 0.0f, 0.0f, 0.5f}  //back
+    {0.0f, 90.0f, 0.0f, 0.3375f, 0.0f}, //up
+    {0.0f, -90.0f, 0.0f, -0.3375f, 0.0f}, //down
+    {90.0f, 0.0f, 0.3375f, 0.0f, 0.0f}, //right
+    {270.0f, 0.0f, -0.3375f, 0.0f, 0.0f}, //left
+    {0.0f, 0.0f, 0.0f, 0.0f, -0.3375f}, //front
+    {180.0f, 0.0f, 0.0f, 0.0f, 0.3375f}  //back
 };
 
 float centerX = 500;
@@ -255,13 +261,17 @@ glm::mat4 RenderManager::getViewMatrixFromCamera() {
 }
 
 //translate is always last so we do that after this
-glm::mat4 RenderManager::mazeCellPathTransform(float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ) {
+glm::mat4 RenderManager::mazeCellPathTransform(glm::vec3 initialCoords, float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ) {
     glm::mat4 identity = glm::mat4(1.0f);
+
+    glm::mat4 toOrigin = glm::translate(identity, -initialCoords);
+    glm::mat4 andBack = glm::translate(identity, initialCoords);
+
     glm::mat4 rotateY = glm::rotate(identity, glm::radians(rotateAngleY), glm::vec3(1.0f, 0.0f, 0.0f));
     glm::mat4 rotateX = glm::rotate(identity, glm::radians(rotateAngleX), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 translate = glm::translate(identity, glm::vec3(translateX, translateY, translateZ));
 
-    return translate * rotateX * rotateY;
+    return andBack * translate * rotateX * rotateY * toOrigin;
 }
 
 void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
@@ -321,7 +331,7 @@ void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int
 
             if (i < 6 && (mazeCellData & bitChecking) > 0) {
                 std::vector<float> transformation = cellPathTransformations[i];
-                glm::mat4 model = mazeCellPathTransform(transformation[0], transformation[1], transformation[2], transformation[3], transformation[4]) * initialTranslate;
+                glm::mat4 model = mazeCellPathTransform(coords, transformation[0], transformation[1], transformation[2], transformation[3], transformation[4]) * initialTranslate;
                 
                 //TODO: move all matrix multiplications into the shaders?
                 glUniformMatrix4fv(glGetUniformLocation(genericCubeProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
@@ -444,7 +454,9 @@ void RenderManager::draw() {
             }
         }
     }
-    drawMazeCellPaths(1, 0, 0, 0, 0);
+    drawMazeCellPaths(63, 0, 0, 0, 0);
+    drawMazeCellPaths(63, 1, 0, 0, 0);
+    drawMazeCellPaths(63, 0, 0, 1, 0);
     //drawMazeCellCenter(1, 1, 1, 0);
 }
 #pragma endregion
