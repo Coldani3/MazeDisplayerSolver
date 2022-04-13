@@ -108,7 +108,7 @@ void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float 
 	yLookingAt = yPos;
 	zLookingAt = zPos;
 
-	std::cout << xPosition << "," << yPosition << "," << zPosition << std::endl;
+	//std::cout << xPosition << "," << yPosition << "," << zPosition << std::endl;
 }
 
 void Camera::zoom(float magnitude) {
