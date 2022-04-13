@@ -8,12 +8,19 @@ Camera::Camera(float xPos, float yPos, float zPos) : Camera(xPos, yPos, zPos, 0.
 }
 
 Camera::Camera(float xPos, float yPos, float zPos, float xLookingAt, float yLookingAt, float zLookingAt) {
-	this->xPosition = xPos;
-	this->yPosition = yPos;
-	this->zPosition = zPos;
+	xPosition = xPos;
+	yPosition = yPos;
+	zPosition = zPos;
 	this->xLookingAt = xLookingAt;
 	this->yLookingAt = yLookingAt;
 	this->zLookingAt = zLookingAt;
+
+	defaultXLookingAt = xLookingAt;
+	defaultYLookingAt = yLookingAt;
+	defaultZLookingAt = zLookingAt;
+	defaultXPosition = xPos;
+	defaultYPosition = yPos;
+	defaultZPosition = zPos;
 }
 
 Camera::~Camera() {
@@ -78,8 +85,10 @@ void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float 
 
 	glm::mat4 translateToOrigin = glm::translate(identity, -aroundVec);
 	glm::mat4 translateBack = glm::translate(identity, aroundVec);
-	glm::mat4 rotateY = glm::rotate(identity, glm::radians(yRot), glm::vec3(0.0, 1.0, 0.0));
-	glm::mat4 rotateX = glm::rotate(identity, glm::radians(xRot), glm::vec3(1.0, 0.0, 0.0));
+	//remember that rotating on an axis does not mean rotating around the center of that plane -
+	//it rotates around the axis itself like a spiral staircase
+	glm::mat4 rotateY = glm::rotate(identity, glm::radians(yRot), glm::vec3(1.0, 0.0, 0.0));
+	glm::mat4 rotateX = glm::rotate(identity, glm::radians(xRot), glm::vec3(0.0, 1.0, 0.0));
 	glm::mat4 rotateZ = glm::rotate(identity, glm::radians(zRot), glm::vec3(0.0, 0.0, 1.0));
 
 	//YXZ to reduce gimbal lock
@@ -87,9 +96,9 @@ void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float 
 	//translate to origin, rotate, then translate back
 	glm::vec3 out = translateBack * rotate * translateToOrigin * glm::vec4(camVec, 1.0);
 
-	while (glm::dot(glm::normalize(out), glm::normalize(aroundVec)) > 0.9) {
+	/*while (glm::dot(glm::normalize(out), glm::normalize(aroundVec)) > 0.9) {
 		out = glm::vec4(out, 1.0) * glm::rotate(identity, glm::radians(1.0f), glm::vec3(0.0, 1.0, 0.0));
-	}
+	}*/
 
 	xPosition = out.x;
 	yPosition = out.y;
@@ -99,7 +108,7 @@ void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float 
 	yLookingAt = yPos;
 	zLookingAt = zPos;
 
-	//std::cout << distance << std::endl;
+	std::cout << xPosition << "," << yPosition << "," << zPosition << std::endl;
 }
 
 void Camera::zoom(float magnitude) {
@@ -113,4 +122,9 @@ void Camera::zoom(float magnitude) {
 	xPosition = newCamPos.x;
 	yPosition = newCamPos.y;
 	zPosition = newCamPos.z;
+}
+
+void Camera::reset() {
+	moveTo(defaultXPosition, defaultYPosition, defaultZPosition);
+	lookAt(defaultXLookingAt, defaultYLookingAt, defaultZLookingAt);
 }

@@ -89,59 +89,59 @@ float cubeVerticesNormals[] = {
 };
 
 float mazePathVertices[] = {
-    0.125, 0.125, 0.4125, //0
-    0.125, 0.125, -0.4125, //1
-    0.125, -0.125, 0.4125, //2
-    0.125, -0.125, -0.4125, //3
-    -0.125, 0.125, 0.4125, //4
-    -0.125, 0.125, -0.4125, //5
-    -0.125, -0.125, 0.4125, //6
-    -0.125, -0.125, -0.4125 //7
+    0.0625, 0.0625, 0.4125, //0
+    0.0625, 0.0625, -0.4125, //1
+    0.0625, -0.0625, 0.4125, //2
+    0.0625, -0.0625, -0.4125, //3
+    -0.0625, 0.0625, 0.4125, //4
+    -0.0625, 0.0625, -0.4125, //5
+    -0.0625, -0.0625, 0.4125, //6
+    -0.0625, -0.0625, -0.4125 //7
 };
 
 float mazePathVerticesNormals[] = {
     //right
-    0.125, 0.125, 0.4125, 1.0, 0.0, 0.0,
-    0.125, 0.125, -0.4125, 1.0, 0.0, 0.0,
-    0.125, -0.125, -0.4125, 1.0, 0.0, 0.0,
-    0.125, 0.125, 0.4125, 1.0, 0.0, 0.0,
-    0.125, -0.125, -0.4125, 1.0, 0.0, 0.0,
-    0.125, -0.125, 0.4125, 1.0, 0.0, 0.0,
+    0.0625, 0.0625, 0.4125, 1.0, 0.0, 0.0,
+    0.0625, 0.0625, -0.4125, 1.0, 0.0, 0.0,
+    0.0625, -0.0625, -0.4125, 1.0, 0.0, 0.0,
+    0.0625, 0.0625, 0.4125, 1.0, 0.0, 0.0,
+    0.0625, -0.0625, -0.4125, 1.0, 0.0, 0.0,
+    0.0625, -0.0625, 0.4125, 1.0, 0.0, 0.0,
     //front
-    0.125, 0.125, 0.4125, 0.0, 0.0, -1.0,
-    -0.125, 0.125, 0.4125, 0.0, 0.0, -1.0,
-    -0.125, -0.125, 0.4125, 0.0, 0.0, -1.0,
-    0.125, 0.125, 0.4125, 0.0, 0.0, -1.0,
-    -0.125, -0.125, 0.4125, 0.0, 0.0, -1.0,
-    0.125, -0.125, 0.4125, 0.0, 0.0, -1.0,
+    0.0625, 0.0625, 0.4125, 0.0, 0.0, -1.0,
+    -0.0625, 0.0625, 0.4125, 0.0, 0.0, -1.0,
+    -0.0625, -0.0625, 0.4125, 0.0, 0.0, -1.0,
+    0.0625, 0.0625, 0.4125, 0.0, 0.0, -1.0,
+    -0.0625, -0.0625, 0.4125, 0.0, 0.0, -1.0,
+    0.0625, -0.0625, 0.4125, 0.0, 0.0, -1.0,
     //top
-    0.125, 0.125, 0.4125, 0.0, 1.0, 0.0,
-    -0.125, 0.125, -0.4125, 0.0, 1.0, 0.0,
-    0.125, 0.125, -0.4125, 0.0, 1.0, 0.0,
-    0.125, 0.125, 0.4125, 0.0, 1.0, 0.0,
-    -0.125, 0.125, 0.4125, 0.0, 1.0, 0.0,
-    -0.125, 0.125, -0.4125, 0.0, 1.0, 0.0,
+    0.0625, 0.0625, 0.4125, 0.0, 1.0, 0.0,
+    -0.0625, 0.0625, -0.4125, 0.0, 1.0, 0.0,
+    0.0625, 0.0625, -0.4125, 0.0, 1.0, 0.0,
+    0.0625, 0.0625, 0.4125, 0.0, 1.0, 0.0,
+    -0.0625, 0.0625, 0.4125, 0.0, 1.0, 0.0,
+    -0.0625, 0.0625, -0.4125, 0.0, 1.0, 0.0,
     //bottom
-    0.125, -0.125, 0.4125, 0.0, -1.0, 0.0,
-    -0.125, -0.125, 0.4125, 0.0, -1.0, 0.0,
-    -0.125, -0.125, -0.4125, 0.0, -1.0, 0.0,
-    0.125, -0.125, 0.4125, 0.0, -1.0, 0.0,
-    -0.125, -0.125, -0.4125, 0.0, -1.0, 0.0,
-    0.125, -0.125, -0.4125, 0.0, -1.0, 0.0,
+    0.0625, -0.0625, 0.4125, 0.0, -1.0, 0.0,
+    -0.0625, -0.0625, 0.4125, 0.0, -1.0, 0.0,
+    -0.0625, -0.0625, -0.4125, 0.0, -1.0, 0.0,
+    0.0625, -0.0625, 0.4125, 0.0, -1.0, 0.0,
+    -0.0625, -0.0625, -0.4125, 0.0, -1.0, 0.0,
+    0.0625, -0.0625, -0.4125, 0.0, -1.0, 0.0,
     //back
-    0.125, -0.125, -0.4125, 0.0, 0.0, 1.0,
-    -0.125, 0.125, -0.4125, 0.0, 0.0, 1.0,
-    -0.125, -0.125, -0.4125, 0.0, 0.0, 1.0,
-    0.125, -0.125, -0.4125, 0.0, 0.0, 1.0,
-    0.125, 0.125, -0.4125, 0.0, 0.0, 1.0,
-    -0.125, 0.125, -0.4125, 0.0, 0.0, 1.0,
+    0.0625, -0.0625, -0.4125, 0.0, 0.0, 1.0,
+    -0.0625, 0.0625, -0.4125, 0.0, 0.0, 1.0,
+    -0.0625, -0.0625, -0.4125, 0.0, 0.0, 1.0,
+    0.0625, -0.0625, -0.4125, 0.0, 0.0, 1.0,
+    0.0625, 0.0625, -0.4125, 0.0, 0.0, 1.0,
+    -0.0625, 0.0625, -0.4125, 0.0, 0.0, 1.0,
     //left
-    -0.125, -0.125, 0.4125, -1.0, 0.0, 0.0,
-    -0.125, -0.125, -0.4125, -1.0, 0.0, 0.0,
-    -0.125, 0.125, -0.4125, -1.0, 0.0, 0.0,
-    -0.125, -0.125, 0.4125, -1.0, 0.0, 0.0,
-    -0.125, 0.125, -0.4125, -1.0, 0.0, 0.0,
-    -0.125, 0.125, 0.4125, -1.0, 0.0, 0.0
+    -0.0625, -0.0625, 0.4125, -1.0, 0.0, 0.0,
+    -0.0625, -0.0625, -0.4125, -1.0, 0.0, 0.0,
+    -0.0625, 0.0625, -0.4125, -1.0, 0.0, 0.0,
+    -0.0625, -0.0625, 0.4125, -1.0, 0.0, 0.0,
+    -0.0625, 0.0625, -0.4125, -1.0, 0.0, 0.0,
+    -0.0625, 0.0625, 0.4125, -1.0, 0.0, 0.0
 };
 
 //xRot, yRot, xTrans, yTrans, zTrans - front = 0 deg
@@ -153,6 +153,10 @@ std::vector<std::vector<float>> cellPathTransformations = {
     {0.0f, 0.0f, 0.0f, 0.0f, -0.5f}, //front
     {180.0f, 0.0f, 0.0f, 0.0f, 0.5f}  //back
 };
+
+float centerX = 500;
+float centerY = 500;
+float centerZ = 500;
 
 #pragma endregion
 
@@ -206,7 +210,7 @@ RenderManager::RenderManager(int width, int height) {
     this->height = height;
 
     projection = glm::perspective(glm::radians(45.0f), (float) this->width / (float) this->height, 0.1f, 100.0f);
-    camera = std::make_unique<Camera>(Camera(0.0f, 0.0f, -5.0f));
+    camera = std::make_unique<Camera>(Camera(centerX, centerY, centerZ + -15.0f, centerX, centerY, centerZ));
 }
 
 RenderManager::~RenderManager() {
@@ -215,10 +219,6 @@ RenderManager::~RenderManager() {
     //I think openGL deletes these automatically but it's better to be safe than sorry
     glDeleteProgram(genericCubeProgram);
     glDeleteProgram(cellCenterProgram);
-
-    /*delete[] cuboidIndices;
-    delete[] cubeVertices;
-    delete[] mazePathVertices;*/
 
     std::cout << "Renderer Cleanup done." << std::endl;
 }
@@ -246,33 +246,29 @@ void RenderManager::setWViewing(int w) {
 }
 
 glm::mat4 RenderManager::getViewMatrixFromCamera() {
-    //TODO: translate and rotate based on camera position
-    //remember that +Z is towards the camera, not away
+    glm::vec3 camPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());
+    glm::vec3 lookingAtPos = glm::vec3(camera->getXLookingAt(), camera->getYLookingAt(), camera->getZLookingAt());
 
+    glm::mat4 lookAtMat = glm::lookAt(camPos, lookingAtPos, glm::vec3(0.0f, 1.0f, 0.0f));
 
-    //glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos()));
-    ////yxz to minimise chance of gimbal lock.
-    //glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), glm::radians(camera->getYRotation()), glm::vec3(0, 1.0f, 0));
-    //rotate = glm::rotate(rotate, glm::radians(camera->getXRotation()), glm::vec3(1.0f, 0, 0));
-    //rotate = glm::rotate(rotate, glm::radians(camera->getZRotation()), glm::vec3(0, 0, 1.0f));
-
-    return glm::lookAt(glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos()), glm::vec3(camera->getXLookingAt(), camera->getYLookingAt(), camera->getZLookingAt()), glm::vec3(0.0f, 1.0f, 0.0f));
+    return lookAtMat;
 }
 
 //translate is always last so we do that after this
 glm::mat4 RenderManager::mazeCellPathTransform(float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ) {
-    glm::mat4 matrix = glm::rotate(glm::mat4(1.0f), glm::radians(rotateAngleY), glm::vec3(0.0f, 1.0f, 0.0f));
-    matrix = glm::rotate(matrix, glm::radians(rotateAngleX), glm::vec3(1.0f, 0.0f, 0.0f));
-    matrix = glm::translate(matrix, glm::vec3(translateX, translateY, translateZ));
+    glm::mat4 identity = glm::mat4(1.0f);
+    glm::mat4 rotateY = glm::rotate(identity, glm::radians(rotateAngleY), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::mat4 rotateX = glm::rotate(identity, glm::radians(rotateAngleX), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 translate = glm::translate(identity, glm::vec3(translateX, translateY, translateZ));
 
-    return matrix;
+    return translate * rotateX * rotateY;
 }
 
 void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
     
     if (mazeW == currentW) {
         //TODO: store these vecs in a lookup buffer to save performance and memory
-        glm::vec3 coords = glm::vec3(mazeX, mazeY, mazeZ);
+        glm::vec3 coords = glm::vec3(mazeX + centerX, mazeY + centerY, mazeZ + centerZ);
         glm::mat4 model = translateModel(coords);
         glm::mat4 view = /*glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f));*/ getViewMatrixFromCamera();
 
@@ -300,7 +296,7 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
 
 void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW) {
     if (mazeW == currentW) {
-        glm::vec3 coords = glm::vec3(mazeX, mazeY, mazeZ);
+        glm::vec3 coords = glm::vec3(mazeX + centerX, mazeY + centerY, mazeZ + centerZ);
         //translation to get it to the same coords as the center piece, from which we then translate it again into the proper position
         glm::mat4 initialTranslate = translateModel(coords);
         glm::mat4 view = getViewMatrixFromCamera();
@@ -448,7 +444,7 @@ void RenderManager::draw() {
             }
         }
     }
-    drawMazeCellPaths(3, 0, 0, 0, 0);
+    drawMazeCellPaths(1, 0, 0, 0, 0);
     //drawMazeCellCenter(1, 1, 1, 0);
 }
 #pragma endregion

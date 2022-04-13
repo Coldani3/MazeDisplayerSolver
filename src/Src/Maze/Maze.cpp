@@ -88,6 +88,7 @@ Maze::~Maze() {
 	
 }
 
+//man I really want to go back and change the file format but eh
 void Maze::loadFromFile(std::string fileName) {
 	std::ifstream inFile;
 

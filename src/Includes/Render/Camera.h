@@ -4,6 +4,8 @@ class Camera
 private:
 	float xPosition, yPosition, zPosition;
 	float xLookingAt, yLookingAt, zLookingAt;
+	float defaultXLookingAt, defaultYLookingAt, defaultZLookingAt;
+	float defaultXPosition, defaultYPosition, defaultZPosition;
 public:
 	Camera(float xPos, float yPos, float zPos);
 	Camera(float xPos, float yPos, float zPos, float xLookingAt, float yLookingAt, float zLookingAt);
@@ -33,5 +35,6 @@ public:
 	void rotateAround(float xPos, float yPos, float zPos, float xRot, float yRot, float zRot);
 	//Where magnitude is how far along in GL units you move along the path between you and what the camera is set to look at
 	void zoom(float magnitude);
+	void reset();
 };
 

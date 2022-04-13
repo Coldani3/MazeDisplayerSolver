@@ -122,6 +122,7 @@ void NeuralNetwork::save(std::string fileName) {
 	outStream.close();
 }
 
+//man isn't this just so much more sane than that string split nonsense
 NeuralNetwork NeuralNetwork::load(std::string fileName) {
 	std::ifstream inStream;
 	inStream.open(fileName);
@@ -143,9 +144,6 @@ NeuralNetwork NeuralNetwork::load(std::string fileName) {
 	NeuralNetwork out(nodesForLayers, learnRate);
 
 	for (int i = 0; i < out.weightsBetweenLayers.size() - 1; i++) {
-		//int weight = 0;
-
-		//out.weightsBetweenLayers[i] = std::make_unique<Matrix<float>>(Matrix<float>(nodesForLayers[i + 1], nodesForLayers[i]));
 		Matrix<float> matrix = out.weightsBetweenLayers[i];
 
 		for (int row = 0; row < matrix.rows; row++) {
