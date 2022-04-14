@@ -8,7 +8,8 @@
 
 struct NetworksConfiguration {
     int layers;
-    std::vector<int> nodesPerLayer;
+    float defaultLearnRate;
+    std::vector<unsigned int> nodesPerLayer;
     std::vector<NeuralNetwork> activeNetworks;
     std::vector<float> networksSuccesses;
 };
@@ -21,6 +22,7 @@ public:
     ~NeuralNetworkSolver();
     void solve();
     std::map<NeuralNetwork, float> getSuccessOfNetworks();
+    std::vector<NeuralNetwork> getAllNetworks();
 
 private:
     Maze mazeSolving;
