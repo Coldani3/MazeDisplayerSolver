@@ -351,7 +351,7 @@ void RenderManager::setup() {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
 
     //create shaders
     std::cout << "Initialising Shaders..." << std::endl;

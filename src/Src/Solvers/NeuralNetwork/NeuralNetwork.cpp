@@ -7,6 +7,10 @@
 #include <iostream>
 #include <fstream>
 
+NeuralNetwork::NeuralNetwork()
+{
+}
+
 //nodesForLayers[0] = input layer nodes
 NeuralNetwork::NeuralNetwork(std::vector<unsigned int> nodesForLayers, float learnRate) {
 	weightsBetweenLayers = std::vector<Matrix<float>>(nodesForLayers.size());
@@ -93,7 +97,6 @@ void NeuralNetwork::train(std::vector<float> inputs, std::vector<float> expected
 	//note: for 1.0 - matrix, create new Matrix with defaultValue parameter of 1.0 and same size as matrix and subtract matrix from the 1.0 matrix
 
 	//learn rate * errors of layer above (closer to out) * outputs of layer above * (1.0 - outputs of layer above) * outputs of this layer transposed
-	
 }
 
 // <layersCount> <nodesForLayers (length layersCount)> <learnRate> <layer1Weights (length layersSize 1)> ... <layerNWeights (length layersSize N)>
@@ -154,6 +157,17 @@ NeuralNetwork NeuralNetwork::load(std::string fileName) {
 	}
 
 	inStream.close();
+
+	return out;
+}
+
+std::vector<int> NeuralNetwork::normalize(std::vector<float> output)
+{
+	std::vector<int> out(output.size());
+
+	for (int i = 0; i < output.size(); i++) {
+		out.push_back((int)roundf(output[i]));
+	}
 
 	return out;
 }

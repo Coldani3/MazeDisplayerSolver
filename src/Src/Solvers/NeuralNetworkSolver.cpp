@@ -37,10 +37,19 @@ void NeuralNetworkSolver::solve() {
 			distances.push_back(mazeSolving.sizes[i] - positionsOfNetworks[train][i]);
 		}
 
+		//collect logs of initial networks movements, using the most successful movement paths as training data for future iterations
+		//alternatively precalculate all paths to the exit and use that as training data, and cache this for subsequent runs
+		//calculate the paths as a tree?
+
+		//use maze exit as expected???
 		//urgh gotta change the entire neuralnetwork to somehow work with mazes
-		allNetworks[train].train()
+		//allNetworks[train].train();
 	}
 	//train for trainsPerCycle times
+}
+
+void NeuralNetworkSolver::train(std::vector<int> startCoords, NeuralNetwork network) {
+
 }
 
 std::map<NeuralNetwork, float> NeuralNetworkSolver::getSuccessOfNetworks() {
@@ -66,6 +75,18 @@ std::vector<NeuralNetwork> NeuralNetworkSolver::getAllNetworks() {
 	return out;
 }
 
+float NeuralNetworkSolver::getSuccess(std::vector<int> finalCoords, int steps) {
+	float distance = 0.0f;
+
+	for (int i = 0; i < finalCoords.size(); i++) {
+		distance += pow(abs(mazeSolving.mazeExit[i] - finalCoords[i]), 2);
+	}
+
+	distance = sqrt(distance);
+
+	return distance;
+}
+
 void NeuralNetworkSolver::setupNetworks() {
 	for (int layer = 0; layer < maxLayersPerNetwork - minLayers; layer++) {
 
@@ -75,10 +96,8 @@ void NeuralNetworkSolver::setupNetworks() {
 			config.activeNetworks = std::vector<NeuralNetwork>(networksPerGroup);
 			config.nodesPerLayer = std::vector<unsigned int>(config.layers);
 
-			//distance to walls (2 * 4) + each direction available to it (8) + its current location (4)
-			config.nodesPerLayer[0] = 20; //(2 * 4) + 8 + 4;
-			//total maze + each direction available to it at any given time + its current location
-			//config.nodesPerLayer[0] = mazeSolving.getSize() + 8 + 4;
+			//each direction available to it (8) + its current location (4)
+			config.nodesPerLayer[0] = 12; //8 + 4;
 			//4D coordinate change
 			config.nodesPerLayer.back() = 4;
 
@@ -93,4 +112,49 @@ void NeuralNetworkSolver::setupNetworks() {
 			networkConfigurations.push_back(config);
 		}
 	}
+}
+
+std::vector<float> NeuralNetworkSolver::networkInputForCoords(std::vector<int> coords) {
+	unsigned int cellData = mazeSolving[coords];
+
+	std::vector<float> out(12);
+
+	for (int i = 0; i < 4; i++) {
+		out.push_back(coords[i]);
+	}
+
+	for (int i = 0; i < 8; i++) {
+		out.push_back((cellData & (1 << i)) >> i);
+	}
+
+	return out;
+}
+
+std::vector<std::vector<std::vector<int>>> NeuralNetworkSolver::getPathsTakenForNetworks(std::vector<int> startPosition, std::vector<NeuralNetwork> networks)
+{
+	std::vector<std::vector<std::vector<int>>> networkPaths;
+
+	for (int i = 0; i < networkPaths.size(); i++) {
+		networkPaths[i].push_back(startPosition);
+	}
+
+	for (int steps = 0; steps < 10; steps++) {
+		for (int network = 0; network < networks.size(); network++) {
+			std::vector<int> outs = NeuralNetwork::normalize(networks[network].query(networkInputForCoords(networkPaths[network][steps])));
+			networkPaths[network].push_back(addCoords(networkPaths[network][steps], outs));
+		}
+	}
+	
+
+	return networkPaths;
+}
+
+std::vector<int> NeuralNetworkSolver::addCoords(std::vector<int> coords1, std::vector<int> coords2) {
+	std::vector<int> out;
+	
+	for (int i = 0; i < 4; i++) {
+		out.push_back(coords1[i] + coords2[i]);
+	}
+
+	return out;
 }

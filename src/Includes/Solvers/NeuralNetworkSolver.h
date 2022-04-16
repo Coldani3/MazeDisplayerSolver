@@ -21,8 +21,10 @@ public:
     NeuralNetworkSolver(Maze maze, int maxNetworkGroups, int networksPerGroup, int maxLayersPerNetwork, int trainsPerCycle);
     ~NeuralNetworkSolver();
     void solve();
+    void train(std::vector<int>, NeuralNetwork network);
     std::map<NeuralNetwork, float> getSuccessOfNetworks();
     std::vector<NeuralNetwork> getAllNetworks();
+    float getSuccess(std::vector<int> finalCoords, int steps);
 
 private:
     Maze mazeSolving;
@@ -30,5 +32,8 @@ private:
     int maxNetworkGroups, networksPerGroup, maxLayersPerNetwork, trainsPerCycle;
 
     void setupNetworks();
+    std::vector<float> networkInputForCoords(std::vector<int> coords);
+    std::vector<std::vector<std::vector<int>>> getPathsTakenForNetworks(std::vector<int> startPosition, std::vector<NeuralNetwork> networks);
+    std::vector<int> addCoords(std::vector<int> coords1, std::vector<int> coords2);
 };
 
