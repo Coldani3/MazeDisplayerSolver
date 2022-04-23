@@ -42,6 +42,9 @@
     <ClCompile Include="src\Src\Render\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Src\Solvers\SimpleNeuralNetworkSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw3\glfw3.lib" />
@@ -87,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Includes\Render\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Includes\Solvers\SimpleNeuralNetworkSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

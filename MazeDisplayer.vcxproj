@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Src\Solvers\SimpleNeuralNetworkSolver.cpp" />
     <ClCompile Include="src\Src\Render\Camera.cpp" />
     <ClCompile Include="src\Src\Render\RenderedMaze.cpp" />
     <ClCompile Include="src\Src\Solvers\NeuralNetwork\NeuralNetwork.cpp" />
@@ -157,6 +158,7 @@
     <Library Include="lib\glfw3\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Includes\Solvers\SimpleNeuralNetworkSolver.h" />
     <ClInclude Include="src\Includes\Render\Camera.h" />
     <ClInclude Include="include\glad\glad.h" />
     <ClInclude Include="include\glfw3\glfw3.h" />
