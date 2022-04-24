@@ -17,6 +17,7 @@ public:
 	std::vector<int> minusCoords(std::vector<int> coords1, std::vector<int> coords2);
 	std::vector<int> intify(std::vector<float> vec);
 	std::vector<float> floatify(std::vector<int> vec);
+	std::vector<std::vector<int>> getMostSuccessfulPath(std::vector<std::vector<std::vector<int>>> paths);
 
 private:
 	std::vector<NeuralNetwork> networks;

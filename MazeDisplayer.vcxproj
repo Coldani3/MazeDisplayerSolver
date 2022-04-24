@@ -143,6 +143,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Src\Solvers\DepthFirstSolver.cpp" />
+    <ClCompile Include="src\Src\Solvers\FloodFillSolver.cpp" />
+    <ClCompile Include="src\Src\Solvers\FungalSolver.cpp" />
     <ClCompile Include="src\Src\Solvers\SimpleNeuralNetworkSolver.cpp" />
     <ClCompile Include="src\Src\Render\Camera.cpp" />
     <ClCompile Include="src\Src\Render\RenderedMaze.cpp" />
@@ -158,6 +161,9 @@
     <Library Include="lib\glfw3\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Includes\Solvers\DepthFirstSolver.h" />
+    <ClInclude Include="src\Includes\Solvers\SolversFloodFillSolver.h" />
+    <ClInclude Include="src\Includes\Solvers\FungalSolver.h" />
     <ClInclude Include="src\Includes\Solvers\SimpleNeuralNetworkSolver.h" />
     <ClInclude Include="src\Includes\Render\Camera.h" />
     <ClInclude Include="include\glad\glad.h" />
@@ -173,6 +179,9 @@
     <ClInclude Include="src\Includes\Solvers\Solver.h" />
     <ClInclude Include="src\Includes\Render\RenderManager.h" />
     <ClInclude Include="src\Includes\Maze\Maze.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="maze.cd3maz" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

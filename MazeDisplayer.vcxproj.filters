@@ -45,6 +45,15 @@
     <ClCompile Include="src\Src\Solvers\SimpleNeuralNetworkSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Src\Solvers\FungalSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Src\Solvers\FloodFillSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Src\Solvers\DepthFirstSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw3\glfw3.lib" />
@@ -95,5 +104,17 @@
     <ClInclude Include="src\Includes\Solvers\SimpleNeuralNetworkSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Includes\Solvers\FungalSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Includes\Solvers\SolversFloodFillSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Includes\Solvers\DepthFirstSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="maze.cd3maz" />
   </ItemGroup>
 </Project>

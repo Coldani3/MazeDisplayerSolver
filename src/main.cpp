@@ -3,9 +3,11 @@
 #include <iostream>
 #include <memory>
 #include <chrono>
+#include <vector>
 
 #include <Maze/Maze.h>
 #include <Render/RenderManager.h>
+#include <Solvers/SimpleNeuralNetworkSolver.h>
 
 std::unique_ptr<RenderManager> renderer;
 double lastFrame;
@@ -89,7 +91,7 @@ void handleInput(GLFWwindow* window) {
 
 }
 
-int main() {
+int beginRenderLoop() {
     std::cout << "Initialising GLFW..." << std::endl;
     //initialise glfw
     glfwInit();
@@ -145,6 +147,19 @@ int main() {
 
     std::cout << "Closing program..." << std::endl;
     glfwTerminate();
+}
+
+int main() {
+    Maze maze;
+    maze.loadFromFile("maze.cd3maz");
+
+    std::cout << "Maze loaded" << std::endl;
+
+    SimpleNeuralNetworkSolver solver({ 12, 10, 10, 4 }, 20, 0.1, maze);
+
+    //solver.solve();
+
+    //return beginRenderLoop();
 
 	return 0;
 }

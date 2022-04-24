@@ -5,9 +5,7 @@
 const int maxQueries = 4;
 const int trainsPerCycle = 50;
 
-SimpleNeuralNetworkSolver::SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, Maze maze) {
-	this->maze = maze;
-	
+SimpleNeuralNetworkSolver::SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, Maze maze) : Solver(maze) {
 	for (int i = 0; i < networks; i++) {
 		this->networks.push_back(NeuralNetwork(nodesPerLayer, learnRate));
 	}
@@ -69,6 +67,10 @@ std::vector<int> SimpleNeuralNetworkSolver::minusCoords(std::vector<int> coords1
 	return out;
 }
 
+std::vector<std::vector<int>> SimpleNeuralNetworkSolver::getMostSuccessfulPath(std::vector<std::vector<std::vector<int>>> paths) {
+
+}
+
 std::vector<std::vector<std::vector<int>>> SimpleNeuralNetworkSolver::queryNetworkPaths(std::vector<int> startPath) {
 	//network -> list of coords -> each coord object
 	std::vector<std::vector<std::vector<int>>> paths;
@@ -85,6 +87,8 @@ std::vector<std::vector<std::vector<int>>> SimpleNeuralNetworkSolver::queryNetwo
 			paths[network].push_back(addCoords(paths[network][query], difference));
 		}
 	}
+
+	return paths;
 }
 
 void SimpleNeuralNetworkSolver::solve() {
@@ -106,6 +110,13 @@ void SimpleNeuralNetworkSolver::solve() {
 
 	//use most successful path to train AIs
 	
+	for (int network = 0; network < networks.size(); network++) {
+		for (int i = 0; i < trainsPerCycle; i++) {
+			train(networks[network], mostSuccessfulPath);
+		}
+	}
+
+	queryNetworkPaths(mostSuccessfulPath.back());
 }
 
 void SimpleNeuralNetworkSolver::train(NeuralNetwork network, std::vector<std::vector<int>> path) {

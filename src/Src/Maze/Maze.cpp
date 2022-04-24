@@ -48,6 +48,8 @@ unsigned char& Maze::operator[](std::vector<int> coordinates) {
 	return mazeData[(height * width * depth * coordsToFour[3]) + (height * width * coordsToFour[2]) + (height * coordsToFour[1]) + coordsToFour[0]];
 }
 
+Maze::Maze() {}
+
 Maze::Maze(std::vector<int> dimensionsVec) {
 	int length = 1;
 	int dimensionsSize = dimensionsVec.size();
@@ -109,28 +111,41 @@ void Maze::loadFromFile(std::string fileName) {
 	}
 
 	//get dimensions
+	//index of the size we are adding.
 	int dimSizeCounter = 0;
 	std::vector<int> dimSizes = std::vector<int>();
+	//skip past {
 	inFile.get(currentChar);
+	//put a value in the dimSizes array so the data has somewhere to go
 	dimSizes.push_back(0);
 
 	while (currentChar != '}') {
 		while (currentChar != ',' && currentChar != '}') {
+			//std::cout << "i" << currentChar;
 			if (!(dimSizes.size() >= dimSizeCounter + 1)) {
+				//adding another value to the dimSizes array, put something empty in there
 				dimSizes.push_back(0);
 			}
 
 			if (isNumberChar(currentChar)) {
 				dimSizes[dimSizeCounter] = (dimSizes[dimSizeCounter] * 10) + charToNum(currentChar);
-				inFile.get(currentChar);
 			} else {
+				//std::cerr << currentChar;
 				throw "Malformed maze file dimension specification in " + fileName;
 			}
+
+			inFile.get(currentChar);
 		}
 
-		inFile.get(currentChar);
+		//std::cout << "o" << currentChar;
+
+		if (currentChar == ',') {
+			inFile.get(currentChar);
+		}
 
 		dimSizeCounter++;
+
+		//std::cout << currentChar;
 	}
 
 	dimensions = dimSizes.size();
@@ -169,7 +184,13 @@ void Maze::loadFromFile(std::string fileName) {
 			}
 		}
 
-		inFile.get(currentChar);
+		//std::cout << currentChar;
+
+		if (currentChar == ')') {
+			inFile.get(currentChar);
+		}
+
+		//std::cout << currentChar;
 
 		if (currentChar == '\\') {
 			while (currentChar != '/') {
@@ -182,6 +203,8 @@ void Maze::loadFromFile(std::string fileName) {
 				}
 			}
 
+			std::cout << currentChar << std::endl;
+
 			inFile.get(currentChar);
 		} else if (dimensions >= 3) {
 			throw "Malformed maze file, a slice is missing its specification of its 3D/4D coordinates!";
@@ -189,12 +212,17 @@ void Maze::loadFromFile(std::string fileName) {
 
 		coords.insert(coords.end(), higherDimCoords.begin(), higherDimCoords.end());
 
+		std::cout << "insert";
+
 		while (currentChar != '[') {
+			std::cout << currentChar;
 			sliceData.push_back(currentChar);
 			inFile.get(currentChar);
 		}
 
 		int dataIndex = 0;
+
+		std::cout << "begin maze input";
 
 		//input data into maze object
 		for (int y = 0; y < sliceSize[1]; y++) {
@@ -236,6 +264,9 @@ void Maze::loadFromFile(std::string fileName) {
 
 		inFile.get(currentChar);
 	}
+
+	mazeEntrance = *mazeEntranceExit[0];
+	mazeExit = *mazeEntranceExit[1];
 
 	inFile.close();
 }

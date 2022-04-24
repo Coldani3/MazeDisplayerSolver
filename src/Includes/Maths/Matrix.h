@@ -186,6 +186,18 @@ public:
 		return out;
 	}
 
+	static Matrix<T> tanH(Matrix<T> input) {
+		Matrix out(input.rows, input.columns);
+
+		for (int row = 0; row < input.rows; row++) {
+			for (int col = 0; col < input.columns; col++) {
+				out[row][col] = std::tanh(input[row][col]);
+			}
+		}
+
+		return out;
+	}
+
 	static std::vector<T> flatten(Matrix<T> input) {
 		std::vector<T> out(input.rows * input.columns);
 		int counter = 0;
