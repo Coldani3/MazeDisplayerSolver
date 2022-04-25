@@ -150,16 +150,17 @@ int beginRenderLoop() {
 }
 
 int main() {
-    Maze maze;
+    //hangs while reading the maze file and memory increasese rapidly, I do not recommend uncommenting this code for a bit
+    /*Maze maze;
     maze.loadFromFile("maze.cd3maz");
 
     std::cout << "Maze loaded" << std::endl;
 
-    SimpleNeuralNetworkSolver solver({ 12, 10, 10, 4 }, 20, 0.1, maze);
+    SimpleNeuralNetworkSolver solver({ 12, 10, 10, 4 }, 20, 0.1, maze);*/
 
     //solver.solve();
 
-    //return beginRenderLoop();
+    int result = beginRenderLoop();
 
-	return 0;
+	return result;
 }

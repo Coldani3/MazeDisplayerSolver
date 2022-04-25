@@ -68,7 +68,19 @@ std::vector<int> SimpleNeuralNetworkSolver::minusCoords(std::vector<int> coords1
 }
 
 std::vector<std::vector<int>> SimpleNeuralNetworkSolver::getMostSuccessfulPath(std::vector<std::vector<std::vector<int>>> paths) {
+	std::vector<float> successes(paths.size());
+	
+	//all paths are the same length so the closest should be the best path.
+	for (int i = 0; i < paths.size(); i++) {
+		std::vector<int> lastCoord = paths[i].back();
 
+		//4D pythagoras = sqrt(a^2 + b^2 + c^2 + d^2)
+		float distance = sqrtf(pow(lastCoord[0], 2) + pow(lastCoord[1], 2) + pow(lastCoord[2], 2) + pow(lastCoord[3], 2));
+
+		successes[i] = distance;
+	}
+
+	return paths[std::distance(successes.begin(), std::max_element(successes.begin(), successes.end()))];
 }
 
 std::vector<std::vector<std::vector<int>>> SimpleNeuralNetworkSolver::queryNetworkPaths(std::vector<int> startPath) {

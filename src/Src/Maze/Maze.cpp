@@ -94,7 +94,7 @@ Maze::~Maze() {
 void Maze::loadFromFile(std::string fileName) {
 	std::ifstream inFile;
 
-	inFile.open(fileName);
+	inFile.open(fileName, std::ios::binary);
 
 	//get cell size
 	char currentChar;
@@ -150,6 +150,16 @@ void Maze::loadFromFile(std::string fileName) {
 
 	dimensions = dimSizes.size();
 
+	int dataSize = 1;
+
+	for (int i = 0; i < dimensions; i++) {
+		dataSize *= dimSizes[i];
+	}
+
+	if (mazeData.size() <= 0) {
+		mazeData = std::vector<unsigned char>(dataSize);
+	}
+
 	std::vector<int> coords = { 0, 0 };
 	//TODO: actually read the slice size coordinates and not just assume the maze is one massive cube.
 	std::vector<char> sliceData;
@@ -184,13 +194,9 @@ void Maze::loadFromFile(std::string fileName) {
 			}
 		}
 
-		//std::cout << currentChar;
-
 		if (currentChar == ')') {
 			inFile.get(currentChar);
 		}
-
-		//std::cout << currentChar;
 
 		if (currentChar == '\\') {
 			while (currentChar != '/') {
@@ -203,8 +209,6 @@ void Maze::loadFromFile(std::string fileName) {
 				}
 			}
 
-			std::cout << currentChar << std::endl;
-
 			inFile.get(currentChar);
 		} else if (dimensions >= 3) {
 			throw "Malformed maze file, a slice is missing its specification of its 3D/4D coordinates!";
@@ -215,9 +219,14 @@ void Maze::loadFromFile(std::string fileName) {
 		std::cout << "insert";
 
 		while (currentChar != '[') {
-			std::cout << currentChar;
+			//std::cout << currentChar << (unsigned int) currentChar << std::endl;
 			sliceData.push_back(currentChar);
-			inFile.get(currentChar);
+			currentChar = inFile.get();
+
+			//if (currentChar == '+') {
+			//	//icky but eh
+			//	goto toPlus;
+			//}
 		}
 
 		int dataIndex = 0;
@@ -229,10 +238,13 @@ void Maze::loadFromFile(std::string fileName) {
 			for (int x = 0; x < sliceSize[0]; x++) {
 				coords[0] = x;
 				coords[1] = y;
+				//std::cout << dataIndex << ", " << sliceData.size() << ", " << x << ", " << y << ";" << std::endl;
 				setCell(coords, sliceData[dataIndex]);
 				dataIndex++;
 			}
 		}
+
+		std::cout << "maze input done";
 
 		//clean up for next slice
 		sliceData.clear();
@@ -244,6 +256,8 @@ void Maze::loadFromFile(std::string fileName) {
 
 	//skip open bracket
 	inFile.get(currentChar);
+
+	toPlus:
 
 	//access and set the entrance and exit like this so I don't write the same code twice and don't have to manually set it after
 	std::array<std::unique_ptr<std::vector<int>>, 2> mazeEntranceExit = { std::unique_ptr<std::vector<int>>(&mazeEntrance), std::unique_ptr<std::vector<int>>(&mazeExit) };
