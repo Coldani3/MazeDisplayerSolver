@@ -2,9 +2,11 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include <array>
 #include <exception>
+#include <filesystem>
 
 bool isNumberChar(char character) {
 	return (character >= 48 && character <= 57);
@@ -96,12 +98,75 @@ void Maze::loadFromFile(std::string fileName) {
 
 	inFile.open(fileName, std::ios::binary);
 
+	if (!inFile.good()) {
+		std::cerr << "Could not find file " << fileName << "!" << std::endl;
+		throw std::runtime_error("Could not find file " + fileName);
+	}
+
 	//get cell size
 	char currentChar;
 	int cellSize = 0;
 	inFile.get(currentChar);
 
-	while (currentChar != '{') {
+	//<dimensions> <maze x size> <maze y size> <maze z size> <maze w size> <maze entrance x, y, z, w> <maze exit x, y, z, w> <raw data>
+
+	int dimensions = currentChar;//charToNum(currentChar);
+
+	if (dimensions != 4) {
+		std::stringstream message;
+		message << "Maze file of dimensions " << dimensions << " detected! We currently only support 4 dimensions!";
+		throw std::runtime_error(message.str());
+	}
+
+	std::vector<int> sizes = std::vector<int>(4);
+
+	for (int i = 0; i < dimensions; i++) {
+		inFile.get(currentChar);
+		sizes[i] = currentChar;
+	}
+
+	std::vector<int> entrance = std::vector<int>(4);
+
+	for (int i = 0; i < dimensions; i++) {
+		inFile.get(currentChar);
+		entrance[i] = currentChar;
+	}
+
+	std::vector<int> exit = std::vector<int>(4);
+
+	mazeExit = exit;
+	mazeEntrance = entrance;
+	this->dimensions = dimensions;
+	width = sizes[0];
+	height = sizes[1];
+	depth = sizes[2];
+	hyperDepth = sizes[3];
+
+	for (int i = 0; i < dimensions; i++) {
+		inFile.get(currentChar);
+		exit[i] = currentChar;
+	}
+
+	int size = 1;
+
+	for (int i = 0; i < sizes.size(); i++) {
+		size *= sizes[i];
+	}
+
+	std::vector<unsigned char> mazeCellData = std::vector<unsigned char>(size);
+
+	//read the data
+	for (int i = 0; i < size; i++) {
+		inFile.get(currentChar);
+		mazeCellData[i] = currentChar;
+	}
+
+	mazeData = mazeCellData;
+
+	//if you ever decide to go back to that abomination of a file format the code is still here but
+	//remember that it hangs and causes mounting memory usage so uh don't
+
+	/*while (currentChar != '{') {
 		if (isNumberChar(currentChar)) {
 			cellSize = (cellSize * 10) + charToNum(currentChar);
 			inFile.get(currentChar);
@@ -280,7 +345,7 @@ void Maze::loadFromFile(std::string fileName) {
 	}
 
 	mazeEntrance = *mazeEntranceExit[0];
-	mazeExit = *mazeEntranceExit[1];
+	mazeExit = *mazeEntranceExit[1];*/
 
 	inFile.close();
 }

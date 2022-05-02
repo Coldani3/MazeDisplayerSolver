@@ -116,5 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="maze.cd3maz" />
+    <None Include="maze.cd3mazs" />
   </ItemGroup>
 </Project>
