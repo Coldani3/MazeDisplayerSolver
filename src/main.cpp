@@ -4,6 +4,7 @@
 #include <memory>
 #include <chrono>
 #include <vector>
+#include <thread>
 
 #include <Maze/Maze.h>
 #include <Render/RenderManager.h>
@@ -149,6 +150,12 @@ int beginRenderLoop() {
     glfwTerminate();
 }
 
+void aiThreadMethod(Maze maze) {
+    SimpleNeuralNetworkSolver solver({ 12, 10, 10, 4 }, 20, 0.1, maze);
+
+    //solver.solve();
+}
+
 int main() {
     
     Maze maze;
@@ -156,9 +163,7 @@ int main() {
 
     std::cout << "Maze loaded" << std::endl;
 
-    SimpleNeuralNetworkSolver solver({ 12, 10, 10, 4 }, 20, 0.1, maze);
-
-    //solver.solve();
+    std::thread aiThread(aiThreadMethod, maze);
 
     int result = beginRenderLoop();
 
