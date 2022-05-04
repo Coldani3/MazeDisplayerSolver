@@ -6,12 +6,12 @@
 
 //The flags each bit of each maze cell contain.
 enum MazeDirections {
-	UP = 1,
-	DOWN = 2,
+	FORWARD = 1,
+	BACKWARD = 2,
 	RIGHT = 4,
 	LEFT = 8,
-	FORWARD = 16,
-	BACKWARD = 32,
+	UP = 16,
+	DOWN = 32,
 	ANA = 64,
 	KATA = 128
 };

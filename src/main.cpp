@@ -92,7 +92,7 @@ void handleInput(GLFWwindow* window) {
 
 }
 
-int beginRenderLoop() {
+int beginRenderLoop(Maze maze) {
     std::cout << "Initialising GLFW..." << std::endl;
     //initialise glfw
     glfwInit();
@@ -102,7 +102,7 @@ int beginRenderLoop() {
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    renderer = std::make_unique<RenderManager>(800, 600);
+    renderer = std::make_unique<RenderManager>(800, 600, maze);
 
     if (renderer->getWindow() == NULL) {
         std::cerr << "Could not create window" << std::endl;
@@ -165,7 +165,9 @@ int main() {
 
     std::thread aiThread(aiThreadMethod, maze);
 
-    int result = beginRenderLoop();
+    int result = beginRenderLoop(maze);
+
+    aiThread.join();
 
 	return result;
 }

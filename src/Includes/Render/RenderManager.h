@@ -4,12 +4,13 @@
 
 #include <memory>
 #include <Render/Camera.h>
+#include <Maze/Maze.h>
 
 #pragma once
 class RenderManager
 {
 public:
-	RenderManager(int width, int height);
+	RenderManager(int width, int height, Maze initialMaze);
 	~RenderManager();
 	void setup();
 	void draw();
@@ -20,6 +21,7 @@ public:
 	void drawMazeCellCenter(int mazeX, int mazeY, int mazeZ = 0, int mazeW = 0);
 	void drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ = 0, int mazeW = 0);
 	void setWViewing(int w);
+	void setMazeUsing(Maze maze);
 	std::unique_ptr<Camera> getCamera();
 	glm::mat4 mazeCellPathTransform(glm::vec3 initialCoords, float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ);
 	glm::mat4 getViewMatrixFromCamera();
@@ -33,5 +35,6 @@ private:
 	int defaultWidth;
 	int defaultHeight;
 	int currentW = 0;
+	Maze maze;
 };
 

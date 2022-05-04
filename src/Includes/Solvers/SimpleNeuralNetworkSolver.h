@@ -13,11 +13,9 @@ public:
 
 	std::vector<std::vector<std::vector<int>>> queryNetworkPaths(std::vector<int> startPath);
 	std::vector<float> networkInputForCoords(std::vector<int> coords);
-	std::vector<int> addCoords(std::vector<int> coords1, std::vector<int> coords2);
-	std::vector<int> minusCoords(std::vector<int> coords1, std::vector<int> coords2);
-	std::vector<int> intify(std::vector<float> vec);
-	std::vector<float> floatify(std::vector<int> vec);
 	std::vector<std::vector<int>> getMostSuccessfulPath(std::vector<std::vector<std::vector<int>>> paths);
+	//block direction being the direction the path came from to exclude going back and just solving the whole maze again.
+	bool validateCanReachExitFrom(std::vector<int>, unsigned char blockDirection);
 
 private:
 	std::vector<NeuralNetwork> networks;

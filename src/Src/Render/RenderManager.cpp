@@ -5,7 +5,6 @@
 #include <memory>
 #include <vector>
 
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -152,12 +151,13 @@ float mazePathVerticesNormals[] = {
 //xRot, yRot, xTrans, yTrans, zTrans - front = 0 deg
 //0.175 + 0.1625 = 0.3375
 std::vector<std::vector<float>> cellPathTransformations = {
-    {0.0f, 90.0f, 0.0f, 0.3375f, 0.0f}, //up
-    {0.0f, -90.0f, 0.0f, -0.3375f, 0.0f}, //down
+    {0.0f, 0.0f, 0.0f, 0.0f, -0.3375f}, //front
+    {180.0f, 0.0f, 0.0f, 0.0f, 0.3375f},  //back
     {90.0f, 0.0f, 0.3375f, 0.0f, 0.0f}, //right
     {270.0f, 0.0f, -0.3375f, 0.0f, 0.0f}, //left
-    {0.0f, 0.0f, 0.0f, 0.0f, -0.3375f}, //front
-    {180.0f, 0.0f, 0.0f, 0.0f, 0.3375f}  //back
+    {0.0f, 90.0f, 0.0f, 0.3375f, 0.0f}, //up
+    {0.0f, -90.0f, 0.0f, -0.3375f, 0.0f} //down
+    
 };
 
 float centerX = 500;
@@ -166,7 +166,7 @@ float centerZ = 500;
 
 #pragma endregion
 
-#pragma region Non-Class Methods
+#pragma region Non_Class_Methods
 void checkShaderCompileSuccess(unsigned int shader) {
     int success;
     char infoLog[512];
@@ -204,7 +204,7 @@ glm::mat4 translateModel(int x, int y, int z) {
 #pragma endregion
 
 #pragma region Class Methods
-RenderManager::RenderManager(int width, int height) {
+RenderManager::RenderManager(int width, int height, Maze maze) {
     //create the window
     window = glfwCreateWindow(width, height, "Maze Displayer and Solver", NULL, NULL);
 
@@ -214,9 +214,11 @@ RenderManager::RenderManager(int width, int height) {
     defaultHeight = height;
     this->width = width;
     this->height = height;
+    this->maze = maze;
 
     projection = glm::perspective(glm::radians(45.0f), (float) this->width / (float) this->height, 0.1f, 100.0f);
     camera = std::make_unique<Camera>(Camera(centerX, centerY, centerZ + -15.0f, centerX, centerY, centerZ));
+    camera->lookAt(centerX + (maze.width / 2), centerY + (maze.height / 2), centerZ + (maze.depth / 2));
 }
 
 RenderManager::~RenderManager() {
@@ -227,6 +229,10 @@ RenderManager::~RenderManager() {
     glDeleteProgram(cellCenterProgram);
 
     std::cout << "Renderer Cleanup done." << std::endl;
+}
+
+void RenderManager::setMazeUsing(Maze maze) {
+    this->maze = maze;
 }
 
 void RenderManager::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
@@ -414,8 +420,8 @@ void RenderManager::setup() {
     // we will transform the cubes into the appropriate positions in the shader
     std::cout << "Creating and populating buffers..." << std::endl;
     
+    //cube buffers
     glGenBuffers(1, &cubeVBO);
-    glGenBuffers(1, &rectangleCubeVBO);
     glGenVertexArrays(1, &cubeVAO);
 
     glBindVertexArray(cubeVAO);
@@ -427,6 +433,8 @@ void RenderManager::setup() {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
+    //path buffers
+    glGenBuffers(1, &rectangleCubeVBO);
     glGenVertexArrays(1, &rectangleCubeVAO);
 
     glBindVertexArray(rectangleCubeVAO);
@@ -446,17 +454,29 @@ void RenderManager::draw() {
     glClearColor(0.8470f, 0.8823f, 0.9098f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for (int x = 0; x < 10; x++) {
-        for (int y = 0; y < 10; y++) {
-            for (int z = 0; z < 10; z++) {
-                drawMazeCellCenter(x, y, z, 0);
-                //drawMazeCellPaths(63, x, y, z, 0);
+    for (int x = 0; x < maze.width; x++) {
+        for (int y = 0; y < maze.height; y++) {
+            for (int z = 0; z < maze.depth; z++) {
+                std::vector<int> coords = { x, y, z, currentW };
+
+                if (maze[coords] > 0) {
+                    drawMazeCellPaths(maze[coords], x, y, z, currentW);
+                    drawMazeCellCenter(x, y, z, currentW);
+                }
             }
         }
     }
-    drawMazeCellPaths(63, 0, 0, 0, 0);
+
+    /*int debugCellData = 1;
+
+    for (int x = 0; x < 68; x++) {
+        drawMazeCellPaths(debugCellData, x, 0, 0, 0);
+        debugCellData = debugCellData << 1;
+    }*/
+
+    /*drawMazeCellPaths(63, 0, 0, 0, 0);
     drawMazeCellPaths(63, 1, 0, 0, 0);
-    drawMazeCellPaths(63, 0, 0, 1, 0);
+    drawMazeCellPaths(63, 0, 0, 1, 0);*/
     //drawMazeCellCenter(1, 1, 1, 0);
 }
 #pragma endregion

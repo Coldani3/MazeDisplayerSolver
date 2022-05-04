@@ -52,7 +52,9 @@ std::vector<std::vector<std::vector<int>>> SimpleNeuralNetworkSolver::queryNetwo
 		paths[i].push_back(startPath);
 	}
 
+	//for every network, query for maxQueries steps.
 	for (int network = 0; network < networks.size(); network++) {
+		//TODO: isn't this just querying it for every coordinate in the path?
 		for (int query = 0; query < maxQueries; query++) {
 			//get current coordinate
 			std::vector<int> difference = NeuralNetwork::normalize(networks[network].query(networkInputForCoords(paths[network][query])));
