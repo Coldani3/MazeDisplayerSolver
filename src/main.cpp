@@ -14,6 +14,7 @@ std::unique_ptr<RenderManager> renderer;
 double lastFrame;
 double delta = 0;
 int fps = 0;
+double lastWShift = 0;
 
 float camMoveSpeedMod = 1.0f;
 
@@ -89,7 +90,17 @@ void handleInput(GLFWwindow* window) {
         renderer->camera->zoom(-zoomSpeed);
     }
 
+    if (glfwGetTime() > lastWShift + 0.2) {
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+            renderer->setWViewing(renderer->getWViewing() + 1);
+            lastWShift = glfwGetTime();
+        }
 
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+            renderer->setWViewing(renderer->getWViewing() - 1);
+            lastWShift = glfwGetTime();
+        }
+    }
 }
 
 int beginRenderLoop(Maze maze) {
