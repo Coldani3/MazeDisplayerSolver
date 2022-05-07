@@ -173,6 +173,8 @@ int main() {
     maze.loadFromFile("maze.cd3mazs");
 
     std::cout << "Maze loaded" << std::endl;
+    std::cout << "Maze entrance coords: " << maze.mazeEntrance[0] << ", " << maze.mazeEntrance[1] << ", " << maze.mazeEntrance[2] << ", " << maze.mazeEntrance[3] << std::endl;
+    std::cout << "Maze exit coords: " << maze.mazeExit[0] << ", " << maze.mazeExit[1] << ", " << maze.mazeExit[2] << ", " << maze.mazeExit[3] << std::endl;
 
     std::thread aiThread(aiThreadMethod, maze);
 

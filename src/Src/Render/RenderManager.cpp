@@ -39,52 +39,52 @@ unsigned int cuboidIndices[] = {
 
 float cubeVerticesNormals[] = {
     //right face
-    0.175, 0.175, 0.175, 1.0, 0.0, 0.0,
-    0.175, 0.175, -0.175, 1.0, 0.0, 0.0,
-    0.175, -0.175, -0.175, 1.0, 0.0, 0.0,
-    0.175, 0.175, 0.175, 1.0, 0.0, 0.0,
-    0.175, -0.175, 0.175, 1.0, 0.0, 0.0,
-    0.175, -0.175, -0.175, 1.0, 0.0, 0.0,
+    0.0625, 0.0625, 0.0625, 1.0, 0.0, 0.0,
+    0.0625, 0.0625, -0.0625, 1.0, 0.0, 0.0,
+    0.0625, -0.0625, -0.0625, 1.0, 0.0, 0.0,
+    0.0625, 0.0625, 0.0625, 1.0, 0.0, 0.0,
+    0.0625, -0.0625, 0.0625, 1.0, 0.0, 0.0,
+    0.0625, -0.0625, -0.0625, 1.0, 0.0, 0.0,
 
     //front face [back face?]
-    0.175, 0.175, 0.175, 0.0, 0.0, 1.0,
-    -0.175, 0.175, 0.175, 0.0, 0.0, 1.0,
-    -0.175, -0.175, 0.175, 0.0, 0.0, 1.0,
-    0.175, 0.175, 0.175, 0.0, 0.0, 1.0,
-    -0.175, -0.175, 0.175, 0.0, 0.0, 1.0,
-    0.175, -0.175, 0.175, 0.0, 0.0, 1.0,
+    0.0625, 0.0625, 0.0625, 0.0, 0.0, 1.0,
+    -0.0625, 0.0625, 0.0625, 0.0, 0.0, 1.0,
+    -0.0625, -0.0625, 0.0625, 0.0, 0.0, 1.0,
+    0.0625, 0.0625, 0.0625, 0.0, 0.0, 1.0,
+    -0.0625, -0.0625, 0.0625, 0.0, 0.0, 1.0,
+    0.0625, -0.0625, 0.0625, 0.0, 0.0, 1.0,
 
     //top face
-    0.175, 0.175, 0.175, 0.0, 1.0, 0.0,
-    0.175, 0.175, -0.175, 0.0, 1.0, 0.0,
-    -0.175, 0.175, -0.175, 0.0, 1.0, 0.0,
-    0.175, 0.175, 0.175, 0.0, 1.0, 0.0,
-    -0.175, 0.175, 0.175, 0.0, 1.0, 0.0,
-    -0.175, 0.175, -0.175, 0.0, 1.0, 0.0,
+    0.0625, 0.0625, 0.0625, 0.0, 1.0, 0.0,
+    0.0625, 0.0625, -0.0625, 0.0, 1.0, 0.0,
+    -0.0625, 0.0625, -0.0625, 0.0, 1.0, 0.0,
+    0.0625, 0.0625, 0.0625, 0.0, 1.0, 0.0,
+    -0.0625, 0.0625, 0.0625, 0.0, 1.0, 0.0,
+    -0.0625, 0.0625, -0.0625, 0.0, 1.0, 0.0,
 
     //bottom face
-    0.175, -0.175, 0.175, 0.0, -1.0, 0.0,
-    -0.175, -0.175, 0.175, 0.0, -1.0, 0.0,
-    -0.175, -0.175, -0.175, 0.0, -1.0, 0.0,
-    0.175, -0.175, 0.175, 0.0, -1.0, 0.0,
-    -0.175, -0.175, -0.175, 0.0, -1.0, 0.0,
-    0.175, -0.175, -0.175, 0.0, -1.0, 0.0,
+    0.0625, -0.0625, 0.0625, 0.0, -1.0, 0.0,
+    -0.0625, -0.0625, 0.0625, 0.0, -1.0, 0.0,
+    -0.0625, -0.0625, -0.0625, 0.0, -1.0, 0.0,
+    0.0625, -0.0625, 0.0625, 0.0, -1.0, 0.0,
+    -0.0625, -0.0625, -0.0625, 0.0, -1.0, 0.0,
+    0.0625, -0.0625, -0.0625, 0.0, -1.0, 0.0,
 
     //back face [front face?]
-    0.175, -0.175, -0.175, 0.0, 0.0, -1.0,
-    -0.175, -0.175, -0.175, 0.0, 0.0, -1.0,
-    -0.175, 0.175, -0.175, 0.0, 0.0, -1.0,
-    0.175, -0.175, -0.175, 0.0, 0.0, -1.0,
-    0.175, 0.175, -0.175, 0.0, 0.0, -1.0,
-    -0.175, 0.175, -0.175, 0.0, 0.0, -1.0,
+    0.0625, -0.0625, -0.0625, 0.0, 0.0, -1.0,
+    -0.0625, -0.0625, -0.0625, 0.0, 0.0, -1.0,
+    -0.0625, 0.0625, -0.0625, 0.0, 0.0, -1.0,
+    0.0625, -0.0625, -0.0625, 0.0, 0.0, -1.0,
+    0.0625, 0.0625, -0.0625, 0.0, 0.0, -1.0,
+    -0.0625, 0.0625, -0.0625, 0.0, 0.0, -1.0,
 
     //left face
-    -0.175, -0.175, 0.175, -1.0, 0.0, 0.0,
-    -0.175, -0.175, -0.175, -1.0, 0.0, 0.0,
-    -0.175, 0.175, -0.175, -1.0, 0.0, 0.0,
-    -0.175, -0.175, 0.175, -1.0, 0.0, 0.0,
-    -0.175, 0.175, -0.175, -1.0, 0.0, 0.0,
-    -0.175, 0.175, 0.175, -1.0, 0.0, 0.0
+    -0.0625, -0.0625, 0.0625, -1.0, 0.0, 0.0,
+    -0.0625, -0.0625, -0.0625, -1.0, 0.0, 0.0,
+    -0.0625, 0.0625, -0.0625, -1.0, 0.0, 0.0,
+    -0.0625, -0.0625, 0.0625, -1.0, 0.0, 0.0,
+    -0.0625, 0.0625, -0.0625, -1.0, 0.0, 0.0,
+    -0.0625, 0.0625, 0.0625, -1.0, 0.0, 0.0
 };
 
 float mazePathVertices[] = {
@@ -98,65 +98,67 @@ float mazePathVertices[] = {
     -0.0625, -0.0625, -0.1625 //7
 };
 
-//0.175 = half of cube
-//0.175 * 2 for top and bottom of division = 0.35
-//1 - 0.35 = 0.65 = length of path in total
-//0.65 / 2 = 0.325 = length of each individual path piece
-//0.325 / 2 = 0.1625
+//0.0625 = half of cube
+//0.0625 * 2 for top and bottom of division = 0.125
+//1 - 0.125 = 0.875 = length of path in total
+//0.875 / 2 = 0.4375 = length of each individual path piece
+//0.4375 / 2 = 0.21875
 float mazePathVerticesNormals[] = {
     //right
-    0.0625, 0.0625, 0.1625, 1.0, 0.0, 0.0,
-    0.0625, 0.0625, -0.1625, 1.0, 0.0, 0.0,
-    0.0625, -0.0625, -0.1625, 1.0, 0.0, 0.0,
-    0.0625, 0.0625, 0.1625, 1.0, 0.0, 0.0,
-    0.0625, -0.0625, -0.1625, 1.0, 0.0, 0.0,
-    0.0625, -0.0625, 0.1625, 1.0, 0.0, 0.0,
+    0.0625, 0.0625, 0.21875, 1.0, 0.0, 0.0,
+    0.0625, 0.0625, -0.21875, 1.0, 0.0, 0.0,
+    0.0625, -0.0625, -0.21875, 1.0, 0.0, 0.0,
+    0.0625, 0.0625, 0.21875, 1.0, 0.0, 0.0,
+    0.0625, -0.0625, -0.21875, 1.0, 0.0, 0.0,
+    0.0625, -0.0625, 0.21875, 1.0, 0.0, 0.0,
     //front
-    0.0625, 0.0625, 0.1625, 0.0, 0.0, 1.0,
-    -0.0625, 0.0625, 0.1625, 0.0, 0.0, 1.0,
-    -0.0625, -0.0625, 0.1625, 0.0, 0.0, 1.0,
-    0.0625, 0.0625, 0.1625, 0.0, 0.0, 1.0,
-    -0.0625, -0.0625, 0.1625, 0.0, 0.0, 1.0,
-    0.0625, -0.0625, 0.1625, 0.0, 0.0, 1.0,
+    0.0625, 0.0625, 0.21875, 0.0, 0.0, 1.0,
+    -0.0625, 0.0625, 0.21875, 0.0, 0.0, 1.0,
+    -0.0625, -0.0625, 0.21875, 0.0, 0.0, 1.0,
+    0.0625, 0.0625, 0.21875, 0.0, 0.0, 1.0,
+    -0.0625, -0.0625, 0.21875, 0.0, 0.0, 1.0,
+    0.0625, -0.0625, 0.21875, 0.0, 0.0, 1.0,
     //top
-    0.0625, 0.0625, 0.1625, 0.0, 1.0, 0.0,
-    -0.0625, 0.0625, -0.1625, 0.0, 1.0, 0.0,
-    0.0625, 0.0625, -0.1625, 0.0, 1.0, 0.0,
-    0.0625, 0.0625, 0.1625, 0.0, 1.0, 0.0,
-    -0.0625, 0.0625, 0.1625, 0.0, 1.0, 0.0,
-    -0.0625, 0.0625, -0.1625, 0.0, 1.0, 0.0,
+    0.0625, 0.0625, 0.21875, 0.0, 1.0, 0.0,
+    -0.0625, 0.0625, -0.21875, 0.0, 1.0, 0.0,
+    0.0625, 0.0625, -0.21875, 0.0, 1.0, 0.0,
+    0.0625, 0.0625, 0.21875, 0.0, 1.0, 0.0,
+    -0.0625, 0.0625, 0.21875, 0.0, 1.0, 0.0,
+    -0.0625, 0.0625, -0.21875, 0.0, 1.0, 0.0,
     //bottom
-    0.0625, -0.0625, 0.1625, 0.0, -1.0, 0.0,
-    -0.0625, -0.0625, 0.1625, 0.0, -1.0, 0.0,
-    -0.0625, -0.0625, -0.1625, 0.0, -1.0, 0.0,
-    0.0625, -0.0625, 0.1625, 0.0, -1.0, 0.0,
-    -0.0625, -0.0625, -0.1625, 0.0, -1.0, 0.0,
-    0.0625, -0.0625, -0.1625, 0.0, -1.0, 0.0,
+    0.0625, -0.0625, 0.21875, 0.0, -1.0, 0.0,
+    -0.0625, -0.0625, 0.21875, 0.0, -1.0, 0.0,
+    -0.0625, -0.0625, -0.21875, 0.0, -1.0, 0.0,
+    0.0625, -0.0625, 0.21875, 0.0, -1.0, 0.0,
+    -0.0625, -0.0625, -0.21875, 0.0, -1.0, 0.0,
+    0.0625, -0.0625, -0.21875, 0.0, -1.0, 0.0,
     //back
-    0.0625, -0.0625, -0.1625, 0.0, 0.0, -1.0,
-    -0.0625, 0.0625, -0.1625, 0.0, 0.0, -1.0,
-    -0.0625, -0.0625, -0.1625, 0.0, 0.0, -1.0,
-    0.0625, -0.0625, -0.1625, 0.0, 0.0, -1.0,
-    0.0625, 0.0625, -0.1625, 0.0, 0.0, -1.0,
-    -0.0625, 0.0625, -0.1625, 0.0, 0.0, -1.0,
+    0.0625, -0.0625, -0.21875, 0.0, 0.0, -1.0,
+    -0.0625, 0.0625, -0.21875, 0.0, 0.0, -1.0,
+    -0.0625, -0.0625, -0.21875, 0.0, 0.0, -1.0,
+    0.0625, -0.0625, -0.21875, 0.0, 0.0, -1.0,
+    0.0625, 0.0625, -0.21875, 0.0, 0.0, -1.0,
+    -0.0625, 0.0625, -0.21875, 0.0, 0.0, -1.0,
     //left
-    -0.0625, -0.0625, 0.1625, -1.0, 0.0, 0.0,
-    -0.0625, -0.0625, -0.1625, -1.0, 0.0, 0.0,
-    -0.0625, 0.0625, -0.1625, -1.0, 0.0, 0.0,
-    -0.0625, -0.0625, 0.1625, -1.0, 0.0, 0.0,
-    -0.0625, 0.0625, -0.1625, -1.0, 0.0, 0.0,
-    -0.0625, 0.0625, 0.1625, -1.0, 0.0, 0.0
+    -0.0625, -0.0625, 0.21875, -1.0, 0.0, 0.0,
+    -0.0625, -0.0625, -0.21875, -1.0, 0.0, 0.0,
+    -0.0625, 0.0625, -0.21875, -1.0, 0.0, 0.0,
+    -0.0625, -0.0625, 0.21875, -1.0, 0.0, 0.0,
+    -0.0625, 0.0625, -0.21875, -1.0, 0.0, 0.0,
+    -0.0625, 0.0625, 0.21875, -1.0, 0.0, 0.0
 };
 
 //xRot, yRot, xTrans, yTrans, zTrans - front = 0 deg
-//0.175 + 0.1625 = 0.3375
+//0.0625 + 0.21875 = 0.28125
 std::vector<std::vector<float>> cellPathTransformations = {
-    {0.0f, 0.0f, 0.0f, 0.0f, -0.3375f}, //front
-    {180.0f, 0.0f, 0.0f, 0.0f, 0.3375f},  //back
-    {90.0f, 0.0f, 0.3375f, 0.0f, 0.0f}, //right
-    {270.0f, 0.0f, -0.3375f, 0.0f, 0.0f}, //left
-    {0.0f, 90.0f, 0.0f, 0.3375f, 0.0f}, //up
-    {0.0f, -90.0f, 0.0f, -0.3375f, 0.0f} //down
+    {0.0f, 0.0f, 0.0f, 0.0f, -0.28125f}, //front
+    {180.0f, 0.0f, 0.0f, 0.0f, 0.28125f},  //back
+    {90.0f, 0.0f, 0.28125f, 0.0f, 0.0f}, //right
+    {270.0f, 0.0f, -0.28125f, 0.0f, 0.0f}, //left
+    {0.0f, 90.0f, 0.0f, 0.28125f, 0.0f}, //up
+    {0.0f, -90.0f, 0.0f, -0.28125f, 0.0f}, //down
+    {45.0f, 35.0f, 0.0625, 0.0625f, 0.0625f}, //ana
+    {-135.0f, -35.0f, -0.0625, -0.0625f, -0.0625f} //kata
     
 };
 
@@ -199,6 +201,20 @@ glm::mat4 translateModel(glm::vec3 translation) {
 
 glm::mat4 translateModel(int x, int y, int z) {
     return translateModel(glm::vec3(x, y, z));
+}
+
+bool coordsMatch(std::vector<int> coords1, std::vector<int> coords2) {
+    if (coords1.size() != coords2.size()) {
+        return false;
+    }
+
+    for (int i = 0; i < coords1.size(); i++) {
+        if (coords1[i] != coords2[i]) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 #pragma endregion
@@ -319,19 +335,22 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
 
 void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW) {
     if (mazeW == currentW) {
-        glm::vec3 coords = glm::vec3(mazeX + centerX, mazeY + centerY, mazeZ + centerZ);
-        //translation to get it to the same coords as the center piece, from which we then translate it again into the proper position
-        glm::mat4 initialTranslate = translateModel(coords);
+        std::vector<int> mazeCoords = { mazeZ, mazeY, mazeZ, mazeW };
+        glm::vec3 modelCoords = glm::vec3(mazeX + centerX, mazeY + centerY, mazeZ + centerZ);
+        //translation to get it to the same modelCoords as the center piece, from which we then translate it again into the proper position
+        glm::mat4 initialTranslate = translateModel(modelCoords);
         glm::mat4 view = getViewMatrixFromCamera();
         float wLerp = 1.0f;
 
-        glm::vec3 cellColour = glm::vec3(0.54f, 0.54f, 0.54f);
+        glm::vec3 defaultCellColour = glm::vec3(0.54f, 0.54f, 0.54f);
+        glm::vec3 mazeEntranceColour = glm::vec3(0.0f, 1.0f, 0.0f);
+        glm::vec3 mazeExitColour = glm::vec3(1.0f, 0.0f, 0.0f);
+
         glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());
         glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
 
         glUseProgram(genericCubeProgram);
 
-        glUniform3fv(glGetUniformLocation(genericCubeProgram, "cellColour"), 1, glm::value_ptr(cellColour));
         glUniform3fv(glGetUniformLocation(genericCubeProgram, "lightPos"), 1, glm::value_ptr(lightPos));
         glUniform3fv(glGetUniformLocation(genericCubeProgram, "lightColour"), 1, glm::value_ptr(lightColour));
 
@@ -343,11 +362,23 @@ void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int
         for (unsigned int i = 0; i < 8; i++) {
             unsigned int bitChecking = 1 << i;
 
-            if (i < 6 && (mazeCellData & bitChecking) > 0) {
+            if ((mazeCellData & bitChecking) > 0) {
                 std::vector<float> transformation = cellPathTransformations[i];
-                glm::mat4 model = mazeCellPathTransform(coords, transformation[0], transformation[1], transformation[2], transformation[3], transformation[4]) * initialTranslate;
-                
                 //TODO: move all matrix multiplications into the shaders?
+                glm::mat4 model = mazeCellPathTransform(modelCoords, transformation[0], transformation[1], transformation[2], transformation[3], transformation[4]) * initialTranslate;
+
+                if (coordsMatch(maze.mazeEntrance, mazeCoords)) {
+                    glUniform3fv(glGetUniformLocation(genericCubeProgram, "cellColour"), 1, glm::value_ptr(mazeEntranceColour));
+                } else if (coordsMatch(maze.mazeExit, mazeCoords)) {
+                    glUniform3fv(glGetUniformLocation(genericCubeProgram, "cellColour"), 1, glm::value_ptr(mazeExitColour));
+                } else {
+                    glUniform3fv(glGetUniformLocation(genericCubeProgram, "cellColour"), 1, glm::value_ptr(defaultCellColour));
+                }
+
+                if (i >= 6) {
+                    //TODO: change colour based on if running path has visited this path
+                }
+
                 glUniformMatrix4fv(glGetUniformLocation(genericCubeProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
                 glDrawArrays(GL_TRIANGLES, 0, 36);
