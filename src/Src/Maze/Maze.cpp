@@ -134,6 +134,11 @@ void Maze::loadFromFile(std::string fileName) {
 
 	std::vector<int> exit = std::vector<int>(4);
 
+	for (int i = 0; i < dimensions; i++) {
+		inFile.get(currentChar);
+		exit[i] = currentChar;
+	}
+
 	mazeExit = exit;
 	mazeEntrance = entrance;
 	this->dimensions = dimensions;

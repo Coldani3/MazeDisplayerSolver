@@ -150,6 +150,7 @@ float mazePathVerticesNormals[] = {
 
 //xRot, yRot, xTrans, yTrans, zTrans - front = 0 deg
 //0.0625 + 0.21875 = 0.28125
+
 std::vector<std::vector<float>> cellPathTransformations = {
     {0.0f, 0.0f, 0.0f, 0.0f, -0.28125f}, //front
     {180.0f, 0.0f, 0.0f, 0.0f, 0.28125f},  //back
@@ -157,6 +158,9 @@ std::vector<std::vector<float>> cellPathTransformations = {
     {270.0f, 0.0f, -0.28125f, 0.0f, 0.0f}, //left
     {0.0f, 90.0f, 0.0f, 0.28125f, 0.0f}, //up
     {0.0f, -90.0f, 0.0f, -0.28125f, 0.0f}, //down
+    //to corner of cube = 0.0625 in all directions
+    //0.8 * 0.21875 = 0.175
+    //
     {45.0f, 35.0f, 0.0625, 0.0625f, 0.0625f}, //ana
     {-135.0f, -35.0f, -0.0625, -0.0625f, -0.0625f} //kata
     
@@ -165,6 +169,12 @@ std::vector<std::vector<float>> cellPathTransformations = {
 float centerX = 500;
 float centerY = 500;
 float centerZ = 500;
+
+glm::vec3 defaultCellColour = glm::vec3(0.54f, 0.54f, 0.54f);
+glm::vec3 mazeEntranceColour = glm::vec3(0.0f, 1.0f, 0.0f);
+glm::vec3 mazeExitColour = glm::vec3(1.0f, 0.0f, 0.0f);
+glm::vec3 anaColour = glm::vec3(0.901f, 0.796f, 0.333f);
+glm::vec3 kataColour = glm::vec3(0.396f, 0.415f, 0.788f);
 
 #pragma endregion
 
@@ -279,6 +289,16 @@ int RenderManager::getWViewing() {
     return currentW;
 }
 
+glm::vec3 RenderManager::getCellColour(std::vector<int> coords) {
+    if (coordsMatch(coords, maze.mazeEntrance)) {
+        return mazeEntranceColour;
+    } else if (coordsMatch(coords, maze.mazeExit)) {
+        return mazeExitColour;
+    } else {
+        return defaultCellColour;
+    }
+}
+
 glm::mat4 RenderManager::getViewMatrixFromCamera() {
     glm::vec3 camPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());
     glm::vec3 lookingAtPos = glm::vec3(camera->getXLookingAt(), camera->getYLookingAt(), camera->getZLookingAt());
@@ -310,7 +330,6 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
         glm::mat4 model = translateModel(coords);
         glm::mat4 view = /*glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f));*/ getViewMatrixFromCamera();
 
-        glm::vec3 cellColour = glm::vec3(0.54f, 0.54f, 0.54f);
         glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());
         glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
 
@@ -320,7 +339,7 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-        glUniform3fv(glGetUniformLocation(cellCenterProgram, "cellColour"), 1, glm::value_ptr(cellColour));
+        glUniform3fv(glGetUniformLocation(cellCenterProgram, "cellColour"), 1, glm::value_ptr(getCellColour({mazeX, mazeY, mazeZ, mazeW})));
         glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightPos"), 1, glm::value_ptr(lightPos));
         glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightColour"), 1, glm::value_ptr(lightColour));
 
@@ -342,10 +361,6 @@ void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int
         glm::mat4 view = getViewMatrixFromCamera();
         float wLerp = 1.0f;
 
-        glm::vec3 defaultCellColour = glm::vec3(0.54f, 0.54f, 0.54f);
-        glm::vec3 mazeEntranceColour = glm::vec3(0.0f, 1.0f, 0.0f);
-        glm::vec3 mazeExitColour = glm::vec3(1.0f, 0.0f, 0.0f);
-
         glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());
         glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
 
@@ -366,18 +381,20 @@ void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int
                 std::vector<float> transformation = cellPathTransformations[i];
                 //TODO: move all matrix multiplications into the shaders?
                 glm::mat4 model = mazeCellPathTransform(modelCoords, transformation[0], transformation[1], transformation[2], transformation[3], transformation[4]) * initialTranslate;
+                glm::vec3 cellColour;
 
-                if (coordsMatch(maze.mazeEntrance, mazeCoords)) {
-                    glUniform3fv(glGetUniformLocation(genericCubeProgram, "cellColour"), 1, glm::value_ptr(mazeEntranceColour));
-                } else if (coordsMatch(maze.mazeExit, mazeCoords)) {
-                    glUniform3fv(glGetUniformLocation(genericCubeProgram, "cellColour"), 1, glm::value_ptr(mazeExitColour));
-                } else {
-                    glUniform3fv(glGetUniformLocation(genericCubeProgram, "cellColour"), 1, glm::value_ptr(defaultCellColour));
-                }
-
-                if (i >= 6) {
+                if (i < 6) {
+                    cellColour = getCellColour(mazeCoords);
                     //TODO: change colour based on if running path has visited this path
+                } else {
+                    if (bitChecking == ANA) {
+                        cellColour = anaColour;
+                    } else {
+                        cellColour = kataColour;
+                    }
                 }
+
+                glUniform3fv(glGetUniformLocation(genericCubeProgram, "cellColour"), 1, glm::value_ptr(cellColour));
 
                 glUniformMatrix4fv(glGetUniformLocation(genericCubeProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
