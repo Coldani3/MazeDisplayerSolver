@@ -147,11 +147,6 @@ void Maze::loadFromFile(std::string fileName) {
 	depth = sizes[2];
 	hyperDepth = sizes[3];
 
-	for (int i = 0; i < dimensions; i++) {
-		inFile.get(currentChar);
-		exit[i] = currentChar;
-	}
-
 	int size = 1;
 
 	for (int i = 0; i < sizes.size(); i++) {

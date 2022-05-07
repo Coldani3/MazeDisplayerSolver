@@ -215,6 +215,7 @@ glm::mat4 translateModel(int x, int y, int z) {
 
 bool coordsMatch(std::vector<int> coords1, std::vector<int> coords2) {
     if (coords1.size() != coords2.size()) {
+        std::cerr << "Non matching coordinate sizes detected!" << std::endl;
         return false;
     }
 
