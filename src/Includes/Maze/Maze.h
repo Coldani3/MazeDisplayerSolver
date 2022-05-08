@@ -6,14 +6,14 @@
 
 //The flags each bit of each maze cell contain.
 enum MazeDirections {
-	FORWARD = 1,
-	BACKWARD = 2,
-	RIGHT = 4,
-	LEFT = 8,
-	UP = 16,
-	DOWN = 32,
-	ANA = 64,
-	KATA = 128
+	FORWARD = (unsigned int) 1,
+	BACKWARD = (unsigned int) 2,
+	RIGHT = (unsigned int) 4,
+	LEFT = (unsigned int) 8,
+	UP = (unsigned int) 16,
+	DOWN = (unsigned int) 32,
+	ANA = (unsigned int) 64,
+	KATA = (unsigned int) 128
 };
 
 //A maze that stores the data and allows access of mazes up to and including 4 dimensions.

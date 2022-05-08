@@ -161,8 +161,8 @@ std::vector<std::vector<float>> cellPathTransformations = {
     //to corner of cube = 0.0625 in all directions
     //0.8 * 0.21875 = 0.175
     //
-    {45.0f, 35.0f, 0.0625, 0.0625f, 0.0625f}, //ana
-    {-135.0f, -35.0f, -0.0625, -0.0625f, -0.0625f} //kata
+    {45.0f, 35.0f, 0.0625, 0.0625f, -0.0625f}, //ana
+    {-135.0f, -35.0f, -0.0625, -0.0625f, 0.0625f} //kata
     
 };
 
@@ -173,7 +173,9 @@ float centerZ = 500;
 glm::vec3 defaultCellColour = glm::vec3(0.54f, 0.54f, 0.54f);
 glm::vec3 mazeEntranceColour = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 mazeExitColour = glm::vec3(1.0f, 0.0f, 0.0f);
+//229, 203, 85 - yellowy
 glm::vec3 anaColour = glm::vec3(0.901f, 0.796f, 0.333f);
+//101, 106, 201 - bluey
 glm::vec3 kataColour = glm::vec3(0.396f, 0.415f, 0.788f);
 
 #pragma endregion
@@ -329,7 +331,7 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
         //TODO: store these vecs in a lookup buffer to save performance and memory
         glm::vec3 coords = glm::vec3(mazeX + centerX, mazeY + centerY, mazeZ + centerZ);
         glm::mat4 model = translateModel(coords);
-        glm::mat4 view = /*glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f));*/ getViewMatrixFromCamera();
+        glm::mat4 view = getViewMatrixFromCamera();
 
         glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());
         glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -355,7 +357,7 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
 
 void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW) {
     if (mazeW == currentW) {
-        std::vector<int> mazeCoords = { mazeZ, mazeY, mazeZ, mazeW };
+        std::vector<int> mazeCoords = { mazeX, mazeY, mazeZ, mazeW };
         glm::vec3 modelCoords = glm::vec3(mazeX + centerX, mazeY + centerY, mazeZ + centerZ);
         //translation to get it to the same modelCoords as the center piece, from which we then translate it again into the proper position
         glm::mat4 initialTranslate = translateModel(modelCoords);
@@ -382,12 +384,9 @@ void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int
                 std::vector<float> transformation = cellPathTransformations[i];
                 //TODO: move all matrix multiplications into the shaders?
                 glm::mat4 model = mazeCellPathTransform(modelCoords, transformation[0], transformation[1], transformation[2], transformation[3], transformation[4]) * initialTranslate;
-                glm::vec3 cellColour;
+                glm::vec3 cellColour = getCellColour(mazeCoords);
 
-                if (i < 6) {
-                    cellColour = getCellColour(mazeCoords);
-                    //TODO: change colour based on if running path has visited this path
-                } else {
+                if (i >= 6) {
                     if (bitChecking == ANA) {
                         cellColour = anaColour;
                     } else {
@@ -403,8 +402,6 @@ void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int
             }
         }
 
-        //TODO: to drawarray
-        //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
 }
@@ -529,7 +526,10 @@ void RenderManager::draw() {
     for (int x = 0; x < 68; x++) {
         drawMazeCellPaths(debugCellData, x, 0, 0, 0);
         debugCellData = debugCellData << 1;
-    }*/
+    }
+
+    drawMazeCellPaths(maze[maze.mazeEntrance], maze.mazeEntrance[0], maze.mazeEntrance[1], maze.mazeEntrance[2], maze.mazeEntrance[3]);
+    drawMazeCellPaths(maze[maze.mazeExit], maze.mazeExit[0], maze.mazeExit[1], maze.mazeExit[2], maze.mazeExit[3]);*/
 
     /*drawMazeCellPaths(63, 0, 0, 0, 0);
     drawMazeCellPaths(63, 1, 0, 0, 0);
