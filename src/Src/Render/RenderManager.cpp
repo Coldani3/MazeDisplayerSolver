@@ -504,6 +504,20 @@ void RenderManager::setup() {
     std::cout << "Finished setting up OpenGL." << std::endl;
 }
 
+void RenderManager::markCellVisited(std::vector<int> coords) {
+    if (!(std::find(visited.begin(), visited.end(), coords) != visited.end())) {
+        visited.push_back(coords);
+    }
+}
+
+void RenderManager::clearVisitedCells() {
+    visited.clear();
+}
+
+void RenderManager::setCellHeadOfSolver(std::vector<int> coords) {
+    head = coords;
+}
+
 void RenderManager::draw() {
     glClearColor(0.8470f, 0.8823f, 0.9098f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

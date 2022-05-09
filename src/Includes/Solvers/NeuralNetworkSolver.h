@@ -18,7 +18,7 @@ class NeuralNetworkSolver :
     public Solver
 {
 public:
-    NeuralNetworkSolver(Maze maze, int maxNetworkGroups, int networksPerGroup, int maxLayersPerNetwork, int trainsPerCycle);
+    NeuralNetworkSolver(Maze maze, std::shared_ptr<RenderManager> renderer, int maxNetworkGroups, int networksPerGroup, int maxLayersPerNetwork, int trainsPerCycle);
     ~NeuralNetworkSolver();
     void solve();
     void train(std::vector<int>, NeuralNetwork network);

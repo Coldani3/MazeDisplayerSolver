@@ -10,7 +10,7 @@
 #include <Render/RenderManager.h>
 #include <Solvers/SimpleNeuralNetworkSolver.h>
 
-std::unique_ptr<RenderManager> renderer;
+std::shared_ptr<RenderManager> renderer;
 double lastFrame;
 double delta = 0;
 int fps = 0;
@@ -113,7 +113,7 @@ int beginRenderLoop(Maze maze) {
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    renderer = std::make_unique<RenderManager>(800, 600, maze);
+    renderer = std::make_shared<RenderManager>(800, 600, maze);
 
     if (renderer->getWindow() == NULL) {
         std::cerr << "Could not create window" << std::endl;
@@ -162,7 +162,7 @@ int beginRenderLoop(Maze maze) {
 }
 
 void aiThreadMethod(Maze maze) {
-    SimpleNeuralNetworkSolver solver({ 12, 10, 10, 4 }, 20, 0.1, maze);
+    SimpleNeuralNetworkSolver solver({ 12, 10, 10, 4 }, 20, 0.1, maze, renderer);
 
     //solver.solve();
 }

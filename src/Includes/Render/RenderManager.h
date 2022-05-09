@@ -27,6 +27,9 @@ public:
 	glm::mat4 mazeCellPathTransform(glm::vec3 initialCoords, float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ);
 	glm::mat4 getViewMatrixFromCamera();
 	glm::vec3 getCellColour(std::vector<int> coords);
+	void markCellVisited(std::vector<int> coords);
+	void clearVisitedCells();
+	void setCellHeadOfSolver(std::vector<int> coords);
 
 	glm::mat4 projection;
 	std::unique_ptr<Camera> camera;
@@ -38,5 +41,7 @@ private:
 	int defaultHeight;
 	int currentW = 0;
 	Maze maze;
+	std::vector<std::vector<int>> visited;
+	std::vector<int> head;
 };
 

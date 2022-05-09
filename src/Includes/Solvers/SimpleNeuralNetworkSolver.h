@@ -7,7 +7,7 @@
 class SimpleNeuralNetworkSolver : public Solver
 {
 public:
-	SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, Maze maze);
+	SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, Maze maze, std::shared_ptr<RenderManager> renderer);
 	void solve();
 	void train(NeuralNetwork network, std::vector<std::vector<int>> path);
 

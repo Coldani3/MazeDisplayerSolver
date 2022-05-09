@@ -5,7 +5,7 @@
 const int maxQueries = 4;
 const int trainsPerCycle = 50;
 
-SimpleNeuralNetworkSolver::SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, Maze maze) : Solver(maze) {
+SimpleNeuralNetworkSolver::SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, Maze maze, std::shared_ptr<RenderManager> renderer) : Solver(maze, renderer) {
 	for (int i = 0; i < networks; i++) {
 		this->networks.push_back(NeuralNetwork(nodesPerLayer, learnRate));
 	}
@@ -34,8 +34,7 @@ std::vector<std::vector<int>> SimpleNeuralNetworkSolver::getMostSuccessfulPath(s
 	for (int i = 0; i < paths.size(); i++) {
 		std::vector<int> lastCoord = paths[i].back();
 
-		//4D pythagoras = sqrt(a^2 + b^2 + c^2 + d^2)
-		float distance = sqrtf(pow(lastCoord[0], 2) + pow(lastCoord[1], 2) + pow(lastCoord[2], 2) + pow(lastCoord[3], 2));
+		float distance = distanceBetween(lastCoord, maze.mazeExit);
 
 		successes[i] = distance;
 	}

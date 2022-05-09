@@ -1,7 +1,8 @@
 #include <Solvers/Solver.h>
 
-Solver::Solver(Maze maze) {
+Solver::Solver(Maze maze, std::shared_ptr<RenderManager> renderer) {
 	this->maze = maze;
+	this->renderer = renderer;
 }
 
 float Solver::distanceBetween(std::vector<int> coords1, std::vector<int> coords2) {
