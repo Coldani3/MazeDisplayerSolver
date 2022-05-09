@@ -152,12 +152,12 @@ float mazePathVerticesNormals[] = {
 //0.0625 + 0.21875 = 0.28125
 
 std::vector<std::vector<float>> cellPathTransformations = {
-    {0.0f, 90.0f, 0.0f, 0.28125f, 0.0f}, //front
-    {0.0f, -90.0f, 0.0f, -0.28125f, 0.0f},  //back
-    {270.0f, 0.0f, -0.28125f, 0.0f, 0.0f}, //right
-    {90.0f, 0.0f, 0.28125f, 0.0f, 0.0f},//left
-    {180.0f, 0.0f, 0.0f, 0.0f, 0.28125f}, //up 
-    {0.0f, 0.0f, 0.0f, 0.0f, -0.28125f}, //down 
+    {0.0f, 90.0f, 0.0f, 0.28125f, 0.0f},  //up 
+    {0.0f, -90.0f, 0.0f, -0.28125f, 0.0f}, //down  
+    {270.0f, 0.0f, -0.28125f, 0.0f, 0.0f}, //left
+    {90.0f, 0.0f, 0.28125f, 0.0f, 0.0f}, //right
+    {180.0f, 0.0f, 0.0f, 0.0f, 0.28125f},//back
+    {0.0f, 0.0f, 0.0f, 0.0f, -0.28125f}, //front
     //to corner of cube = 0.0625 in all directions
     //0.8 * 0.21875 = 0.175
     //
