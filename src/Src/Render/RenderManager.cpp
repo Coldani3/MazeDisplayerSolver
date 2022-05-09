@@ -152,12 +152,12 @@ float mazePathVerticesNormals[] = {
 //0.0625 + 0.21875 = 0.28125
 
 std::vector<std::vector<float>> cellPathTransformations = {
-    {0.0f, 0.0f, 0.0f, 0.0f, -0.28125f}, //front
-    {180.0f, 0.0f, 0.0f, 0.0f, 0.28125f},  //back
-    {90.0f, 0.0f, 0.28125f, 0.0f, 0.0f}, //right
-    {270.0f, 0.0f, -0.28125f, 0.0f, 0.0f}, //left
-    {0.0f, 90.0f, 0.0f, 0.28125f, 0.0f}, //up
-    {0.0f, -90.0f, 0.0f, -0.28125f, 0.0f}, //down
+    {0.0f, 90.0f, 0.0f, 0.28125f, 0.0f}, //front
+    {0.0f, -90.0f, 0.0f, -0.28125f, 0.0f},  //back
+    {270.0f, 0.0f, -0.28125f, 0.0f, 0.0f}, //right
+    {90.0f, 0.0f, 0.28125f, 0.0f, 0.0f},//left
+    {180.0f, 0.0f, 0.0f, 0.0f, 0.28125f}, //up 
+    {0.0f, 0.0f, 0.0f, 0.0f, -0.28125f}, //down 
     //to corner of cube = 0.0625 in all directions
     //0.8 * 0.21875 = 0.175
     //
@@ -329,7 +329,7 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
     
     if (mazeW == currentW) {
         //TODO: store these vecs in a lookup buffer to save performance and memory
-        glm::vec3 coords = glm::vec3(mazeX + centerX, mazeY + centerY, mazeZ + centerZ);
+        glm::vec3 coords = glm::vec3((maze.width - mazeX) + centerX, mazeY + centerY, mazeZ + centerZ);
         glm::mat4 model = translateModel(coords);
         glm::mat4 view = getViewMatrixFromCamera();
 
@@ -358,7 +358,7 @@ void RenderManager::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int maze
 void RenderManager::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW) {
     if (mazeW == currentW) {
         std::vector<int> mazeCoords = { mazeX, mazeY, mazeZ, mazeW };
-        glm::vec3 modelCoords = glm::vec3(mazeX + centerX, mazeY + centerY, mazeZ + centerZ);
+        glm::vec3 modelCoords = glm::vec3((maze.width - mazeX) + centerX, mazeY + centerY, mazeZ + centerZ);
         //translation to get it to the same modelCoords as the center piece, from which we then translate it again into the proper position
         glm::mat4 initialTranslate = translateModel(modelCoords);
         glm::mat4 view = getViewMatrixFromCamera();
