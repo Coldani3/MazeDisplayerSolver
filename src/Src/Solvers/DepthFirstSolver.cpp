@@ -65,7 +65,7 @@ std::vector<int> DepthFirstSolver::pickNextCellFrom(std::vector<int> from) {
 			std::cout << std::endl;
 		}*/
 
-		if (maze.inBounds(trying) && !visitedCell(trying)) {
+		if (maze.inBounds(trying) && !visitedCell(trying) && canAccessFrom(from, trying)) {
 			return trying;
 		}
 	}

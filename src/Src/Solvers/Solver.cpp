@@ -52,3 +52,66 @@ std::vector<int> Solver::minusCoords(std::vector<int> coords1, std::vector<int> 
 
 	return out;
 }
+
+bool Solver::canAccessFrom(std::vector<int> fromCoords, std::vector<int> targetCoords) {
+	std::vector<int> difference = minusCoords(targetCoords, fromCoords);
+	unsigned int side = 0;
+
+	for (int i = 0; i < difference.size(); i++) {
+		if (difference[i] != 0) {
+			switch (i) {
+				case 0:
+					if (difference[i] > 0) {
+						side = RIGHT;
+					}
+					else {
+						side = LEFT;
+					}
+
+					break;
+				case 1:
+					
+
+					if (difference[i] > 0) {
+						side = UP;
+					}
+					else {
+						side = DOWN;
+					}
+
+					break;
+				case 2:
+					if (difference[i] > 0) {
+						side = FORWARD;
+					} else {
+						side = BACKWARD;
+					}
+					break;
+				case 3:
+					if (difference[i] > 0) {
+						side = ANA;
+					} else {
+						side = KATA;
+					}
+					break;
+				}
+		}
+	}
+
+	std::cout << "side: " << side << std::endl;
+	
+	unsigned int opposite = 0;
+
+	//AAA because we eliminated the visited bit when saving from the generator
+	if ((side & 0xAAAAAAAAAAAAAAAA) > 0) {
+		//if it is, shift one way, getting the opposite
+		opposite = side >> 1;
+	} else {
+		//otherwise shift the other way
+		opposite = side << 1;
+	}
+
+	std::cout << "opposite: " << opposite << std::endl;
+
+	return (maze[targetCoords] & opposite) > 0;
+}

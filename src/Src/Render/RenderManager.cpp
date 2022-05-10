@@ -248,6 +248,7 @@ RenderManager::RenderManager(int width, int height, Maze maze) {
     this->maze = maze;
     visited = std::vector<bool>();
     visited.resize(maze.width * maze.height * maze.depth * maze.hyperDepth);
+    visitedPath = std::vector<std::vector<int>>();
     head = std::vector<int>();
     std::vector<float> mazeCenter = { centerX + ((float) maze.width / 2), centerY + ((float) maze.height / 2), centerZ + ((float) maze.depth / 2) };
 
@@ -522,6 +523,7 @@ void RenderManager::markCellVisited(std::vector<int> coords) {
     if (!(visitedCell(coords))) {
         visited[(maze.height * maze.width * maze.depth * coords[3]) + (maze.height * maze.width * coords[2]) + (maze.height * coords[1]) + coords[0]] = true;
         //visited->push_back(coords);
+        visitedPath.push_back(coords);
     }
 }
 

@@ -178,6 +178,17 @@ void aiThreadMethod(Maze maze) {
     SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1, maze, renderer);
     DepthFirstSolver depthSolver(maze, renderer);
 
+    /*std::cout << "test1 (should be true or 1): " << depthSolver.canAccessFrom({ 0, 0, 0, 0 }, { 1, 0, 0, 0 }) << std::endl;
+    std::cout << "test 2 (should be false or 0): " << depthSolver.canAccessFrom({ 0, 0, 0, 0 }, { 0, 0, 1, 0 }) << std::endl;
+    std::cout << "test 3 (should be true or 1): " << depthSolver.canAccessFrom({ 0, 0, 0, 0 }, { 0, 1, 0, 0 }) << std::endl;
+    std::cout << "test 4 (should be false or 0): " << depthSolver.canAccessFrom({ 0, 0, 0, 0 }, { 0, 0, 0, 1 }) << std::endl;
+    std::cout << "test 5 (should be true or 1): " << depthSolver.canAccessFrom({ 0, 1, 0, 0 }, { 0, 0, 0, 0 }) << std::endl;
+    std::cout << "[AI] +y " << (int)maze[{0, 1, 0, 0}] << ", 0 " << (int)maze[{0, 0, 0, 0}] << ", +z " << (int)maze[{0, 0, 1, 0}] << std::endl;
+
+    renderer->markCellVisited({ 0, 0, 0, 0 });
+    renderer->markCellVisited({ 0, 0, 1, 0 });
+    renderer->markCellVisited({ 0, 1, 0, 0 });*/
+
     std::cout << "[AI] Done." << std::endl;
 
     runSolver(std::make_unique<DepthFirstSolver>(depthSolver), maze, "Psuedo Right-Hand Rule Depth First Solver");

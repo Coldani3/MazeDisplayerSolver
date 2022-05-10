@@ -6,12 +6,13 @@
 
 //The flags each bit of each maze cell contain.
 enum MazeDirections {
-	FORWARD = (unsigned int) 1,
-	BACKWARD = (unsigned int) 2,
-	RIGHT = (unsigned int) 4,
-	LEFT = (unsigned int) 8,
-	UP = (unsigned int) 16,
-	DOWN = (unsigned int) 32,
+	//so uh apparently the saved mazes are the wrong way around? I commented out what they should be
+	FORWARD = (unsigned int) 16,//1,
+	BACKWARD = (unsigned int) 32,//2,
+	RIGHT = (unsigned int) 4,//4,
+	LEFT = (unsigned int) 8,//8,
+	UP = (unsigned int) 1,//16,
+	DOWN = (unsigned int) 2,//32,
 	ANA = (unsigned int) 64,
 	KATA = (unsigned int) 128
 };

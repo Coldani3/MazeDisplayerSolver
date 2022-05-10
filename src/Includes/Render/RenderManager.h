@@ -35,6 +35,7 @@ public:
 	glm::mat4 projection;
 	std::unique_ptr<Camera> camera;
 	std::vector<bool> visited;
+	std::vector<std::vector<int>> visitedPath;
 	std::vector<int> head;
 private:
 	GLFWwindow* window;
