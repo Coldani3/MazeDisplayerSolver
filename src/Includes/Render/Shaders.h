@@ -18,11 +18,10 @@ out vec3 modelVertexPassed;
 
 void main() {
 	vec4 cubeVec4 = vec4(cubeCoord, 1.0);
-	mat4 mvp = projection * view * model;
-	mat3 normalTransform = transpose(inverse(mat3(mvp)));
+	mat3 normalTransform = transpose(inverse(mat3(model)));
 	vecNormal = normalize(normalTransform * vertexNormal);
 	modelVertexPassed = vec3(model * cubeVec4);
-	gl_Position = mvp * cubeVec4;
+	gl_Position = projection * view * model * cubeVec4;
 })glsl";
 
 //stride = sizeof(float) * 3

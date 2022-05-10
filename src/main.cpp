@@ -93,12 +93,12 @@ void handleInput(GLFWwindow* window) {
 
     if (glfwGetTime() > lastWShift + 0.2) {
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-            renderer->setWViewing(renderer->getWViewing() + 1);
+            renderer->setWViewing(renderer->getWViewing() - 1);
             lastWShift = glfwGetTime();
         }
 
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-            renderer->setWViewing(renderer->getWViewing() - 1);
+            renderer->setWViewing(renderer->getWViewing() + 1);
             lastWShift = glfwGetTime();
         }
     }

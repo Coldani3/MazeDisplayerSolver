@@ -15,7 +15,7 @@ void DepthFirstSolver::solve() {
 
 	std::cout << "[Depth First] Begin loop..." << std::endl;
 
-	while (navStack.size() > 0) {
+	while (!navStack.empty()) {
 		if (canGoAnywhereFrom(navStack.top())) {
 			std::vector<int> next = pickNextCellFrom(navStack.top());
 
@@ -26,14 +26,14 @@ void DepthFirstSolver::solve() {
 
 			++stepsTaken;
 
-			if (next == maze.mazeEntrance) {
+			if (next == maze.mazeExit) {
 				std::cout << "[Depth First] Found exit!" << std::endl;
 				success = true;
 				break;
 			}
 		} else {
 			//backtrack
-			while (!canGoAnywhereFrom(navStack.top()) && !navStack.empty()) {
+			while (!navStack.empty() && !canGoAnywhereFrom(navStack.top())) {
 				navStack.pop();
 			}
 		}
