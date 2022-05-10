@@ -18,6 +18,7 @@ out vec3 modelVertexPassed;
 
 void main() {
 	vec4 cubeVec4 = vec4(cubeCoord, 1.0);
+	//TODO: move this out of shader because inverse is bad on the GPU
 	mat3 normalTransform = transpose(inverse(mat3(model)));
 	vecNormal = normalize(normalTransform * vertexNormal);
 	modelVertexPassed = vec3(model * cubeVec4);

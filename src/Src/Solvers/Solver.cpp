@@ -9,7 +9,11 @@ float Solver::distanceBetween(std::vector<int> coords1, std::vector<int> coords2
 	return sqrtf(pow(abs(coords2[0] - coords1[0]), 2) + pow(abs(coords2[2] - coords1[1]), 2) + pow(abs(coords2[2] - coords1[2]), 2) + pow(abs(coords2[3] - coords1[3]), 2));
 }
 
-std::vector<int> Solver::addCoords(std::vector<int> coords1, std::vector<int> coords2) {
+void Solver::solve() {
+
+}
+
+std::vector<int> Solver::addCoords(std::vector<int> coords1, std::vector<int> coords2) const {
 	std::vector<int> out;
 
 	for (int i = 0; i < 4; i++) {

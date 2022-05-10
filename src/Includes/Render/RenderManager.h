@@ -30,10 +30,11 @@ public:
 	void markCellVisited(std::vector<int> coords);
 	void clearVisitedCells();
 	void setCellHeadOfSolver(std::vector<int> coords);
+	bool visitedCell(std::vector<int> coords);
 
 	glm::mat4 projection;
 	std::unique_ptr<Camera> camera;
-	std::vector<std::vector<int>> visited;
+	std::vector<bool> visited;
 	std::vector<int> head;
 private:
 	GLFWwindow* window;

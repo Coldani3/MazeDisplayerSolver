@@ -166,11 +166,13 @@ std::vector<std::vector<float>> cellPathTransformations = {
     
 };
 
-float centerX = 500;
-float centerY = 500;
-float centerZ = 500;
+float centerX = 500.0f;
+float centerY = 500.0f;
+float centerZ = 500.0f;
 
 glm::vec3 defaultCellColour = glm::vec3(0.54f, 0.54f, 0.54f);
+//177, 3, 252 - purpley
+glm::vec3 visitedCellColour = glm::vec3(0.694f, 0.0117f, 0.988f);
 glm::vec3 mazeEntranceColour = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 mazeExitColour = glm::vec3(1.0f, 0.0f, 0.0f);
 //229, 203, 85 - yellowy
@@ -244,12 +246,14 @@ RenderManager::RenderManager(int width, int height, Maze maze) {
     this->width = width;
     this->height = height;
     this->maze = maze;
-    visited = std::vector<std::vector<int>>();
+    visited = std::vector<bool>();
+    visited.resize(maze.width * maze.height * maze.depth * maze.hyperDepth);
     head = std::vector<int>();
+    std::vector<float> mazeCenter = { centerX + ((float) maze.width / 2), centerY + ((float) maze.height / 2), centerZ + ((float) maze.depth / 2) };
 
     projection = glm::perspective(glm::radians(45.0f), (float) this->width / (float) this->height, 0.1f, 100.0f);
-    camera = std::make_unique<Camera>(Camera(centerX, centerY, centerZ + -15.0f, centerX, centerY, centerZ));
-    camera->lookAt(centerX + (maze.width / 2), centerY + (maze.height / 2), centerZ + (maze.depth / 2));
+    camera = std::make_unique<Camera>(Camera(mazeCenter[0], mazeCenter[1], mazeCenter[2] + -15.0f, mazeCenter[0], mazeCenter[1], mazeCenter[2]));
+    camera->lookAt(mazeCenter[0], mazeCenter[1], mazeCenter[2]);
 }
 
 RenderManager::~RenderManager() {
@@ -300,6 +304,14 @@ glm::vec3 RenderManager::getCellColour(std::vector<int> coords) {
     } else if (coordsMatch(coords, maze.mazeExit)) {
         return mazeExitColour;
     } else {
+        if (visited.size() > 0) {
+            //std::vector<std::vector<int>> visitedCopy = *visited;
+
+            if (visitedCell(coords)) {
+                return visitedCellColour;
+            }
+        }
+
         return defaultCellColour;
     }
 }
@@ -507,8 +519,9 @@ void RenderManager::setup() {
 }
 
 void RenderManager::markCellVisited(std::vector<int> coords) {
-    if (!(std::find(visited.begin(), visited.end(), coords) != visited.end())) {
-        visited.push_back(coords);
+    if (!(visitedCell(coords))) {
+        visited[(maze.height * maze.width * maze.depth * coords[3]) + (maze.height * maze.width * coords[2]) + (maze.height * coords[1]) + coords[0]] = true;
+        //visited->push_back(coords);
     }
 }
 
@@ -518,6 +531,10 @@ void RenderManager::clearVisitedCells() {
 
 void RenderManager::setCellHeadOfSolver(std::vector<int> coords) {
     head = coords;
+}
+
+bool RenderManager::visitedCell(std::vector<int> coords) {
+    return visited[(maze.height * maze.width * maze.depth * coords[3]) + (maze.height * maze.width * coords[2]) + (maze.height * coords[1]) + coords[0]];
 }
 
 void RenderManager::draw() {

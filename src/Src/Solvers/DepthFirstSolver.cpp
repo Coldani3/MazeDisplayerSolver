@@ -1,7 +1,16 @@
 #include <Solvers/DepthFirstSolver.h>
 #include <algorithm>
 
-
+std::vector<std::vector<int>> touchingSides = { 
+	{1, 0, 0, 0}, 
+	{0, 1, 0, 0},
+	{0, 0, 1, 0},
+	{0, 0, 0, 1},
+	{-1, 0, 0, 0},
+	{0, -1, 0, 0},
+	{0, 0, -1, 0},
+	{0, 0, 0, -1} 
+};
 
 DepthFirstSolver::DepthFirstSolver(Maze maze, std::shared_ptr<RenderManager> renderer) : Solver(maze, renderer) {
 	visited = std::vector<std::vector<int>>();
@@ -32,6 +41,7 @@ void DepthFirstSolver::solve() {
 				break;
 			}
 		} else {
+			//remember the teleporting rule so no steps taken increment
 			//backtrack
 			while (!navStack.empty() && !canGoAnywhereFrom(navStack.top())) {
 				navStack.pop();
@@ -43,40 +53,30 @@ void DepthFirstSolver::solve() {
 std::vector<int> DepthFirstSolver::pickNextCellFrom(std::vector<int> from) {
 	//prefer positive coordinates first
 
-	for (int x = 1; x >= -1; x -= 2) {
-		for (int y = 1; y >= -1; y -= 2) {
-			for (int z = 1; z >= -1; z -= 2) {
-				for (int w = 1; w >= -1; w -= 2) {
-					std::vector<int> trying = { from[0] + x, from[1] + y, from[2] + z, from[3] + w };
+	for (int i = 0; i < touchingSides.size(); i++) {
+		std::vector<int> trying = addCoords(touchingSides[i], from);
 
-					if (maze.inBounds(trying) && !visitedCell(trying)) {
-						return trying;
-					}
-				}
-			}
+		/*std::cout << "picking: {" << trying.size() << "} ";
+		std::cout << trying[0];
+
+		if (trying.size() > 1) {
+			std::cout << ", " << trying[1] << ", " << trying[2] << ", " << trying[3] << std::endl;
+		} else {
+			std::cout << std::endl;
+		}*/
+
+		if (maze.inBounds(trying) && !visitedCell(trying)) {
+			return trying;
 		}
 	}
 
-	return std::vector<int>(-1);
+	return { -1 };
 }
 
 bool DepthFirstSolver::canGoAnywhereFrom(std::vector<int> from) {
-	for (int x = -1; x <= 1; x += 2) {
-		for (int y = -1; y <= 1; y += 2) {
-			for (int z = -1; z <= 1; z += 2) {
-				for (int w = -1; w <= 1; w += 2) {
-					std::vector<int> coords = { from[0] + x, from[1] + y, from[2] + z, from[3] + w };
+	return pickNextCellFrom(from) != std::vector<int> {-1};
 
-					//if coords in visitedCell
-					if (maze.inBounds(coords) && !visitedCell(coords)) {
-						return true;
-					}
-				}
-			}
-		}
-	}
-
-	return false;
+	//return false;
 }
 
 bool DepthFirstSolver::visitedCell(std::vector<int> cell) {

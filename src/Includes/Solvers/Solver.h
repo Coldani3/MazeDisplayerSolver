@@ -7,9 +7,9 @@ class Solver
 {
 public:
 	Solver(Maze maze, std::shared_ptr<RenderManager> renderer);
-	void solve();
+	virtual void solve();
 	float distanceBetween(std::vector<int>, std::vector<int>);
-	std::vector<int> addCoords(std::vector<int> coords1, std::vector<int> coords2);
+	std::vector<int> addCoords(std::vector<int> coords1, std::vector<int> coords2) const;
 	std::vector<float> floatify(std::vector<int> vec);
 	std::vector<int> intify(std::vector<float> vec);
 	std::vector<int> minusCoords(std::vector<int> coords1, std::vector<int> coords2);

@@ -151,6 +151,28 @@ int beginRenderLoop(Maze maze) {
     glfwTerminate();
 }
 
+long now() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+void runSolver(std::unique_ptr<Solver> solver, Maze maze, std::string solverName) {
+    std::cout << "[AI] Beginning " << solverName << " Solver..." << std::endl;
+
+    long start = now();
+
+    solver->solve();
+
+    long finish = now();
+
+    if (solver->success) {
+        std::cout << "[AI] Success!";
+    } else {
+        std::cout << "[AI] Failed.";
+    }
+
+    std::cout << " Steps Taken: " << solver->stepsTaken << " in " << finish - start << " milliseconds " << std::endl;
+}
+
 void aiThreadMethod(Maze maze) {
     std::cout << "[AI] Initialising solvers..." << std::endl;
     SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1, maze, renderer);
@@ -158,7 +180,9 @@ void aiThreadMethod(Maze maze) {
 
     std::cout << "[AI] Done." << std::endl;
 
-    std::cout << "[AI] Beginning pseudo right-hand rule Depth First Solver..." << std::endl;
+    runSolver(std::make_unique<DepthFirstSolver>(depthSolver), maze, "Psuedo Right-Hand Rule Depth First Solver");
+
+    /*std::cout << "[AI] Beginning pseudo right-hand rule Depth First Solver..." << std::endl;
     depthSolver.solve();
 
     if (depthSolver.success) {
@@ -167,7 +191,7 @@ void aiThreadMethod(Maze maze) {
         std::cout << "[AI] Failed.";
     }
 
-    std::cout << " Steps Taken: " << depthSolver.stepsTaken << std::endl;
+    std::cout << " Steps Taken: " << depthSolver.stepsTaken << std::endl;*/
 
     //solver.solve();
 }
