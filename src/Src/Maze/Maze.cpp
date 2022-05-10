@@ -50,6 +50,17 @@ unsigned char& Maze::operator[](std::vector<int> coordinates) {
 	return mazeData[(height * width * depth * coordsToFour[3]) + (height * width * coordsToFour[2]) + (height * coordsToFour[1]) + coordsToFour[0]];
 }
 
+bool Maze::inBounds(std::vector<int> coordinates) {
+	if (coordinates.size() != 4) {
+		return false;
+	}
+
+	return (coordinates[0] >= 0 && coordinates[0] < sizes[0]) && 
+		(coordinates[1] >= 0 && coordinates[1] < sizes[1]) && 
+		(coordinates[2] >= 0 && coordinates[2] < sizes[2]) && 
+		(coordinates[3] >= 0 && coordinates[3] < sizes[3]);
+}
+
 Maze::Maze() {}
 
 Maze::Maze(std::vector<int> dimensionsVec) {
@@ -118,7 +129,7 @@ void Maze::loadFromFile(std::string fileName) {
 		throw std::runtime_error(message.str());
 	}
 
-	std::vector<int> sizes = std::vector<int>(4);
+	sizes = std::vector<int>(4);
 
 	for (int i = 0; i < dimensions; i++) {
 		inFile.get(currentChar);

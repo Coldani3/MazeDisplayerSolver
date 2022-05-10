@@ -10,6 +10,7 @@ public:
     DepthFirstSolver(Maze maze, std::shared_ptr<RenderManager> renderer);
     void solve();
     bool canGoAnywhereFrom(std::vector<int> from);
+    bool visitedCell(std::vector<int> cell);
     std::vector<int> pickNextCellFrom(std::vector<int> from);
 
 private:

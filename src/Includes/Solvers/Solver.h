@@ -14,6 +14,9 @@ public:
 	std::vector<int> intify(std::vector<float> vec);
 	std::vector<int> minusCoords(std::vector<int> coords1, std::vector<int> coords2);
 
+	int stepsTaken = 0;
+	bool success = false;
+
 protected:
 	Maze maze;
 	std::shared_ptr<RenderManager> renderer;

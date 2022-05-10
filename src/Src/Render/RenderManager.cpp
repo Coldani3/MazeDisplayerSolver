@@ -244,6 +244,8 @@ RenderManager::RenderManager(int width, int height, Maze maze) {
     this->width = width;
     this->height = height;
     this->maze = maze;
+    visited = std::vector<std::vector<int>>();
+    head = std::vector<int>();
 
     projection = glm::perspective(glm::radians(45.0f), (float) this->width / (float) this->height, 0.1f, 100.0f);
     camera = std::make_unique<Camera>(Camera(centerX, centerY, centerZ + -15.0f, centerX, centerY, centerZ));

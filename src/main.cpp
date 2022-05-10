@@ -9,6 +9,7 @@
 #include <Maze/Maze.h>
 #include <Render/RenderManager.h>
 #include <Solvers/SimpleNeuralNetworkSolver.h>
+#include <Solvers/DepthFirstSolver.h>
 
 std::shared_ptr<RenderManager> renderer;
 double lastFrame;
@@ -104,17 +105,6 @@ void handleInput(GLFWwindow* window) {
 }
 
 int beginRenderLoop(Maze maze) {
-    std::cout << "Initialising GLFW..." << std::endl;
-    //initialise glfw
-    glfwInit();
-    //tell glfw we're using opengl 3.3 with the core profile, instead of the old method
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    renderer = std::make_shared<RenderManager>(800, 600, maze);
-
     if (renderer->getWindow() == NULL) {
         std::cerr << "Could not create window" << std::endl;
         glfwTerminate();
@@ -162,7 +152,22 @@ int beginRenderLoop(Maze maze) {
 }
 
 void aiThreadMethod(Maze maze) {
-    SimpleNeuralNetworkSolver solver({ 12, 10, 10, 4 }, 20, 0.1, maze, renderer);
+    std::cout << "[AI] Initialising solvers..." << std::endl;
+    SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1, maze, renderer);
+    DepthFirstSolver depthSolver(maze, renderer);
+
+    std::cout << "[AI] Done." << std::endl;
+
+    std::cout << "[AI] Beginning pseudo right-hand rule Depth First Solver..." << std::endl;
+    depthSolver.solve();
+
+    if (depthSolver.success) {
+        std::cout << "[AI] Success!";
+    } else {
+        std::cout << "[AI] Failed.";
+    }
+
+    std::cout << " Steps Taken: " << depthSolver.stepsTaken << std::endl;
 
     //solver.solve();
 }
@@ -176,6 +181,19 @@ int main() {
     std::cout << "Maze entrance coords: " << maze.mazeEntrance[0] << ", " << maze.mazeEntrance[1] << ", " << maze.mazeEntrance[2] << ", " << maze.mazeEntrance[3] << std::endl;
     std::cout << "Maze exit coords: " << maze.mazeExit[0] << ", " << maze.mazeExit[1] << ", " << maze.mazeExit[2] << ", " << maze.mazeExit[3] << std::endl;
     std::cout << (unsigned int) maze[{0, 0, 0, 0}] << std::endl;
+
+
+    //initialise it here as renderer needs to be not nullaaa
+    std::cout << "Initialising GLFW..." << std::endl;
+    //initialise glfw
+    glfwInit();
+    //tell glfw we're using opengl 3.3 with the core profile, instead of the old method
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    renderer = std::make_shared<RenderManager>(800, 600, maze);
 
     std::thread aiThread(aiThreadMethod, maze);
 

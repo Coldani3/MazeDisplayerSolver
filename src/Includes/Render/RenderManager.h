@@ -33,6 +33,8 @@ public:
 
 	glm::mat4 projection;
 	std::unique_ptr<Camera> camera;
+	std::vector<std::vector<int>> visited;
+	std::vector<int> head;
 private:
 	GLFWwindow* window;
 	int width;
@@ -41,7 +43,5 @@ private:
 	int defaultHeight;
 	int currentW = 0;
 	Maze maze;
-	std::vector<std::vector<int>> visited;
-	std::vector<int> head;
 };
 
