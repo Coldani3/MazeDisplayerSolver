@@ -11,6 +11,7 @@
 #include <Render/RenderManager.h>
 #include <Solvers/SimpleNeuralNetworkSolver.h>
 #include <Solvers/DepthFirstSolver.h>
+#include <Solvers/FloodFillSolver.h>
 
 std::shared_ptr<RenderManager> renderer;
 bool running = true;
@@ -112,17 +113,20 @@ void handleInput(GLFWwindow* window) {
     if (glfwGetTime() > lastPathShowChange + 0.2) {
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
             renderer->setShowPath(!renderer->showPath);
+            lastPathShowChange = glfwGetTime();
         }
-
-        lastPathShowChange = glfwGetTime();
     }
 
     if (glfwGetTime() > lastSolverShift + 1.0) {
         if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
             ++solverIndex;
+            std::cout << "Incrementing Solver Index!" << std::endl;
+            lastSolverShift = glfwGetTime();
+        } else if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+            --solverIndex;
+            std::cout << "Decrementing Solver Index!" << std::endl;
+            lastSolverShift = glfwGetTime();
         }
-
-        lastSolverShift = glfwGetTime();
     }
 }
 
@@ -202,26 +206,34 @@ void aiThreadMethod(Maze maze) {
     std::cout << "[AI] Initialising solvers..." << std::endl;
     SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1, maze, renderer);
     DepthFirstSolver depthSolver(maze, renderer);
+    FloodFillSolver floodFillSolver(maze, renderer);
 
     std::vector<std::pair<std::string, std::shared_ptr<Solver>>> solversToNames = {
-        {"Psuedo Right-Hand Rule Depth First Solver", std::make_shared<DepthFirstSolver>(depthSolver)}
+        {"Psuedo Right-Hand Rule Depth First Solver", std::make_shared<DepthFirstSolver>(depthSolver)},
+        {"Flood Fill Solver", std::make_shared<FloodFillSolver>(floodFillSolver)}
 
     };
 
     std::cout << "[AI] Done." << std::endl;
 
     while (running) {
-        if (solverIndex != lastSolverIndex) {
-            //run next solver
+        //if (glfwGetTime() > lastSolverShift + 0.15) {
+            if (solverIndex != lastSolverIndex) {
+                //run next solver
 
-            //renderer->clearVisitedCells();
+                renderer->clearVisitedCells();
+                
 
-            if (solverIndex >= 0 && solverIndex < solversToNames.size()) {
-                runSolver(solversToNames[solverIndex].second, maze, solversToNames[solverIndex].first);
+                if (solverIndex >= 0 && solverIndex < solversToNames.size()) {
+                    solversToNames[solverIndex].second->clear();
+                    solversToNames[solverIndex].second->stepsTaken = 0;
+                    solversToNames[solverIndex].second->success = false;
+                    runSolver(solversToNames[solverIndex].second, maze, solversToNames[solverIndex].first);
+                }
+
+                lastSolverIndex = solverIndex;
             }
-
-            lastSolverIndex = solverIndex;
-        }
+        //}
     }
 
     //runSolver(std::make_unique<DepthFirstSolver>(depthSolver), maze, "Psuedo Right-Hand Rule Depth First Solver");

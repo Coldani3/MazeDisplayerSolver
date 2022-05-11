@@ -111,3 +111,7 @@ bool Solver::canAccessFrom(std::vector<int> fromCoords, std::vector<int> targetC
 
 	return (maze[targetCoords] & opposite) > 0;
 }
+
+void Solver::clear()
+{
+}

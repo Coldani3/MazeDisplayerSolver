@@ -82,3 +82,7 @@ bool DepthFirstSolver::canGoAnywhereFrom(std::vector<int> from) {
 bool DepthFirstSolver::visitedCell(std::vector<int> cell) {
 	return std::find(visited.begin(), visited.end(), cell) != visited.end();
 }
+
+void DepthFirstSolver::clear() {
+	visited.clear();
+}

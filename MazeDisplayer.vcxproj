@@ -162,7 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Includes\Solvers\DepthFirstSolver.h" />
-    <ClInclude Include="src\Includes\Solvers\SolversFloodFillSolver.h" />
+    <ClInclude Include="src\Includes\Solvers\FloodFillSolver.h" />
     <ClInclude Include="src\Includes\Solvers\FungalSolver.h" />
     <ClInclude Include="src\Includes\Solvers\SimpleNeuralNetworkSolver.h" />
     <ClInclude Include="src\Includes\Render\Camera.h" />

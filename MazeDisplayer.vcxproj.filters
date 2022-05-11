@@ -107,7 +107,7 @@
     <ClInclude Include="src\Includes\Solvers\FungalSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Solvers\SolversFloodFillSolver.h">
+    <ClInclude Include="src\Includes\Solvers\FloodFillSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Includes\Solvers\DepthFirstSolver.h">

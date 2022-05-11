@@ -528,8 +528,12 @@ void RenderManager::markCellVisited(std::vector<int> coords) {
 }
 
 void RenderManager::clearVisitedCells() {
-    visited.clear();
     visitedPath.clear();
+
+    for (int i = 0; i < visited.size(); i++) {
+        visited[i] = false;
+    }
+
     visitedPath.resize(maze.width * maze.height * maze.depth * maze.hyperDepth);
 }
 

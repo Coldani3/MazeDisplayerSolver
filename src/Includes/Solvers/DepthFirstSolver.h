@@ -11,6 +11,7 @@ public:
     void solve();
     bool canGoAnywhereFrom(std::vector<int> from);
     bool visitedCell(std::vector<int> cell);
+    void clear();
     std::vector<int> pickNextCellFrom(std::vector<int> from);
 
 private:
