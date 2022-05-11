@@ -31,12 +31,11 @@ public:
 	void clearVisitedCells();
 	void setCellHeadOfSolver(std::vector<int> coords);
 	bool visitedCell(std::vector<int> coords);
+	void setShowPath(bool showPath);
 
 	glm::mat4 projection;
 	std::unique_ptr<Camera> camera;
-	std::vector<bool> visited;
-	std::vector<std::vector<int>> visitedPath;
-	std::vector<int> head;
+	bool showPath = true;
 private:
 	GLFWwindow* window;
 	int width;
@@ -45,5 +44,8 @@ private:
 	int defaultHeight;
 	int currentW = 0;
 	Maze maze;
+	std::vector<bool> visited;
+	std::vector<std::vector<int>> visitedPath;
+	std::vector<int> head;
 };
 

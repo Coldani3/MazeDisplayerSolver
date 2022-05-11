@@ -97,8 +97,6 @@ bool Solver::canAccessFrom(std::vector<int> fromCoords, std::vector<int> targetC
 				}
 		}
 	}
-
-	std::cout << "side: " << side << std::endl;
 	
 	unsigned int opposite = 0;
 
@@ -110,8 +108,6 @@ bool Solver::canAccessFrom(std::vector<int> fromCoords, std::vector<int> targetC
 		//otherwise shift the other way
 		opposite = side << 1;
 	}
-
-	std::cout << "opposite: " << opposite << std::endl;
 
 	return (maze[targetCoords] & opposite) > 0;
 }

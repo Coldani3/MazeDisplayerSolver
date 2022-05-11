@@ -5,6 +5,7 @@
 #include <chrono>
 #include <vector>
 #include <thread>
+#include <map>
 
 #include <Maze/Maze.h>
 #include <Render/RenderManager.h>
@@ -12,10 +13,15 @@
 #include <Solvers/DepthFirstSolver.h>
 
 std::shared_ptr<RenderManager> renderer;
+bool running = true;
 double lastFrame;
 double delta = 0;
 int fps = 0;
 double lastWShift = 0;
+double lastPathShowChange = 0;
+int solverIndex = 0;
+int lastSolverIndex = -1;
+double lastSolverShift = 0;
 
 float camMoveSpeedMod = 1.0f;
 
@@ -102,6 +108,22 @@ void handleInput(GLFWwindow* window) {
             lastWShift = glfwGetTime();
         }
     }
+
+    if (glfwGetTime() > lastPathShowChange + 0.2) {
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+            renderer->setShowPath(!renderer->showPath);
+        }
+
+        lastPathShowChange = glfwGetTime();
+    }
+
+    if (glfwGetTime() > lastSolverShift + 1.0) {
+        if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
+            ++solverIndex;
+        }
+
+        lastSolverShift = glfwGetTime();
+    }
 }
 
 int beginRenderLoop(Maze maze) {
@@ -149,13 +171,14 @@ int beginRenderLoop(Maze maze) {
 
     std::cout << "Closing program..." << std::endl;
     glfwTerminate();
+    running = false;
 }
 
 long now() {
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
-void runSolver(std::unique_ptr<Solver> solver, Maze maze, std::string solverName) {
+void runSolver(std::shared_ptr<Solver> solver, Maze maze, std::string solverName) {
     std::cout << "[AI] Beginning " << solverName << " Solver..." << std::endl;
 
     long start = now();
@@ -171,6 +194,8 @@ void runSolver(std::unique_ptr<Solver> solver, Maze maze, std::string solverName
     }
 
     std::cout << " Steps Taken: " << solver->stepsTaken << " in " << finish - start << " milliseconds " << std::endl;
+
+    glfwSetWindowTitle(renderer->getWindow(), ("Maze Displayer and Solver - " + solverName).c_str());
 }
 
 void aiThreadMethod(Maze maze) {
@@ -178,31 +203,28 @@ void aiThreadMethod(Maze maze) {
     SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1, maze, renderer);
     DepthFirstSolver depthSolver(maze, renderer);
 
-    /*std::cout << "test1 (should be true or 1): " << depthSolver.canAccessFrom({ 0, 0, 0, 0 }, { 1, 0, 0, 0 }) << std::endl;
-    std::cout << "test 2 (should be false or 0): " << depthSolver.canAccessFrom({ 0, 0, 0, 0 }, { 0, 0, 1, 0 }) << std::endl;
-    std::cout << "test 3 (should be true or 1): " << depthSolver.canAccessFrom({ 0, 0, 0, 0 }, { 0, 1, 0, 0 }) << std::endl;
-    std::cout << "test 4 (should be false or 0): " << depthSolver.canAccessFrom({ 0, 0, 0, 0 }, { 0, 0, 0, 1 }) << std::endl;
-    std::cout << "test 5 (should be true or 1): " << depthSolver.canAccessFrom({ 0, 1, 0, 0 }, { 0, 0, 0, 0 }) << std::endl;
-    std::cout << "[AI] +y " << (int)maze[{0, 1, 0, 0}] << ", 0 " << (int)maze[{0, 0, 0, 0}] << ", +z " << (int)maze[{0, 0, 1, 0}] << std::endl;
+    std::vector<std::pair<std::string, std::shared_ptr<Solver>>> solversToNames = {
+        {"Psuedo Right-Hand Rule Depth First Solver", std::make_shared<DepthFirstSolver>(depthSolver)}
 
-    renderer->markCellVisited({ 0, 0, 0, 0 });
-    renderer->markCellVisited({ 0, 0, 1, 0 });
-    renderer->markCellVisited({ 0, 1, 0, 0 });*/
+    };
 
     std::cout << "[AI] Done." << std::endl;
 
-    runSolver(std::make_unique<DepthFirstSolver>(depthSolver), maze, "Psuedo Right-Hand Rule Depth First Solver");
+    while (running) {
+        if (solverIndex != lastSolverIndex) {
+            //run next solver
 
-    /*std::cout << "[AI] Beginning pseudo right-hand rule Depth First Solver..." << std::endl;
-    depthSolver.solve();
+            //renderer->clearVisitedCells();
 
-    if (depthSolver.success) {
-        std::cout << "[AI] Success!";
-    } else {
-        std::cout << "[AI] Failed.";
+            if (solverIndex >= 0 && solverIndex < solversToNames.size()) {
+                runSolver(solversToNames[solverIndex].second, maze, solversToNames[solverIndex].first);
+            }
+
+            lastSolverIndex = solverIndex;
+        }
     }
 
-    std::cout << " Steps Taken: " << depthSolver.stepsTaken << std::endl;*/
+    //runSolver(std::make_unique<DepthFirstSolver>(depthSolver), maze, "Psuedo Right-Hand Rule Depth First Solver");
 
     //solver.solve();
 }

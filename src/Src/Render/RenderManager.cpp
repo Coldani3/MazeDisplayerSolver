@@ -305,7 +305,7 @@ glm::vec3 RenderManager::getCellColour(std::vector<int> coords) {
     } else if (coordsMatch(coords, maze.mazeExit)) {
         return mazeExitColour;
     } else {
-        if (visited.size() > 0) {
+        if (visited.size() > 0 && showPath) {
             //std::vector<std::vector<int>> visitedCopy = *visited;
 
             if (visitedCell(coords)) {
@@ -529,6 +529,8 @@ void RenderManager::markCellVisited(std::vector<int> coords) {
 
 void RenderManager::clearVisitedCells() {
     visited.clear();
+    visitedPath.clear();
+    visitedPath.resize(maze.width * maze.height * maze.depth * maze.hyperDepth);
 }
 
 void RenderManager::setCellHeadOfSolver(std::vector<int> coords) {
@@ -537,6 +539,10 @@ void RenderManager::setCellHeadOfSolver(std::vector<int> coords) {
 
 bool RenderManager::visitedCell(std::vector<int> coords) {
     return visited[(maze.height * maze.width * maze.depth * coords[3]) + (maze.height * maze.width * coords[2]) + (maze.height * coords[1]) + coords[0]];
+}
+
+void RenderManager::setShowPath(bool showPath) {
+    this->showPath = showPath;
 }
 
 void RenderManager::draw() {
