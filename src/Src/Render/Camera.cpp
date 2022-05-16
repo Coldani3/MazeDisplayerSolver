@@ -1,13 +1,11 @@
 #include <Render/Camera.h>
 #include <cmath>
 #include <iostream>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
-Camera::Camera(float xPos, float yPos, float zPos) : Camera(xPos, yPos, zPos, 0.0f, 0.0f, 0.0f) {
+Camera::Camera(float xPos, float yPos, float zPos, int screenWidth, int screenHeight) : Camera(xPos, yPos, zPos, screenWidth, screenHeight, 0.0f, 0.0f, 0.0f) {
 }
 
-Camera::Camera(float xPos, float yPos, float zPos, float xLookingAt, float yLookingAt, float zLookingAt) {
+Camera::Camera(float xPos, float yPos, float zPos, int screenWidth, int screenHeight, float xLookingAt, float yLookingAt, float zLookingAt) {
 	xPosition = xPos;
 	yPosition = yPos;
 	zPosition = zPos;
@@ -21,6 +19,8 @@ Camera::Camera(float xPos, float yPos, float zPos, float xLookingAt, float yLook
 	defaultXPosition = xPos;
 	defaultYPosition = yPos;
 	defaultZPosition = zPos;
+
+	projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 }
 
 Camera::~Camera() {
@@ -48,6 +48,10 @@ float Camera::getYLookingAt() {
 
 float Camera::getZLookingAt() {
 	return zLookingAt;
+}
+
+glm::mat4 Camera::getProjection() {
+	return projection;
 }
 
 void Camera::setXPos(float x) {

@@ -36,7 +36,7 @@
     <ClCompile Include="src\Src\Solvers\NeuralNetwork\NeuralNetwork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Src\Render\RenderedMaze.cpp">
+    <ClCompile Include="src\Src\Render\MazeRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Src\Render\Camera.cpp">
@@ -52,6 +52,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Src\Solvers\DepthFirstSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Src\Maze\MazePath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,7 +98,7 @@
     <ClInclude Include="src\Includes\Render\Shaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\RenderedMaze.h">
+    <ClInclude Include="src\Includes\Render\MazeRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Includes\Render\Camera.h">
@@ -111,6 +114,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Includes\Solvers\DepthFirstSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Includes\Maze\MazePath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

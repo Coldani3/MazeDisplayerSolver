@@ -28,7 +28,7 @@ void FloodFillSolver::solve() {
 			break;
 		}
 
-		renderer->markCellVisited(top);
+		renderer->mazeRenderer->selectedPath.markCellVisited(top);
 		visited.push_back(top);
 
 		for (int i = 0; i < floodTouchingSides.size(); i++) {

@@ -1,12 +1,21 @@
-#include <glfw3/glfw3.h>
+#pragma once
 
+#include <glad/glad.h>
+#include <glfw3/glfw3.h>
 #include <glm/glm.hpp>
 
-#include <memory>
 #include <Render/Camera.h>
+#include <Render/MazeRenderer.h>
 #include <Maze/Maze.h>
+#include <Maze/MazePath.h>
 
-#pragma once
+#include <iostream>
+#include <memory>
+#include <vector>
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 class RenderManager
 {
 public:
@@ -18,23 +27,14 @@ public:
 	GLFWwindow* getWindow();
 	int getWidth();
 	int getHeight();
-	void drawMazeCellCenter(int mazeX, int mazeY, int mazeZ = 0, int mazeW = 0);
-	void drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ = 0, int mazeW = 0);
 	void setWViewing(int w);
 	int getWViewing();
 	void setMazeUsing(Maze maze);
-	std::unique_ptr<Camera> getCamera();
-	glm::mat4 mazeCellPathTransform(glm::vec3 initialCoords, float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ);
-	glm::mat4 getViewMatrixFromCamera();
-	glm::vec3 getCellColour(std::vector<int> coords);
-	void markCellVisited(std::vector<int> coords);
-	void clearVisitedCells();
-	void setCellHeadOfSolver(std::vector<int> coords);
-	bool visitedCell(std::vector<int> coords);
-	void setShowPath(bool showPath);
+	std::shared_ptr<Camera> getCamera();
 
 	glm::mat4 projection;
-	std::unique_ptr<Camera> camera;
+	std::shared_ptr<Camera> camera;
+	std::unique_ptr<MazeRenderer> mazeRenderer;
 	bool showPath = true;
 private:
 	GLFWwindow* window;
@@ -44,8 +44,5 @@ private:
 	int defaultHeight;
 	int currentW = 0;
 	Maze maze;
-	std::vector<bool> visited;
-	std::vector<std::vector<int>> visitedPath;
-	std::vector<int> head;
 };
 

@@ -1,4 +1,6 @@
+#ifndef __gl_h
 #include <glad/glad.h>
+#endif
 #include <glfw3/glfw3.h>
 #include <iostream>
 #include <memory>
@@ -112,7 +114,7 @@ void handleInput(GLFWwindow* window) {
 
     if (glfwGetTime() > lastPathShowChange + 0.2) {
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
-            renderer->setShowPath(!renderer->showPath);
+            renderer->mazeRenderer->setShowPath(!renderer->mazeRenderer->showPath);
             lastPathShowChange = glfwGetTime();
         }
     }
@@ -221,7 +223,7 @@ void aiThreadMethod(Maze maze) {
             if (solverIndex != lastSolverIndex) {
                 //run next solver
 
-                renderer->clearVisitedCells();
+                renderer->mazeRenderer->selectedPath.clearVisitedCells();
                 
 
                 if (solverIndex >= 0 && solverIndex < solversToNames.size()) {

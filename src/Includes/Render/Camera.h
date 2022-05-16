@@ -1,4 +1,7 @@
 #pragma once
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 class Camera
 {
 private:
@@ -6,9 +9,11 @@ private:
 	float xLookingAt, yLookingAt, zLookingAt;
 	float defaultXLookingAt, defaultYLookingAt, defaultZLookingAt;
 	float defaultXPosition, defaultYPosition, defaultZPosition;
+	int screenWidth, screenHeight;
+	glm::mat4 projection;
 public:
-	Camera(float xPos, float yPos, float zPos);
-	Camera(float xPos, float yPos, float zPos, float xLookingAt, float yLookingAt, float zLookingAt);
+	Camera(float xPos, float yPos, float zPos, int screenWidth, int screenHeight);
+	Camera(float xPos, float yPos, float zPos, int screenWidth, int screenHeight, float xLookingAt, float yLookingAt, float zLookingAt);
 	~Camera();
 	/*using getters / setters in case I decide to do any funny business like store the positions in a vector to streamline
 	  matrix code or rotations in a Quaternion for if I run into gimbal lock. possibly falls under YAGNI but sources on C++
@@ -19,6 +24,7 @@ public:
 	float getXLookingAt();
 	float getYLookingAt();
 	float getZLookingAt();
+	glm::mat4 getProjection();
 
 	void setXPos(float);
 	void setYPos(float);
