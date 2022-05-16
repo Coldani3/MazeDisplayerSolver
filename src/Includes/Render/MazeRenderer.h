@@ -29,6 +29,8 @@ public:
 	void setMazeCenterProgram(int program);
 	void setMazePathProgram(int program);
 	void setShowPath(bool showPath);
+	void setWViewing(int w);
+	int getWViewing();
 
 	glm::vec3 getCellColour(std::vector<int> coords);
 	glm::mat4 getViewMatrixFromCamera();

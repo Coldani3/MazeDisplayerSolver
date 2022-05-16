@@ -193,6 +193,7 @@ MazeRenderer::MazeRenderer(Maze maze, int centerX, int centerY, int centerZ) {
     mazeCenterX = centerX;
     mazeCenterY = centerY;
     mazeCenterZ = centerZ;
+    this->maze = maze;
 }
 
 MazeRenderer::~MazeRenderer() {
@@ -306,21 +307,27 @@ void MazeRenderer::setup() {
 void MazeRenderer::cleanup() {
     std::cout << "Cleaning up Maze Renderer..." << std::endl;
     int cellCenterExists, mazePathExists;
-    glGetProgramiv(cellCenterProgram, GL_DELETE_STATUS, &cellCenterExists);
-    glGetProgramiv(mazePathProgram, GL_DELETE_STATUS, &mazePathExists);
 
-    if (cellCenterExists) {
-        std::cout << "Cleaning up cellCenterProgram..." << std::endl;
-        glDeleteProgram(cellCenterProgram);
-    } else {
-        std::cout << "cellCenterProgram was already deleted, skipping..." << std::endl;
+    if (cellCenterProgram != 0) {
+        glGetProgramiv(cellCenterProgram, GL_DELETE_STATUS, &cellCenterExists);
+
+        if (cellCenterExists == GL_FALSE) {
+            std::cout << "Cleaning up cellCenterProgram..." << std::endl;
+            glDeleteProgram(cellCenterProgram);
+        } else {
+            std::cout << "cellCenterProgram was already deleted, skipping..." << std::endl;
+        }
     }
 
-    if (mazePathExists) {
-        std::cout << "Cleaning up mazePathProgram..." << std::endl;
-        glDeleteProgram(mazePathProgram);
-    } else {
-        std::cout << "mazePathProgram was already deleted, skipping..." << std::endl;
+    if (mazePathProgram != 0) {
+        glGetProgramiv(mazePathProgram, GL_DELETE_STATUS, &mazePathExists);
+
+        if (mazePathExists == GL_FALSE) {
+            std::cout << "Cleaning up mazePathProgram..." << std::endl;
+            glDeleteProgram(mazePathProgram);
+        } else {
+            std::cout << "mazePathProgram was already deleted, skipping..." << std::endl;
+        }
     }
 }
 
@@ -338,6 +345,16 @@ void MazeRenderer::setMazePathProgram(int program) {
 
 void MazeRenderer::setShowPath(bool showPath) {
     this->showPath = showPath;
+}
+
+void MazeRenderer::setWViewing(int w) {
+    if (w < maze.hyperDepth && w >= 0) {
+        currentW = w;
+    }
+}
+
+int MazeRenderer::getWViewing() {
+    return currentW;
 }
 
 glm::vec3 MazeRenderer::getCellColour(std::vector<int> coords) {

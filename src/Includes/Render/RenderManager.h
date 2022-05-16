@@ -27,8 +27,6 @@ public:
 	GLFWwindow* getWindow();
 	int getWidth();
 	int getHeight();
-	void setWViewing(int w);
-	int getWViewing();
 	void setMazeUsing(Maze maze);
 	std::shared_ptr<Camera> getCamera();
 

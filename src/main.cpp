@@ -102,12 +102,12 @@ void handleInput(GLFWwindow* window) {
 
     if (glfwGetTime() > lastWShift + 0.2) {
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-            renderer->setWViewing(renderer->getWViewing() - 1);
+            renderer->mazeRenderer->setWViewing(renderer->mazeRenderer->getWViewing() - 1);
             lastWShift = glfwGetTime();
         }
 
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-            renderer->setWViewing(renderer->getWViewing() + 1);
+            renderer->mazeRenderer->setWViewing(renderer->mazeRenderer->getWViewing() + 1);
             lastWShift = glfwGetTime();
         }
     }
@@ -244,7 +244,6 @@ void aiThreadMethod(Maze maze) {
 }
 
 int main() {
-    
     Maze maze;
     maze.loadFromFile("maze.cd3mazs");
 
@@ -252,7 +251,6 @@ int main() {
     std::cout << "Maze entrance coords: " << maze.mazeEntrance[0] << ", " << maze.mazeEntrance[1] << ", " << maze.mazeEntrance[2] << ", " << maze.mazeEntrance[3] << std::endl;
     std::cout << "Maze exit coords: " << maze.mazeExit[0] << ", " << maze.mazeExit[1] << ", " << maze.mazeExit[2] << ", " << maze.mazeExit[3] << std::endl;
     std::cout << (unsigned int) maze[{0, 0, 0, 0}] << std::endl;
-
 
     //initialise it here as renderer needs to be not nullaaa
     std::cout << "Initialising GLFW..." << std::endl;
