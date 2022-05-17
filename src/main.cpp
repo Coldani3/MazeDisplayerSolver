@@ -1,6 +1,7 @@
 #ifndef __gl_h
 #include <glad/glad.h>
 #endif
+
 #include <glfw3/glfw3.h>
 #include <iostream>
 #include <memory>
@@ -252,7 +253,7 @@ int main() {
     std::cout << "Maze exit coords: " << maze.mazeExit[0] << ", " << maze.mazeExit[1] << ", " << maze.mazeExit[2] << ", " << maze.mazeExit[3] << std::endl;
     std::cout << (unsigned int) maze[{0, 0, 0, 0}] << std::endl;
 
-    //initialise it here as renderer needs to be not nullaaa
+    //initialise it here as renderer needs to be not null
     std::cout << "Initialising GLFW..." << std::endl;
     //initialise glfw
     glfwInit();

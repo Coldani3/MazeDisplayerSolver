@@ -311,7 +311,7 @@ void MazeRenderer::cleanup() {
     if (cellCenterProgram != 0) {
         glGetProgramiv(cellCenterProgram, GL_DELETE_STATUS, &cellCenterExists);
 
-        if (cellCenterExists == GL_FALSE) {
+        if (cellCenterExists != GL_TRUE) {
             std::cout << "Cleaning up cellCenterProgram..." << std::endl;
             glDeleteProgram(cellCenterProgram);
         } else {
@@ -322,7 +322,7 @@ void MazeRenderer::cleanup() {
     if (mazePathProgram != 0) {
         glGetProgramiv(mazePathProgram, GL_DELETE_STATUS, &mazePathExists);
 
-        if (mazePathExists == GL_FALSE) {
+        if (mazePathExists != GL_TRUE) {
             std::cout << "Cleaning up mazePathProgram..." << std::endl;
             glDeleteProgram(mazePathProgram);
         } else {

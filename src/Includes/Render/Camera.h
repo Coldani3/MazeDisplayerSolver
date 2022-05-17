@@ -7,6 +7,13 @@ class Camera
 private:
 	float xPosition, yPosition, zPosition;
 	float xLookingAt, yLookingAt, zLookingAt;
+	//roll unused
+	float pitch = 0;
+	float yaw = -90;
+	float roll = 0;
+	float fov = 45.0f;
+	float minRenderDistance = 0.1f;
+	float maxRenderDistance = 100.0f;
 	float defaultXLookingAt, defaultYLookingAt, defaultZLookingAt;
 	float defaultXPosition, defaultYPosition, defaultZPosition;
 	int screenWidth, screenHeight;
@@ -24,23 +31,30 @@ public:
 	float getXLookingAt();
 	float getYLookingAt();
 	float getZLookingAt();
+
 	glm::mat4 getProjection();
+	void setRenderDistanceMin(float);
+	void setRenderDistanceMax(float);
+	void setFOV(float angle);
 
 	void setXPos(float);
 	void setYPos(float);
 	void setZPos(float);
-	void moveTo(float x, float y, float z);
-	void setXRotation(float);
-	void setYRotation(float);
-	void setZRotation(float);
-	void setRotation(float xRot, float yRot, float zRot);
+	void setPitch(float);
+	void setYaw(float);
+	void setRoll(float);
 
-	void rotate(float xRot, float yRot, float zRot);
+	void setRotation(float pitch, float yaw, float roll);
+	void rotateBy(float pitch, float yaw, float roll);
+	void moveTo(float x, float y, float z);
 	void moveBy(float xPos, float yPos, float zPos);
 	void lookAt(float xPos, float yPos, float zPos);
 	void rotateAround(float xPos, float yPos, float zPos, float xRot, float yRot, float zRot);
 	//Where magnitude is how far along in GL units you move along the path between you and what the camera is set to look at
 	void zoom(float magnitude);
 	void reset();
+
+private:
+	void updateProjection();
 };
 

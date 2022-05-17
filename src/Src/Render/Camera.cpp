@@ -12,6 +12,8 @@ Camera::Camera(float xPos, float yPos, float zPos, int screenWidth, int screenHe
 	this->xLookingAt = xLookingAt;
 	this->yLookingAt = yLookingAt;
 	this->zLookingAt = zLookingAt;
+	this->screenWidth = screenWidth;
+	this->screenHeight = screenHeight;
 
 	defaultXLookingAt = xLookingAt;
 	defaultYLookingAt = yLookingAt;
@@ -20,7 +22,8 @@ Camera::Camera(float xPos, float yPos, float zPos, int screenWidth, int screenHe
 	defaultYPosition = yPos;
 	defaultZPosition = zPos;
 
-	projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+	updateProjection();
+	//projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 }
 
 Camera::~Camera() {
@@ -66,10 +69,34 @@ void Camera::setZPos(float z) {
 	zPosition = z;
 }
 
+void Camera::setRotation(float pitch, float yaw, float roll) {
+	this->pitch = pitch;
+	this->yaw = yaw;
+	this->roll = roll;
+}
+
+void Camera::rotateBy(float pitch, float yaw, float roll) {
+}
+
 void Camera::moveTo(float x, float y, float z) {
 	xPosition = x;
 	yPosition = y;
 	zPosition = z;
+}
+
+void Camera::setRenderDistanceMin(float min) {
+	minRenderDistance = min;
+	updateProjection();
+}
+
+void Camera::setRenderDistanceMax(float max) {
+	maxRenderDistance = max;
+	updateProjection();
+}
+
+void Camera::setFOV(float angle) {
+	fov = angle;
+	updateProjection();
 }
 
 void Camera::moveBy(float x, float y, float z) {
@@ -97,12 +124,8 @@ void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float 
 
 	//YXZ to reduce gimbal lock
 	glm::mat4 rotate = rotateZ * rotateX * rotateY;
-	//translate to origin, rotate, then translate back
+	//translate to origin, rotateBy, then translate back
 	glm::vec3 out = translateBack * rotate * translateToOrigin * glm::vec4(camVec, 1.0);
-
-	/*while (glm::dot(glm::normalize(out), glm::normalize(aroundVec)) > 0.9) {
-		out = glm::vec4(out, 1.0) * glm::rotate(identity, glm::radians(1.0f), glm::vec3(0.0, 1.0, 0.0));
-	}*/
 
 	xPosition = out.x;
 	yPosition = out.y;
@@ -131,4 +154,8 @@ void Camera::zoom(float magnitude) {
 void Camera::reset() {
 	moveTo(defaultXPosition, defaultYPosition, defaultZPosition);
 	lookAt(defaultXLookingAt, defaultYLookingAt, defaultZLookingAt);
+}
+
+void Camera::updateProjection() {
+	projection = glm::perspective(glm::radians(fov), (float)screenWidth / (float)screenHeight, minRenderDistance, maxRenderDistance);
 }
