@@ -17,6 +17,8 @@ float centerZ = 500.0f;
 RenderManager::RenderManager(int width, int height, Maze maze) {
     //create the window
     window = glfwCreateWindow(width, height, "Maze Displayer and Solver", NULL, NULL);
+    //set to top left corner
+    glfwSetWindowPos(window, 0, 40);
 
     glfwMakeContextCurrent(window);
 

@@ -18,6 +18,7 @@ private:
 	float defaultXPosition, defaultYPosition, defaultZPosition;
 	int screenWidth, screenHeight;
 	glm::mat4 projection;
+
 public:
 	Camera(float xPos, float yPos, float zPos, int screenWidth, int screenHeight);
 	Camera(float xPos, float yPos, float zPos, int screenWidth, int screenHeight, float xLookingAt, float yLookingAt, float zLookingAt);

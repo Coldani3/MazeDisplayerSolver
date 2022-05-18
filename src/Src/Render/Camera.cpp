@@ -75,7 +75,8 @@ void Camera::setRotation(float pitch, float yaw, float roll) {
 	this->roll = roll;
 }
 
-void Camera::rotateBy(float pitch, float yaw, float roll) {
+void Camera::rotateBy(float pitchBy, float yawBy, float rollBy) {
+	setRotation(pitch + pitchBy, yaw + yawBy, roll + rollBy);
 }
 
 void Camera::moveTo(float x, float y, float z) {

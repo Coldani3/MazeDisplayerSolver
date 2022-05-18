@@ -257,13 +257,22 @@ int main() {
     std::cout << "Initialising GLFW..." << std::endl;
     //initialise glfw
     glfwInit();
+
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+    glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+    glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+    glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+    glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
     //tell glfw we're using opengl 3.3 with the core profile, instead of the old method
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    renderer = std::make_shared<RenderManager>(800, 600, maze);
+
+    renderer = std::make_shared<RenderManager>(mode->width, mode->height - 90/*800, 600*/, maze);
 
     std::thread aiThread(aiThreadMethod, maze);
 
