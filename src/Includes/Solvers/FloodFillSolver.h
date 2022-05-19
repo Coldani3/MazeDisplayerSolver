@@ -7,6 +7,18 @@ class FloodFillSolver :
     public Solver
 {
 public:
+	const std::vector<std::vector<int>> floodTouchingSides = {
+		{1, 0, 0, 0},
+		{-1, 0, 0, 0},
+		{0, 1, 0, 0},
+		{0, -1, 0, 0},
+		{0, 0, 1, 0},
+		{0, 0, -1, 0},
+		{0, 0, 0, 1},
+		{0, 0, 0, -1}
+	};
+
+
     FloodFillSolver(Maze maze, std::shared_ptr<RenderManager> renderer);
     void solve();
     bool visitedCell(std::vector<int> coords);

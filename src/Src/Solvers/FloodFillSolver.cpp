@@ -1,16 +1,5 @@
 #include <Solvers/FloodFillSolver.h>
 
-std::vector<std::vector<int>> floodTouchingSides = {
-	{1, 0, 0, 0},
-	{-1, 0, 0, 0},
-	{0, 1, 0, 0},
-	{0, -1, 0, 0},
-	{0, 0, 1, 0},
-	{0, 0, -1, 0},
-	{0, 0, 0, 1},
-	{0, 0, 0, -1}
-};
-
 FloodFillSolver::FloodFillSolver(Maze maze, std::shared_ptr<RenderManager> renderer) : Solver(maze, renderer) {
 	navQueue = std::queue<std::vector<int>>();
 	visited = std::vector<std::vector<int>>();

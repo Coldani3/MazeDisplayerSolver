@@ -1,24 +1,16 @@
 #include <Render/RenderManager.h>
-
-//#include <Render/Shaders.h>
 #include <Render/MazeRenderer.h>
-
-
-#pragma region Variables
-int currentW = 0;
-
-float centerX = 500.0f;
-float centerY = 500.0f;
-float centerZ = 500.0f;
-
-#pragma endregion
 
 #pragma region Class Methods
 RenderManager::RenderManager(int width, int height, Maze maze) {
     //create the window
     window = glfwCreateWindow(width, height, "Maze Displayer and Solver", NULL, NULL);
     //set to top left corner
-    glfwSetWindowPos(window, 0, 40);
+
+    /*int left, top, right, bottom;
+    glfwGetWindowFrameSize(window, &left, &top, &right, &bottom);
+
+    glfwSetWindowPos(window, 0, top);*/
 
     glfwMakeContextCurrent(window);
 

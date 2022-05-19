@@ -1,10 +1,6 @@
 #include <Solvers/SimpleNeuralNetworkSolver.h>
 #include <algorithm>
 
-
-const int maxQueries = 4;
-const int trainsPerCycle = 50;
-
 SimpleNeuralNetworkSolver::SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, Maze maze, std::shared_ptr<RenderManager> renderer) : Solver(maze, renderer) {
 	for (int i = 0; i < networks; i++) {
 		this->networks.push_back(NeuralNetwork(nodesPerLayer, learnRate));

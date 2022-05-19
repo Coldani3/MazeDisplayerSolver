@@ -34,6 +34,10 @@ public:
 	std::shared_ptr<Camera> camera;
 	std::unique_ptr<MazeRenderer> mazeRenderer;
 	bool showPath = true;
+
+	float centerX = 500.0f;
+	float centerY = 500.0f;
+	float centerZ = 500.0f;
 private:
 	GLFWwindow* window;
 	int width;

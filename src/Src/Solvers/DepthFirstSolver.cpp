@@ -1,17 +1,6 @@
 #include <Solvers/DepthFirstSolver.h>
 #include <algorithm>
 
-std::vector<std::vector<int>> touchingSides = { 
-	{1, 0, 0, 0}, 
-	{0, 1, 0, 0},
-	{0, 0, 1, 0},
-	{0, 0, 0, 1},
-	{-1, 0, 0, 0},
-	{0, -1, 0, 0},
-	{0, 0, -1, 0},
-	{0, 0, 0, -1} 
-};
-
 DepthFirstSolver::DepthFirstSolver(Maze maze, std::shared_ptr<RenderManager> renderer) : Solver(maze, renderer) {
 	visited = std::vector<std::vector<int>>();
 	navStack = std::stack<std::vector<int>>();

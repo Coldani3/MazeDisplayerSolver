@@ -7,6 +7,17 @@ class DepthFirstSolver :
     public Solver
 {
 public:
+    const std::vector<std::vector<int>> touchingSides = {
+        {1, 0, 0, 0},
+        {0, 1, 0, 0},
+        {0, 0, 1, 0},
+        {0, 0, 0, 1},
+        {-1, 0, 0, 0},
+        {0, -1, 0, 0},
+        {0, 0, -1, 0},
+        {0, 0, 0, -1}
+    };
+
     DepthFirstSolver(Maze maze, std::shared_ptr<RenderManager> renderer);
     void solve();
     bool canGoAnywhereFrom(std::vector<int> from);

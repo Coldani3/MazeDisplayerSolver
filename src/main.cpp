@@ -258,7 +258,8 @@ int main() {
     //initialise glfw
     glfwInit();
 
-    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
     glfwWindowHint(GLFW_RED_BITS, mode->redBits);
     glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
@@ -271,8 +272,10 @@ int main() {
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    int xpos, ypos, width, height;
+    glfwGetMonitorWorkarea(monitor, &xpos, &ypos, &width, &height);
 
-    renderer = std::make_shared<RenderManager>(mode->width, mode->height - 90/*800, 600*/, maze);
+    renderer = std::make_shared<RenderManager>(width, height/*800, 600*/, maze);
 
     std::thread aiThread(aiThreadMethod, maze);
 
