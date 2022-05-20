@@ -16,9 +16,9 @@ RenderManager::RenderManager(int width, int height, Maze maze) {
     glfwMakeContextCurrent(window);
 
     defaultWidth = width;
-    defaultHeight = height;
+    defaultHeight = height - top;
     this->width = width;
-    this->height = height;
+    this->height = height - top;
     this->maze = maze;
 
     std::vector<float> mazeCenter = { centerX + ((float)maze.width / 2), centerY + ((float)maze.height / 2), centerZ + ((float)maze.depth / 2) };
