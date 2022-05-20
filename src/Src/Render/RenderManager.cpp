@@ -7,10 +7,11 @@ RenderManager::RenderManager(int width, int height, Maze maze) {
     window = glfwCreateWindow(width, height, "Maze Displayer and Solver", NULL, NULL);
     //set to top left corner
 
-    /*int left, top, right, bottom;
+    int left, top, right, bottom;
     glfwGetWindowFrameSize(window, &left, &top, &right, &bottom);
 
-    glfwSetWindowPos(window, 0, top);*/
+    glfwSetWindowSize(window, width, height - top);
+    glfwSetWindowPos(window, 0, top);
 
     glfwMakeContextCurrent(window);
 

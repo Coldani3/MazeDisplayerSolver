@@ -23,7 +23,6 @@ Camera::Camera(float xPos, float yPos, float zPos, int screenWidth, int screenHe
 	defaultZPosition = zPos;
 
 	updateProjection();
-	//projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 }
 
 Camera::~Camera() {
@@ -108,6 +107,17 @@ void Camera::lookAt(float xPos, float yPos, float zPos) {
 	xLookingAt = xPos;
 	yLookingAt = yPos;
 	zLookingAt = zPos;
+
+	glm::vec3 lookingAt = glm::vec3(xLookingAt, yLookingAt, zLookingAt);
+	glm::vec3 camPos = glm::vec3(xPosition, yPosition, zPosition);
+
+	glm::vec3 hypotenuse = lookingAt - camPos;
+
+	//toa - tan^-1(yDistance / xDistance) - atan(yDistance / xDistance)
+	//we dont' care about roll here
+	//TODO: what about 0 z or x difference
+	pitch = atan(hypotenuse.y / hypotenuse.x);
+	yaw = atan(hypotenuse.x / hypotenuse.z);
 }
 
 void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float yRot, float zRot) {
