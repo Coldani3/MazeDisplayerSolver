@@ -189,7 +189,6 @@ public:
 	int getWViewing();
 
 	glm::vec3 getCellColour(std::vector<int> coords);
-	glm::mat4 getViewMatrixFromCamera();
 	glm::mat4 mazeCellPathTransform(glm::vec3 initialCoords, float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ);
 
 	void drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW);

@@ -1,6 +1,6 @@
 #include <Solvers/Solver.h>
 
-Solver::Solver(Maze maze, std::shared_ptr<RenderManager> renderer) {
+Solver::Solver(Maze maze, std::shared_ptr<MainRenderManager> renderer) {
 	this->maze = maze;
 	this->renderer = renderer;
 }

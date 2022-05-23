@@ -11,12 +11,15 @@
 #include <map>
 
 #include <Maze/Maze.h>
-#include <Render/RenderManager.h>
+#include <Render/MainRenderManager.h>
 #include <Solvers/SimpleNeuralNetworkSolver.h>
 #include <Solvers/DepthFirstSolver.h>
 #include <Solvers/FloodFillSolver.h>
+#include <Render/Camera.h>
 
-std::shared_ptr<RenderManager> renderer;
+#pragma once
+
+std::shared_ptr<MainRenderManager> renderer;
 bool running = true;
 double lastFrame;
 double delta = 0;
@@ -275,7 +278,7 @@ int main() {
     int xpos, ypos, width, height;
     glfwGetMonitorWorkarea(monitor, &xpos, &ypos, &width, &height);
 
-    renderer = std::make_shared<RenderManager>(width, height/*800, 600*/, maze);
+    renderer = std::make_shared<MainRenderManager>(width, height/*800, 600*/, maze);
 
     std::thread aiThread(aiThreadMethod, maze);
 

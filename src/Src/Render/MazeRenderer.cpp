@@ -217,15 +217,6 @@ glm::vec3 MazeRenderer::getCellColour(std::vector<int> coords) {
     }
 }
 
-glm::mat4 MazeRenderer::getViewMatrixFromCamera() {
-    glm::vec3 camPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());
-    glm::vec3 lookingAtPos = glm::vec3(camera->getXLookingAt(), camera->getYLookingAt(), camera->getZLookingAt());
-
-    glm::mat4 lookAtMat = glm::lookAt(camPos, lookingAtPos, glm::vec3(0.0f, 1.0f, 0.0f));
-
-    return lookAtMat;
-}
-
 glm::mat4 MazeRenderer::mazeCellPathTransform(glm::vec3 initialCoords, float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ) {
     glm::mat4 identity = glm::mat4(1.0f);
 
@@ -244,7 +235,7 @@ void MazeRenderer::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW
         //TODO: store these vecs in a lookup buffer to save performance and memory
         glm::vec3 coords = glm::vec3((maze.width - mazeX) + mazeCenterX, mazeY + mazeCenterY, mazeZ + mazeCenterZ);
         glm::mat4 model = glm::translate(glm::mat4(1.0f), coords);
-        glm::mat4 view = getViewMatrixFromCamera();
+        glm::mat4 view = camera->getViewMatrix();
 
         glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());
         glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -275,7 +266,7 @@ void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int 
         glm::vec3 modelCoords = glm::vec3((maze.width - mazeX) + mazeCenterX, mazeY + mazeCenterY, mazeZ + mazeCenterZ);
         //translation to get it to the same modelCoords as the center piece, from which we then translate it again into the proper position
         glm::mat4 initialTranslate = glm::translate(glm::mat4(1.0f), modelCoords);
-        glm::mat4 view = getViewMatrixFromCamera();
+        glm::mat4 view = camera->getViewMatrix();
         float wLerp = 1.0f;
 
         glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());

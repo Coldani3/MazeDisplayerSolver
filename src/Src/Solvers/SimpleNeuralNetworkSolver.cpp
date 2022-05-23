@@ -1,7 +1,7 @@
 #include <Solvers/SimpleNeuralNetworkSolver.h>
 #include <algorithm>
 
-SimpleNeuralNetworkSolver::SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, Maze maze, std::shared_ptr<RenderManager> renderer) : Solver(maze, renderer) {
+SimpleNeuralNetworkSolver::SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, Maze maze, std::shared_ptr<MainRenderManager> renderer) : Solver(maze, renderer) {
 	for (int i = 0; i < networks; i++) {
 		this->networks.push_back(NeuralNetwork(nodesPerLayer, learnRate));
 	}

@@ -19,7 +19,7 @@ public:
 	};
 
 
-    FloodFillSolver(Maze maze, std::shared_ptr<RenderManager> renderer);
+    FloodFillSolver(Maze maze, std::shared_ptr<MainRenderManager> renderer);
     void solve();
     bool visitedCell(std::vector<int> coords);
     void clear();

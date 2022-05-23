@@ -6,12 +6,14 @@ Camera::Camera(float xPos, float yPos, float zPos, int screenWidth, int screenHe
 }
 
 Camera::Camera(float xPos, float yPos, float zPos, int screenWidth, int screenHeight, float xLookingAt, float yLookingAt, float zLookingAt) {
-	xPosition = xPos;
+	moveTo(xPos, yPos, zPos);
+	/*xPosition = xPos;
 	yPosition = yPos;
-	zPosition = zPos;
-	this->xLookingAt = xLookingAt;
+	zPosition = zPos;*/
+	lookAt(xLookingAt, yLookingAt, zLookingAt);
+	/*this->xLookingAt = xLookingAt;
 	this->yLookingAt = yLookingAt;
-	this->zLookingAt = zLookingAt;
+	this->zLookingAt = zLookingAt;*/
 	this->screenWidth = screenWidth;
 	this->screenHeight = screenHeight;
 
@@ -56,16 +58,42 @@ glm::mat4 Camera::getProjection() {
 	return projection;
 }
 
+glm::mat4 Camera::getViewMatrix() {
+	glm::vec3 camPos = glm::vec3(xPosition, yPosition, zPosition);
+	glm::vec3 lookingAtPos = glm::vec3(xLookingAt, yLookingAt, zLookingAt);
+
+	glm::mat4 lookAtMat = glm::lookAt(camPos, lookingAtPos, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	return lookAtMat;
+}
+
 void Camera::setXPos(float x) {
-	xPosition = x;
+	moveTo(x, yPosition, zPosition);
 }
 
 void Camera::setYPos(float y) {
-	yPosition = y;
+	moveTo(xPosition, y, zPosition);
 }
 
 void Camera::setZPos(float z) {
-	zPosition = z;
+	moveTo(xPosition, yPosition, z);
+}
+
+void Camera::updateRotation() {
+	glm::vec3 lookingAt = glm::vec3(xLookingAt, yLookingAt, zLookingAt);
+	glm::vec3 camPos = glm::vec3(xPosition, yPosition, zPosition);
+
+	glm::vec3 hypotenuse = lookingAt - camPos;
+
+	//toa - tan^-1(yDistance / xDistance) - atan(yDistance / xDistance)
+	//we dont' care about roll here
+	//TODO: what about 0 z or x difference
+	pitch = atan(hypotenuse.y / hypotenuse.x);
+	yaw = atan(hypotenuse.x / hypotenuse.z);
+}
+
+void Camera::setCameraMode(CameraMode newMode) {
+	camMode = newMode;
 }
 
 void Camera::setRotation(float pitch, float yaw, float roll) {
@@ -75,7 +103,24 @@ void Camera::setRotation(float pitch, float yaw, float roll) {
 }
 
 void Camera::rotateBy(float pitchBy, float yawBy, float rollBy) {
-	setRotation(pitch + pitchBy, yaw + yawBy, roll + rollBy);
+	setCameraMode(CameraMode::FREE_CAM);
+	pitch += pitchBy;
+	yaw += yawBy;
+	roll += rollBy;
+	setRotation(pitch, yaw, roll);
+
+	//update lookingAt to be the front of the camera
+
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+	direction = glm::normalize(direction);
+
+	xLookingAt = direction.x;
+	yLookingAt = direction.y;
+	zLookingAt = direction.z;
 }
 
 void Camera::moveTo(float x, float y, float z) {
@@ -103,24 +148,17 @@ void Camera::moveBy(float x, float y, float z) {
 	moveTo(xPosition + x, yPosition + y, zPosition + z);
 }
 
+//TODO: For rotating freely instead of around a point, create a vector point in front of the camera which is rotated around
+//the camera that the camera continuously looks at.
+//or actually just use lookingAt as that
 void Camera::lookAt(float xPos, float yPos, float zPos) {
 	xLookingAt = xPos;
 	yLookingAt = yPos;
 	zLookingAt = zPos;
-
-	glm::vec3 lookingAt = glm::vec3(xLookingAt, yLookingAt, zLookingAt);
-	glm::vec3 camPos = glm::vec3(xPosition, yPosition, zPosition);
-
-	glm::vec3 hypotenuse = lookingAt - camPos;
-
-	//toa - tan^-1(yDistance / xDistance) - atan(yDistance / xDistance)
-	//we dont' care about roll here
-	//TODO: what about 0 z or x difference
-	pitch = atan(hypotenuse.y / hypotenuse.x);
-	yaw = atan(hypotenuse.x / hypotenuse.z);
 }
 
 void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float yRot, float zRot) {
+	setCameraMode(CameraMode::ROTATE_AROUND);
 	glm::mat4 identity = glm::mat4(1.0);
 	glm::vec3 aroundVec = glm::vec3(xPos, yPos, zPos);
 	glm::vec3 camVec = glm::vec3(xPosition, yPosition, zPosition);
@@ -138,13 +176,13 @@ void Camera::rotateAround(float xPos, float yPos, float zPos, float xRot, float 
 	//translate to origin, rotateBy, then translate back
 	glm::vec3 out = translateBack * rotate * translateToOrigin * glm::vec4(camVec, 1.0);
 
-	xPosition = out.x;
-	yPosition = out.y;
-	zPosition = out.z;
+	moveTo(out.x, out.y, out.z);
 
-	xLookingAt = xPos;
+	lookAt(xPos, yPos, zPos);
+	updateRotation();
+	/*xLookingAt = xPos;
 	yLookingAt = yPos;
-	zLookingAt = zPos;
+	zLookingAt = zPos;*/
 
 	//std::cout << xPosition << "," << yPosition << "," << zPosition << std::endl;
 }
@@ -153,13 +191,26 @@ void Camera::zoom(float magnitude) {
 	glm::vec3 camCoords = glm::vec3(xPosition, yPosition, zPosition);
 	glm::vec3 lookingAtCoords = glm::vec3(xLookingAt, yLookingAt, zLookingAt);
 	glm::vec3 path = camCoords - lookingAtCoords;
-	float lerp = magnitude / glm::length(path);
 
-	glm::vec3 newCamPos = lerp * lookingAtCoords + (1 - lerp) * camCoords;
 
-	xPosition = newCamPos.x;
-	yPosition = newCamPos.y;
-	zPosition = newCamPos.z;
+	if (camMode == CameraMode::ROTATE_AROUND) {
+		float lerp = magnitude / glm::length(path);
+
+		glm::vec3 newCamPos = lerp * lookingAtCoords + (1 - lerp) * camCoords;
+
+		xPosition = newCamPos.x;
+		yPosition = newCamPos.y;
+		zPosition = newCamPos.z;
+	} else if (camMode == CameraMode::FREE_CAM) {
+		//get direction facing
+		glm::vec3 unitPath = glm::normalize(path);
+		//then traverse that by magnitude times
+		glm::vec3 newCamPos = camCoords + (unitPath * magnitude);
+
+		xPosition = newCamPos.x;
+		yPosition = newCamPos.y;
+		zPosition = newCamPos.z;
+	}
 }
 
 void Camera::reset() {

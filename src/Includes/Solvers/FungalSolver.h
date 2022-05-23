@@ -4,7 +4,7 @@ class FungalSolver :
     public Solver
 {
 public:
-    FungalSolver(Maze maze, std::shared_ptr<RenderManager> renderer, int maxSpreadPerNode);
+    FungalSolver(Maze maze, std::shared_ptr<MainRenderManager> renderer, int maxSpreadPerNode);
     void solve();
     void spreadFrom(std::vector<int> from);
     std::vector<int> selectNewSpreadFromPoint(std::vector<int> previous);

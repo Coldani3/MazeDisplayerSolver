@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Src\Maze\MazePath.cpp" />
+    <ClCompile Include="src\Src\Render\GUI\GUIRenderManager.cpp" />
     <ClCompile Include="src\Src\Solvers\DepthFirstSolver.cpp" />
     <ClCompile Include="src\Src\Solvers\FloodFillSolver.cpp" />
     <ClCompile Include="src\Src\Solvers\FungalSolver.cpp" />
@@ -154,7 +155,7 @@
     <ClCompile Include="src\Src\Solvers\NeuralNetworkSolver.cpp" />
     <ClCompile Include="src\Src\Solvers\Solver.cpp" />
     <ClCompile Include="src\glad.c" />
-    <ClCompile Include="src\Src\Render\RenderManager.cpp" />
+    <ClCompile Include="src\Src\Render\MainRenderManager.cpp" />
     <ClCompile Include="src\Src\Maze\Maze.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -163,6 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Includes\Maze\MazePath.h" />
+    <ClInclude Include="src\Includes\Render\GUI\GUIRenderManager.h" />
     <ClInclude Include="src\Includes\Solvers\DepthFirstSolver.h" />
     <ClInclude Include="src\Includes\Solvers\FloodFillSolver.h" />
     <ClInclude Include="src\Includes\Solvers\FungalSolver.h" />
@@ -179,7 +181,7 @@
     <ClInclude Include="src\Includes\Maths\Matrix.h" />
     <ClInclude Include="src\Includes\Solvers\NeuralNetworkSolver.h" />
     <ClInclude Include="src\Includes\Solvers\Solver.h" />
-    <ClInclude Include="src\Includes\Render\RenderManager.h" />
+    <ClInclude Include="src\Includes\Render\MainRenderManager.h" />
     <ClInclude Include="src\Includes\Maze\Maze.h" />
   </ItemGroup>
   <ItemGroup>

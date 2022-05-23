@@ -2,8 +2,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-class Camera
-{
+enum class CameraMode {
+	ROTATE_AROUND,
+	FREE_CAM
+};
+
+class Camera {
 private:
 	float xPosition, yPosition, zPosition;
 	float xLookingAt, yLookingAt, zLookingAt;
@@ -18,6 +22,7 @@ private:
 	float defaultXPosition, defaultYPosition, defaultZPosition;
 	int screenWidth, screenHeight;
 	glm::mat4 projection;
+	CameraMode camMode = CameraMode::ROTATE_AROUND;
 
 public:
 	Camera(float xPos, float yPos, float zPos, int screenWidth, int screenHeight);
@@ -34,6 +39,7 @@ public:
 	float getZLookingAt();
 
 	glm::mat4 getProjection();
+	glm::mat4 getViewMatrix();
 	void setRenderDistanceMin(float);
 	void setRenderDistanceMax(float);
 	void setFOV(float angle);
@@ -44,6 +50,9 @@ public:
 	void setPitch(float);
 	void setYaw(float);
 	void setRoll(float);
+	void updateRotation();
+
+	void setCameraMode(CameraMode newMode);
 
 	void setRotation(float pitch, float yaw, float roll);
 	void rotateBy(float pitch, float yaw, float roll);

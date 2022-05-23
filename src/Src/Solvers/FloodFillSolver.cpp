@@ -1,6 +1,6 @@
 #include <Solvers/FloodFillSolver.h>
 
-FloodFillSolver::FloodFillSolver(Maze maze, std::shared_ptr<RenderManager> renderer) : Solver(maze, renderer) {
+FloodFillSolver::FloodFillSolver(Maze maze, std::shared_ptr<MainRenderManager> renderer) : Solver(maze, renderer) {
 	navQueue = std::queue<std::vector<int>>();
 	visited = std::vector<std::vector<int>>();
 }

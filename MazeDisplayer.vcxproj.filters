@@ -21,7 +21,7 @@
     <ClCompile Include="src\Src\Maze\Maze.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Src\Render\RenderManager.cpp">
+    <ClCompile Include="src\Src\Render\MainRenderManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\glad.c">
@@ -57,6 +57,9 @@
     <ClCompile Include="src\Src\Maze\MazePath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Src\Render\GUI\GUIRenderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw3\glfw3.lib" />
@@ -77,7 +80,7 @@
     <ClInclude Include="src\Includes\Maze\Maze.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\RenderManager.h">
+    <ClInclude Include="src\Includes\Render\MainRenderManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Includes\Solvers\Solver.h">
@@ -117,6 +120,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Includes\Maze\MazePath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Includes\Render\GUI\GUIRenderManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

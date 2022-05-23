@@ -16,11 +16,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class RenderManager
+class MainRenderManager
 {
 public:
-	RenderManager(int width, int height, Maze initialMaze);
-	~RenderManager();
+	MainRenderManager(int width, int height, Maze initialMaze);
+	~MainRenderManager();
 	void setup();
 	void draw();
 	void framebufferSizeCallback(GLFWwindow* window, int width, int height);

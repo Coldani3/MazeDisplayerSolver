@@ -1,7 +1,7 @@
 #include <Solvers/DepthFirstSolver.h>
 #include <algorithm>
 
-DepthFirstSolver::DepthFirstSolver(Maze maze, std::shared_ptr<RenderManager> renderer) : Solver(maze, renderer) {
+DepthFirstSolver::DepthFirstSolver(Maze maze, std::shared_ptr<MainRenderManager> renderer) : Solver(maze, renderer) {
 	visited = std::vector<std::vector<int>>();
 	navStack = std::stack<std::vector<int>>();
 }
