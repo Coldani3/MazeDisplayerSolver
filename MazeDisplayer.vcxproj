@@ -143,8 +143,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Src\Render\GUI\FourDLocationIndicatorRenderer.cpp" />
     <ClCompile Include="src\Src\Maze\MazePath.cpp" />
     <ClCompile Include="src\Src\Render\GUI\GUIRenderManager.cpp" />
+    <ClCompile Include="src\Src\Render\Renderer.cpp" />
+    <ClCompile Include="src\Src\Render\RenderManager.cpp" />
     <ClCompile Include="src\Src\Solvers\DepthFirstSolver.cpp" />
     <ClCompile Include="src\Src\Solvers\FloodFillSolver.cpp" />
     <ClCompile Include="src\Src\Solvers\FungalSolver.cpp" />
@@ -164,7 +167,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Includes\Maze\MazePath.h" />
+    <ClInclude Include="src\Includes\Render\GUI\FourDLocationIndicatorRenderer.h" />
     <ClInclude Include="src\Includes\Render\GUI\GUIRenderManager.h" />
+    <ClInclude Include="src\Includes\Render\Renderer.h" />
+    <ClInclude Include="src\Includes\Render\RenderManager.h" />
     <ClInclude Include="src\Includes\Solvers\DepthFirstSolver.h" />
     <ClInclude Include="src\Includes\Solvers\FloodFillSolver.h" />
     <ClInclude Include="src\Includes\Solvers\FungalSolver.h" />

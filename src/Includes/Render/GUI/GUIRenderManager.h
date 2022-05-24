@@ -1,11 +1,15 @@
 #include <Maze/Maze.h>
+#include <Render/RenderManager.h>
 
 #pragma once
-class GUIRenderManager {
+class GUIRenderManager : public RenderManager {
 	GUIRenderManager(Maze maze);
 	~GUIRenderManager();
 
 	void setup();
-	void draw();
+	void render();
+
+public:
+	Maze maze;
 };
 

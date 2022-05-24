@@ -3,14 +3,11 @@
 #include <Maze/Maze.h>
 #include <Maze/MazePath.h>
 #include <Render/Camera.h>
-
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <Render/Renderer.h>
 
 #include <vector>
 
-class MazeRenderer
-{
+class MazeRenderer : public Renderer {
 public:
 	MazePath selectedPath;
 	bool showPath;

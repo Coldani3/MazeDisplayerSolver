@@ -1,34 +1,4 @@
-#ifndef __gl_h
-#include <glad/glad.h>
-#endif
 #include <Render/MazeRenderer.h>
-#include <Render/Shaders.h>
-
-#pragma region Non_Class_Methods
-void checkShaderCompileSuccess(unsigned int shader) {
-    int success;
-    char infoLog[512];
-
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-
-    if (!success) {
-        glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        std::cerr << "SHADER ERROR: " << infoLog << std::endl;
-    }
-}
-
-void checkProgramCompileSuccess(unsigned int program) {
-    int success;
-    char infoLog[512];
-
-    glGetProgramiv(program, GL_LINK_STATUS, &success);
-
-    if (!success) {
-        glGetProgramInfoLog(program, 512, NULL, infoLog);
-        std::cerr << "PROGRAM ERROR: " << infoLog << std::endl;
-    }
-}
-#pragma endregion
 
 MazeRenderer::MazeRenderer(Maze maze, int centerX, int centerY, int centerZ) {
     selectedPath = MazePath(maze.width, maze.height, maze.depth, maze.hyperDepth);
@@ -290,6 +260,8 @@ void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int 
                 //TODO: move all matrix multiplications into the shaders?
                 glm::mat4 model = mazeCellPathTransform(modelCoords, transformation[0], transformation[1], transformation[2], transformation[3], transformation[4]) * initialTranslate;
                 glm::vec3 cellColour = getCellColour(mazeCoords);
+                //perform this out of the shader as inverse is bad on the GPU due to performance
+                glm::mat3 normalTransform = glm::transpose(glm::inverse(glm::mat3(model)));
 
                 if (i >= 6) {
                     if (bitChecking == ANA) {
@@ -303,6 +275,7 @@ void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int 
                 glUniform3fv(glGetUniformLocation(mazePathProgram, "cellColour"), 1, glm::value_ptr(cellColour));
 
                 glUniformMatrix4fv(glGetUniformLocation(mazePathProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+                glUniformMatrix3fv(glGetUniformLocation(mazePathProgram, "normalTransform"), 1, GL_FALSE, glm::value_ptr(normalTransform));
 
                 glDrawArrays(GL_TRIANGLES, 0, 36);
             }

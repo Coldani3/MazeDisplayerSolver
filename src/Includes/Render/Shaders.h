@@ -1,9 +1,11 @@
-#pragma once
+#ifndef MAZE_SHADERS
+#define MAZE_SHADERS
 
+#pragma region Maze
 #pragma region Vertex Shaders
 //TODO: implement shrinking based on transit between two 4d slices
 //https://stackoverflow.com/a/14197892
-const char *mazeCellPathVertexShader = R"glsl(
+const char* const mazeCellPathVertexShader = R"glsl(
 #version 330 core
 
 layout (location = 0) in vec3 cubeCoord;
@@ -12,14 +14,13 @@ layout (location = 1) in vec3 vertexNormal;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform mat3 normalTransform;
 
 out vec3 vecNormal;
 out vec3 modelVertexPassed;
 
 void main() {
 	vec4 cubeVec4 = vec4(cubeCoord, 1.0);
-	//TODO: move this out of shader because inverse is bad on the GPU
-	mat3 normalTransform = transpose(inverse(mat3(model)));
 	vecNormal = normalize(normalTransform * vertexNormal);
 	modelVertexPassed = vec3(model * cubeVec4);
 	gl_Position = projection * view * model * cubeVec4;
@@ -28,7 +29,7 @@ void main() {
 //stride = sizeof(float) * 3
 // size: 3
 //offset: 0
-const char *mazeCellCenterCubeVertexShader = R"glsl(
+const char* const mazeCellCenterCubeVertexShader = R"glsl(
 #version 330 core
 
 layout (location = 0) in vec3 cubeCoord;
@@ -94,7 +95,7 @@ void main() {
 #pragma endregion
 
 #pragma region Fragment Shaders
-const char *mazeCellCenterCubeFragmentShader = R"glsl(
+const char* const mazeCellCenterCubeFragmentShader = R"glsl(
 #version 330 core
 
 out vec4 FragColor;
@@ -116,7 +117,7 @@ void main() {
 })glsl";
 
 //pretty much a copy but I'll probably do something with it eventually
-const char *mazeCellPathFragmentShader = R"glsl(
+const char* const mazeCellPathFragmentShader = R"glsl(
 #version 330 core
 
 out vec4 FragColor;
@@ -138,3 +139,44 @@ void main() {
 })glsl";
 
 #pragma endregion
+
+#pragma region UI Shaders
+#pragma region Vertex
+
+const char* const fourDIndicatorVertexShader = R"glsl(
+#version 330 core
+
+layout (location = 0) in vec3 squareVector;
+
+uniform vec3 squareColour;
+uniform mat4 model;
+uniform mat4 projection;
+
+void main() {
+	gl_Position = vec4(squareVector, 1.0);
+}
+)glsl";
+
+#pragma endregion
+
+#pragma region Fragment
+
+const char* const fourDIndicatorFragmentShader = R"glsl(
+#version 330 core
+
+uniform vec3 squareColour;
+
+out vec4 FragColor;
+
+void main() {
+	FragColor = vec4(squareColour, 0.5);
+}
+)glsl";
+
+#pragma endregion
+
+
+#pragma endregion
+#pragma endregion
+
+#endif

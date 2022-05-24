@@ -168,7 +168,7 @@ int beginRenderLoop(Maze maze) {
     while (!glfwWindowShouldClose(renderer->getWindow())) {
         startDraw = glfwGetTime();
 
-        renderer->draw();
+        renderer->render();
         glfwSwapBuffers(renderer->getWindow());
 
         delta = startDraw - lastFrame;

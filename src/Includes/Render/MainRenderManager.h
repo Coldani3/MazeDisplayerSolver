@@ -1,11 +1,12 @@
 #pragma once
 
-#include <glad/glad.h>
-#include <glfw3/glfw3.h>
-#include <glm/glm.hpp>
+//#include <glad/glad.h>
+//#include <glfw3/glfw3.h>
+//#include <glm/glm.hpp>
 
 #include <Render/Camera.h>
 #include <Render/MazeRenderer.h>
+#include <Render/RenderManager.h>
 #include <Maze/Maze.h>
 #include <Maze/MazePath.h>
 
@@ -13,16 +14,16 @@
 #include <memory>
 #include <vector>
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+//#include <glm/gtc/matrix_transform.hpp>
+//#include <glm/gtc/type_ptr.hpp>
 
-class MainRenderManager
+class MainRenderManager : public RenderManager
 {
 public:
 	MainRenderManager(int width, int height, Maze initialMaze);
 	~MainRenderManager();
 	void setup();
-	void draw();
+	void render();
 	void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 	GLFWwindow* getWindow();
 	int getWidth();
