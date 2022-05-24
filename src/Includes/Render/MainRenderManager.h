@@ -20,7 +20,7 @@
 class MainRenderManager : public RenderManager
 {
 public:
-	MainRenderManager(int width, int height, Maze initialMaze);
+	MainRenderManager(int width, int height, std::shared_ptr<Maze> initialMaze);
 	~MainRenderManager();
 	void setup();
 	void render();
@@ -28,7 +28,7 @@ public:
 	GLFWwindow* getWindow();
 	int getWidth();
 	int getHeight();
-	void setMazeUsing(Maze maze);
+	void setMazeUsing(std::shared_ptr<Maze> maze);
 	std::shared_ptr<Camera> getCamera();
 
 	glm::mat4 projection;
@@ -46,6 +46,6 @@ private:
 	int defaultWidth;
 	int defaultHeight;
 	int currentW = 0;
-	Maze maze;
+	std::shared_ptr<Maze> maze;
 };
 

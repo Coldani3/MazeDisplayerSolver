@@ -1,14 +1,14 @@
 #include <Solvers/SimpleNeuralNetworkSolver.h>
 #include <algorithm>
 
-SimpleNeuralNetworkSolver::SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, Maze maze, std::shared_ptr<MainRenderManager> renderer) : Solver(maze, renderer) {
+SimpleNeuralNetworkSolver::SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, std::shared_ptr<Maze> maze, std::shared_ptr<MainRenderManager> renderer) : Solver(maze, renderer) {
 	for (int i = 0; i < networks; i++) {
 		this->networks.push_back(NeuralNetwork(nodesPerLayer, learnRate));
 	}
 }
 
 std::vector<float> SimpleNeuralNetworkSolver::networkInputForCoords(std::vector<int> coords) {
-	unsigned int cellData = maze[coords];
+	unsigned int cellData = (*maze)[coords];
 
 	std::vector<float> out(12);
 
@@ -30,7 +30,7 @@ std::vector<std::vector<int>> SimpleNeuralNetworkSolver::getMostSuccessfulPath(s
 	for (int i = 0; i < paths.size(); i++) {
 		std::vector<int> lastCoord = paths[i].back();
 
-		float distance = distanceBetween(lastCoord, maze.mazeExit);
+		float distance = distanceBetween(lastCoord, maze->mazeExit);
 
 		successes[i] = distance;
 	}
@@ -62,7 +62,7 @@ std::vector<std::vector<std::vector<int>>> SimpleNeuralNetworkSolver::queryNetwo
 
 void SimpleNeuralNetworkSolver::solve() {
 	//query all networks and pick the best path
-	std::vector<std::vector<std::vector<int>>> paths = queryNetworkPaths(maze.mazeEntrance);
+	std::vector<std::vector<std::vector<int>>> paths = queryNetworkPaths(maze->mazeEntrance);
 	std::vector<float> successes(paths.size());
 
 	//all paths are the same length so the closest should be the best path.
@@ -70,7 +70,7 @@ void SimpleNeuralNetworkSolver::solve() {
 		std::vector<int> lastCoord = paths[i].back();
 
 		//4D pythagoras = sqrt(a^2 + b^2 + c^2 + d^2)
-		float distance = distanceBetween(lastCoord, maze.mazeExit);//sqrtf(pow(lastCoord[0], 2) + pow(lastCoord[1], 2) + pow(lastCoord[2], 2) + pow(lastCoord[3], 2));
+		float distance = distanceBetween(lastCoord, maze->mazeExit);//sqrtf(pow(lastCoord[0], 2) + pow(lastCoord[1], 2) + pow(lastCoord[2], 2) + pow(lastCoord[3], 2));
 
 		successes[i] = distance;
 	}

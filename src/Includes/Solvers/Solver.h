@@ -6,7 +6,7 @@
 class Solver
 {
 public:
-	Solver(Maze maze, std::shared_ptr<MainRenderManager> renderer);
+	Solver(std::shared_ptr<Maze> maze, std::shared_ptr<MainRenderManager> renderer);
 	virtual void solve();
 	float distanceBetween(std::vector<int>, std::vector<int>);
 	std::vector<int> addCoords(std::vector<int> coords1, std::vector<int> coords2) const;
@@ -20,7 +20,7 @@ public:
 	bool success = false;
 
 protected:
-	Maze maze;
+	std::shared_ptr<Maze> maze;
 	std::shared_ptr<MainRenderManager> renderer;
 };
 

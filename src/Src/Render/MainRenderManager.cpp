@@ -2,7 +2,7 @@
 #include <Render/MazeRenderer.h>
 
 #pragma region Class Methods
-MainRenderManager::MainRenderManager(int width, int height, Maze maze) {
+MainRenderManager::MainRenderManager(int width, int height, std::shared_ptr<Maze> maze) {
     //create the window
     window = glfwCreateWindow(width, height, "Maze Displayer and Solver", NULL, NULL);
     //set to top left corner
@@ -21,7 +21,7 @@ MainRenderManager::MainRenderManager(int width, int height, Maze maze) {
     this->height = height - top;
     this->maze = maze;
 
-    std::vector<float> mazeCenter = { centerX + ((float)maze.width / 2), centerY + ((float)maze.height / 2), centerZ + ((float)maze.depth / 2) };
+    std::vector<float> mazeCenter = { centerX + ((float)maze->width / 2), centerY + ((float)maze->height / 2), centerZ + ((float)maze->depth / 2) };
 
     camera = std::make_shared<Camera>(mazeCenter[0], mazeCenter[1], mazeCenter[2] + -15.0f, defaultWidth, defaultHeight, mazeCenter[0], mazeCenter[1], mazeCenter[2]);
     camera->lookAt(mazeCenter[0], mazeCenter[1], mazeCenter[2]);
@@ -42,7 +42,7 @@ MainRenderManager::~MainRenderManager() {
     std::cout << "Renderer Cleanup done." << std::endl;
 }
 
-void MainRenderManager::setMazeUsing(Maze maze) {
+void MainRenderManager::setMazeUsing(std::shared_ptr<Maze> maze) {
     this->maze = maze;
 }
 

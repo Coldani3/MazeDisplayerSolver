@@ -1,7 +1,7 @@
 #include <Render/MazeRenderer.h>
 
-MazeRenderer::MazeRenderer(Maze maze, int centerX, int centerY, int centerZ) {
-    selectedPath = MazePath(maze.width, maze.height, maze.depth, maze.hyperDepth);
+MazeRenderer::MazeRenderer(std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ) {
+    selectedPath = MazePath(maze->width, maze->height, maze->depth, maze->hyperDepth);
     mazeCenterX = centerX;
     mazeCenterY = centerY;
     mazeCenterZ = centerZ;
@@ -14,13 +14,15 @@ MazeRenderer::~MazeRenderer() {
 }
 
 void MazeRenderer::render() {
-    for (int x = 0; x < maze.width; x++) {
-        for (int y = 0; y < maze.height; y++) {
-            for (int z = 0; z < maze.depth; z++) {
+    for (int x = 0; x < maze->width; x++) {
+        for (int y = 0; y < maze->height; y++) {
+            for (int z = 0; z < maze->depth; z++) {
                 std::vector<int> coords = { x, y, z, currentW };
 
-                if (maze[coords] > 0) {
-                    drawMazeCellPaths(maze[coords], x, y, z, currentW);
+                unsigned char data = (*maze)[coords];
+
+                if (data > 0) {
+                    drawMazeCellPaths(data, x, y, z, currentW);
                     drawMazeCellCenter(x, y, z, currentW);
                 }
             }
@@ -160,7 +162,7 @@ void MazeRenderer::setShowPath(bool showPath) {
 }
 
 void MazeRenderer::setWViewing(int w) {
-    if (w < maze.hyperDepth && w >= 0) {
+    if (w < maze->hyperDepth && w >= 0) {
         currentW = w;
     }
 }
@@ -170,10 +172,10 @@ int MazeRenderer::getWViewing() {
 }
 
 glm::vec3 MazeRenderer::getCellColour(std::vector<int> coords) {
-    if (coords == maze.mazeEntrance) {
+    if (coords == maze->mazeEntrance) {
         return mazeEntranceColour;
     }
-    else if (coords == maze.mazeExit) {
+    else if (coords == maze->mazeExit) {
         return mazeExitColour;
     }
     else {
@@ -203,7 +205,7 @@ glm::mat4 MazeRenderer::mazeCellPathTransform(glm::vec3 initialCoords, float rot
 void MazeRenderer::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
     if (mazeW == currentW) {
         //TODO: store these vecs in a lookup buffer to save performance and memory
-        glm::vec3 coords = glm::vec3((maze.width - mazeX) + mazeCenterX, mazeY + mazeCenterY, mazeZ + mazeCenterZ);
+        glm::vec3 coords = glm::vec3((maze->width - mazeX) + mazeCenterX, mazeY + mazeCenterY, mazeZ + mazeCenterZ);
         glm::mat4 model = glm::translate(glm::mat4(1.0f), coords);
         glm::mat4 view = camera->getViewMatrix();
 
@@ -233,7 +235,7 @@ void MazeRenderer::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW
 void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW) {
     if (mazeW == currentW) {
         std::vector<int> mazeCoords = { mazeX, mazeY, mazeZ, mazeW };
-        glm::vec3 modelCoords = glm::vec3((maze.width - mazeX) + mazeCenterX, mazeY + mazeCenterY, mazeZ + mazeCenterZ);
+        glm::vec3 modelCoords = glm::vec3((maze->width - mazeX) + mazeCenterX, mazeY + mazeCenterY, mazeZ + mazeCenterZ);
         //translation to get it to the same modelCoords as the center piece, from which we then translate it again into the proper position
         glm::mat4 initialTranslate = glm::translate(glm::mat4(1.0f), modelCoords);
         glm::mat4 view = camera->getViewMatrix();

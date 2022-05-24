@@ -172,7 +172,7 @@ public:
     //101, 106, 201 - bluey
     const glm::vec3 kataColour = glm::vec3(0.396f, 0.415f, 0.788f);
 
-	MazeRenderer(Maze maze, int centerX, int centerY, int centerZ);
+	MazeRenderer(std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ);
 	~MazeRenderer();
 
 	void render();
@@ -192,7 +192,7 @@ public:
 	void drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW);
 
 private:
-	Maze maze;
+    std::shared_ptr<Maze> maze;
 	int currentW = 0;
 #pragma region GL_Vars
 	int cellCenterProgram;

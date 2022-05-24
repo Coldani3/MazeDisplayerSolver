@@ -1,15 +1,15 @@
 #include <Solvers/DepthFirstSolver.h>
 #include <algorithm>
 
-DepthFirstSolver::DepthFirstSolver(Maze maze, std::shared_ptr<MainRenderManager> renderer) : Solver(maze, renderer) {
+DepthFirstSolver::DepthFirstSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MainRenderManager> renderer) : Solver(maze, renderer) {
 	visited = std::vector<std::vector<int>>();
 	navStack = std::stack<std::vector<int>>();
 }
 
 void DepthFirstSolver::solve() {
-	navStack.push(maze.mazeEntrance);
-	visited.push_back(maze.mazeEntrance);
-	renderer->mazeRenderer->selectedPath.markCellVisited(maze.mazeEntrance);
+	navStack.push(maze->mazeEntrance);
+	visited.push_back(maze->mazeEntrance);
+	renderer->mazeRenderer->selectedPath.markCellVisited(maze->mazeEntrance);
 
 	std::cout << "[Depth First] Begin loop..." << std::endl;
 
@@ -24,7 +24,7 @@ void DepthFirstSolver::solve() {
 
 			++stepsTaken;
 
-			if (next == maze.mazeExit) {
+			if (next == maze->mazeExit) {
 				std::cout << "[Depth First] Found exit!" << std::endl;
 				success = true;
 				break;
@@ -54,7 +54,7 @@ std::vector<int> DepthFirstSolver::pickNextCellFrom(std::vector<int> from) {
 			std::cout << std::endl;
 		}*/
 
-		if (maze.inBounds(trying) && !renderer->mazeRenderer->selectedPath.visitedCell(trying) && canAccessFrom(from, trying)) {
+		if (maze->inBounds(trying) && !renderer->mazeRenderer->selectedPath.visitedCell(trying) && canAccessFrom(from, trying)) {
 			return trying;
 		}
 	}

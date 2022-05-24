@@ -136,7 +136,7 @@ void handleInput(GLFWwindow* window) {
     }
 }
 
-int beginRenderLoop(Maze maze) {
+int beginRenderLoop(std::shared_ptr<Maze> maze) {
     if (renderer->getWindow() == NULL) {
         std::cerr << "Could not create window" << std::endl;
         glfwTerminate();
@@ -188,7 +188,7 @@ long now() {
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
-void runSolver(std::shared_ptr<Solver> solver, Maze maze, std::string solverName) {
+void runSolver(std::shared_ptr<Solver> solver, std::shared_ptr<Maze> maze, std::string solverName) {
     std::cout << "[AI] Beginning " << solverName << " Solver..." << std::endl;
 
     long start = now();
@@ -208,7 +208,7 @@ void runSolver(std::shared_ptr<Solver> solver, Maze maze, std::string solverName
     glfwSetWindowTitle(renderer->getWindow(), ("Maze Displayer and Solver - " + solverName).c_str());
 }
 
-void aiThreadMethod(Maze maze) {
+void aiThreadMethod(std::shared_ptr<Maze> maze) {
     std::cout << "[AI] Initialising solvers..." << std::endl;
     SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1, maze, renderer);
     DepthFirstSolver depthSolver(maze, renderer);
@@ -248,13 +248,16 @@ void aiThreadMethod(Maze maze) {
 }
 
 int main() {
-    Maze maze;
-    maze.loadFromFile("maze.cd3mazs");
+    Maze mazeObj;
+    mazeObj.loadFromFile("maze.cd3mazs");
+
+    std::shared_ptr<Maze> maze;
 
     std::cout << "Maze loaded" << std::endl;
-    std::cout << "Maze entrance coords: " << maze.mazeEntrance[0] << ", " << maze.mazeEntrance[1] << ", " << maze.mazeEntrance[2] << ", " << maze.mazeEntrance[3] << std::endl;
-    std::cout << "Maze exit coords: " << maze.mazeExit[0] << ", " << maze.mazeExit[1] << ", " << maze.mazeExit[2] << ", " << maze.mazeExit[3] << std::endl;
-    std::cout << (unsigned int) maze[{0, 0, 0, 0}] << std::endl;
+    std::cout << "Maze entrance coords: " << mazeObj.mazeEntrance[0] << ", " << mazeObj.mazeEntrance[1] << ", " << mazeObj.mazeEntrance[2] << ", " << mazeObj.mazeEntrance[3] << std::endl;
+    std::cout << "Maze exit coords: " << mazeObj.mazeExit[0] << ", " << mazeObj.mazeExit[1] << ", " << mazeObj.mazeExit[2] << ", " << mazeObj.mazeExit[3] << std::endl;
+
+    maze = std::make_shared<Maze>(mazeObj);
 
     //initialise it here as renderer needs to be not null
     std::cout << "Initialising GLFW..." << std::endl;

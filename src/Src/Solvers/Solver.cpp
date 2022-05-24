@@ -1,6 +1,6 @@
 #include <Solvers/Solver.h>
 
-Solver::Solver(Maze maze, std::shared_ptr<MainRenderManager> renderer) {
+Solver::Solver(std::shared_ptr<Maze> maze, std::shared_ptr<MainRenderManager> renderer) {
 	this->maze = maze;
 	this->renderer = renderer;
 }
@@ -109,7 +109,7 @@ bool Solver::canAccessFrom(std::vector<int> fromCoords, std::vector<int> targetC
 		opposite = side << 1;
 	}
 
-	return (maze[targetCoords] & opposite) > 0;
+	return ((*maze)[targetCoords] & opposite) > 0;
 }
 
 void Solver::clear()

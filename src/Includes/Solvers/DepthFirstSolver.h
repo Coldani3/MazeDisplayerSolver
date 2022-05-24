@@ -18,7 +18,7 @@ public:
         {0, 0, 0, -1}
     };
 
-    DepthFirstSolver(Maze maze, std::shared_ptr<MainRenderManager> renderer);
+    DepthFirstSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MainRenderManager> renderer);
     void solve();
     bool canGoAnywhereFrom(std::vector<int> from);
     bool visitedCell(std::vector<int> cell);
