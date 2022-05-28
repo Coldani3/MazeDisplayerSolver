@@ -5,13 +5,15 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <Maze/Maze.h>
+#include <Render/PerspectiveCamera.h>
 
 #pragma once
 class RenderManager {
 public:
-	RenderManager();
-	~RenderManager();
-	virtual void setup();
-	virtual void render();
+	virtual void setup() = 0;
+	virtual void render() = 0;
+
+	virtual std::shared_ptr<Camera> getCamera() = 0;
+	
 };
 

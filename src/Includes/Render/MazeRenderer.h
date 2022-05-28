@@ -2,7 +2,7 @@
 
 #include <Maze/Maze.h>
 #include <Maze/MazePath.h>
-#include <Render/Camera.h>
+#include <Render/PerspectiveCamera.h>
 #include <Render/Renderer.h>
 
 #include <vector>
@@ -16,23 +16,6 @@ public:
 	float mazeCenterZ = 500.0f;
 
 #pragma region GL_Consts
-    /* Kept for reference
-
-    unsigned int cuboidIndices[] = {
-        0, 1, 3, //right face upper triangle
-        0, 2, 3, //right face lower triangle
-        0, 4, 6, //front face upper triangle
-        0, 2, 6, //front face lower triangle
-        0, 1, 5, //top face furthest triangle
-        0, 4, 5, //top face closest triangle
-        2, 6, 7, //bottom face closest triangle
-        2, 3, 7, //bottom face furthest tirangle
-        3, 7, 5, //back face bottom triangle
-        3, 1, 5, //back face top triangle
-        6, 7, 5, //left face bottom face
-        6, 4, 5  //left face top face
-    };*/
-
     const float cubeVerticesNormals[216] = {
         //back face
         -0.0625f, -0.0625f, -0.0625f, 0.0f, 0.0f, -1.0f,
@@ -83,22 +66,14 @@ public:
         0.0625f, 0.0625f, 0.0625f, 0.0f, 1.0f, 0.0f
     };
 
-    //float mazePathVertices[] = {
-    //    0.0625, 0.0625, 0.1625, //0
-    //    0.0625, 0.0625, -0.1625, //1
-    //    0.0625, -0.0625, 0.1625, //2
-    //    0.0625, -0.0625, -0.1625, //3
-    //    -0.0625, 0.0625, 0.1625, //4
-    //    -0.0625, 0.0625, -0.1625, //5
-    //    -0.0625, -0.0625, 0.1625, //6
-    //    -0.0625, -0.0625, -0.1625 //7
-    //};
+    /*TODO: frontand back are never displayed anywhere other than on the 4D paths.get rid of them
+      with these and then make a new set of buffers for the 4D paths.*/
 
-    //0.0625 = half of cube
-    //0.0625 * 2 for top and bottom of division = 0.125
-    //1 - 0.125 = 0.875 = length of path in total
-    //0.875 / 2 = 0.4375 = length of each individual path piece
-    //0.4375 / 2 = 0.21875
+    /*0.0625 = half of cube
+      0.0625 * 2 for top and bottom of division = 0.125
+      1 - 0.125 = 0.875 = length of path in total
+      0.875 / 2 = 0.4375 = length of each individual path piece
+      0.4375 / 2 = 0.21875*/
     const float mazePathVerticesNormals[216] = {
         //right
         0.0625f, -0.0625f, -0.21875f, 1.0f, 0.0f, 0.0f,
@@ -172,13 +147,12 @@ public:
     //101, 106, 201 - bluey
     const glm::vec3 kataColour = glm::vec3(0.396f, 0.415f, 0.788f);
 
-	MazeRenderer(std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ);
+	MazeRenderer(PerspectiveCamera camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ);
 	~MazeRenderer();
 
 	void render();
 	void setup();
 	void cleanup();
-	void setCamera(std::shared_ptr<Camera> camera);
 	void setMazeCenterProgram(int program);
 	void setMazePathProgram(int program);
 	void setShowPath(bool showPath);
@@ -205,7 +179,7 @@ private:
 #pragma endregion
 
 #pragma region Maze_Logic_Vars
-	std::shared_ptr<Camera> camera;
+	//PerspectiveCamera camera;
 #pragma endregion
 };
 

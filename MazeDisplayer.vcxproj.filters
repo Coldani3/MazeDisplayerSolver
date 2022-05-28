@@ -39,7 +39,7 @@
     <ClCompile Include="src\Src\Render\MazeRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Src\Render\Camera.cpp">
+    <ClCompile Include="src\Src\Render\PerspectiveCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Src\Solvers\SimpleNeuralNetworkSolver.cpp">
@@ -67,6 +67,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Src\Render\GUI\FourDLocationIndicatorRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Src\Render\GUI\TwoDCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Src\Render\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -113,7 +119,7 @@
     <ClInclude Include="src\Includes\Render\MazeRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\Camera.h">
+    <ClInclude Include="src\Includes\Render\PerspectiveCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Includes\Solvers\SimpleNeuralNetworkSolver.h">
@@ -141,6 +147,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Includes\Render\GUI\FourDLocationIndicatorRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Includes\Render\GUI\TwoDCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Includes\Render\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -148,12 +148,10 @@ const char* const fourDIndicatorVertexShader = R"glsl(
 
 layout (location = 0) in vec3 squareVector;
 
-uniform vec3 squareColour;
 uniform mat4 model;
-uniform mat4 projection;
 
 void main() {
-	gl_Position = vec4(squareVector, 1.0);
+	gl_Position = model * vec4(squareVector, 1.0);
 }
 )glsl";
 
@@ -169,7 +167,7 @@ uniform vec3 squareColour;
 out vec4 FragColor;
 
 void main() {
-	FragColor = vec4(squareColour, 0.5);
+	FragColor = vec4(squareColour, 1.0);
 }
 )glsl";
 

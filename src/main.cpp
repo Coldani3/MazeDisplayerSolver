@@ -12,14 +12,16 @@
 
 #include <Maze/Maze.h>
 #include <Render/MainRenderManager.h>
+#include <Render/GUI/GUIRenderManager.h>
 #include <Solvers/SimpleNeuralNetworkSolver.h>
 #include <Solvers/DepthFirstSolver.h>
 #include <Solvers/FloodFillSolver.h>
-#include <Render/Camera.h>
+#include <Render/PerspectiveCamera.h>
 
 #pragma once
 
-std::shared_ptr<MainRenderManager> renderer;
+std::shared_ptr<MainRenderManager> renderer = nullptr;
+std::shared_ptr<GUIRenderManager> guiRenderer = nullptr;
 bool running = true;
 double lastFrame;
 double delta = 0;
@@ -34,6 +36,7 @@ float camMoveSpeedMod = 1.0f;
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height) {    
     renderer->framebufferSizeCallback(window, width, height);
+    guiRenderer->framebufferSizeCallback(window, width, height);
 }
 
 void handleInput(GLFWwindow* window) {
@@ -61,57 +64,61 @@ void handleInput(GLFWwindow* window) {
     }
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        renderer->camera->rotateAround(
-            renderer->camera->getXLookingAt(), 
-            renderer->camera->getYLookingAt(), 
-            renderer->camera->getZLookingAt(),
+        renderer->camera.rotateAround(
+            renderer->camera.getXLookingAt(), 
+            renderer->camera.getYLookingAt(),
+            renderer->camera.getZLookingAt(),
             -360.0f * camSpeed, 0.0f, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        renderer->camera->rotateAround(
-            renderer->camera->getXLookingAt(),
-            renderer->camera->getYLookingAt(),
-            renderer->camera->getZLookingAt(),
+        renderer->camera.rotateAround(
+            renderer->camera.getXLookingAt(),
+            renderer->camera.getYLookingAt(),
+            renderer->camera.getZLookingAt(),
             360.0f * camSpeed, 0.0f, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        renderer->camera->rotateAround(
-            renderer->camera->getXLookingAt(),
-            renderer->camera->getYLookingAt(),
-            renderer->camera->getZLookingAt(),
+        renderer->camera.rotateAround(
+            renderer->camera.getXLookingAt(),
+            renderer->camera.getYLookingAt(),
+            renderer->camera.getZLookingAt(),
             0.0f, -360.0f * camSpeed, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        renderer->camera->rotateAround(
-            renderer->camera->getXLookingAt(),
-            renderer->camera->getYLookingAt(),
-            renderer->camera->getZLookingAt(),
+        renderer->camera.rotateAround(
+            renderer->camera.getXLookingAt(),
+            renderer->camera.getYLookingAt(),
+            renderer->camera.getZLookingAt(),
             0.0f, 360.0f * camSpeed, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-        renderer->camera->reset();
+        renderer->camera.reset();
     }
 
     if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
-        renderer->camera->zoom(zoomSpeed);
+        renderer->camera.zoom(zoomSpeed);
     }
 
     if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-        renderer->camera->zoom(-zoomSpeed);
+        renderer->camera.zoom(-zoomSpeed);
     }
 
     if (glfwGetTime() > lastWShift + 0.2) {
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-            renderer->mazeRenderer->setWViewing(renderer->mazeRenderer->getWViewing() - 1);
+            int w = renderer->mazeRenderer->getWViewing() - 1;
+            renderer->mazeRenderer->setWViewing(w);
+            guiRenderer->fourDIndicator->setWViewing(w);
             lastWShift = glfwGetTime();
         }
 
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-            renderer->mazeRenderer->setWViewing(renderer->mazeRenderer->getWViewing() + 1);
+            int w = renderer->mazeRenderer->getWViewing() + 1;
+            renderer->mazeRenderer->setWViewing(w);
+            guiRenderer->fourDIndicator->setWViewing(w);
             lastWShift = glfwGetTime();
         }
     }
@@ -159,6 +166,7 @@ int beginRenderLoop(std::shared_ptr<Maze> maze) {
     std::cout << "Done." << std::endl;
 
     renderer->setup();
+    guiRenderer->setup();
 
     //setup solvers thread
 
@@ -169,6 +177,7 @@ int beginRenderLoop(std::shared_ptr<Maze> maze) {
         startDraw = glfwGetTime();
 
         renderer->render();
+        guiRenderer->render();
         glfwSwapBuffers(renderer->getWindow());
 
         delta = startDraw - lastFrame;
@@ -251,13 +260,12 @@ int main() {
     Maze mazeObj;
     mazeObj.loadFromFile("maze.cd3mazs");
 
-    std::shared_ptr<Maze> maze;
-
     std::cout << "Maze loaded" << std::endl;
     std::cout << "Maze entrance coords: " << mazeObj.mazeEntrance[0] << ", " << mazeObj.mazeEntrance[1] << ", " << mazeObj.mazeEntrance[2] << ", " << mazeObj.mazeEntrance[3] << std::endl;
     std::cout << "Maze exit coords: " << mazeObj.mazeExit[0] << ", " << mazeObj.mazeExit[1] << ", " << mazeObj.mazeExit[2] << ", " << mazeObj.mazeExit[3] << std::endl;
 
-    maze = std::make_shared<Maze>(mazeObj);
+    //Mazes can get pretty big in memory so pointers are the call here.
+    std::shared_ptr<Maze> maze = std::make_shared<Maze>(mazeObj);
 
     //initialise it here as renderer needs to be not null
     std::cout << "Initialising GLFW..." << std::endl;
@@ -281,7 +289,10 @@ int main() {
     int xpos, ypos, width, height;
     glfwGetMonitorWorkarea(monitor, &xpos, &ypos, &width, &height);
 
+    std::cout << "Initialising renderers..." << std::endl;
     renderer = std::make_shared<MainRenderManager>(width, height/*800, 600*/, maze);
+    guiRenderer = std::make_shared<GUIRenderManager>(maze, width, height);
+    std::cout << "Done." << std::endl;
 
     std::thread aiThread(aiThreadMethod, maze);
 

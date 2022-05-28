@@ -1,16 +1,13 @@
 #include <Render/Renderer.h>
 #include <iostream>
 
-void Renderer::setup() {
-
+Renderer::Renderer(std::shared_ptr<Camera> camera) {
+    //std::cout << "c" << std::endl;
+    this->camera = camera;
 }
 
-void Renderer::render() {
-
-}
-
-void Renderer::cleanup() {
-
+void Renderer::setCamera(std::shared_ptr<Camera> camera) {
+    this->camera = camera;
 }
 
 void Renderer::checkShaderCompileSuccess(unsigned int shader) {
@@ -34,5 +31,17 @@ void Renderer::checkProgramCompileSuccess(unsigned int program) {
     if (!success) {
         glGetProgramInfoLog(program, 512, NULL, infoLog);
         std::cerr << "PROGRAM ERROR: " << infoLog << std::endl;
+    }
+}
+
+void Renderer::deleteProgramIfExists(unsigned int program, std::string name = "a program") {
+    int programSuccess;
+    glGetProgramiv(program, GL_DELETE_STATUS, &programSuccess);
+
+    if (programSuccess != GL_TRUE) {
+        std::cout << "Cleaning up " << name << "..." << std::endl;
+        glDeleteProgram(program);
+    } else {
+        std::cout << name << " was already deleted, skipping..." << std::endl;
     }
 }

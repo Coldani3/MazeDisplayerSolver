@@ -1,6 +1,6 @@
 #include <Render/GUI/FourDLocationIndicatorRenderer.h>
 
-FourDLocationIndicatorRenderer::FourDLocationIndicatorRenderer(Maze maze) {
+FourDLocationIndicatorRenderer::FourDLocationIndicatorRenderer(TwoDCamera camera, std::shared_ptr<Maze> maze) : Renderer(std::make_shared<TwoDCamera>(camera)) {
 	this->maze = maze;
 }
 
@@ -36,8 +36,8 @@ void FourDLocationIndicatorRenderer::setup() {
 
 	std::cout << "[FourDLocationManager] Genning buffers..." << std::endl;
 	glGenBuffers(1, &squareVBO);
-	glGenBuffers(1, &squareEBO);
 	glGenVertexArrays(1, &squareVAO);
+	glGenBuffers(1, &squareEBO);
 
 	glBindVertexArray(squareVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, squareVBO);
@@ -52,25 +52,47 @@ void FourDLocationIndicatorRenderer::setup() {
 }
 
 void FourDLocationIndicatorRenderer::render() {
-	//glDisable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
 
 	glUseProgram(indicatorProgram);
+	glBindVertexArray(squareVAO);
 
-	for (int i = maze.hyperDepth; i >= 0; i--) {
+	float hyperDepth = (float)maze->hyperDepth;
+
+	//draw layer 0 on top and at the bottom left of the others by starting with the last layer
+	for (int i = maze->hyperDepth - 1; i >= 0; i--) {
 		if (i == wViewing) {
 			glUniform3fv(glGetUniformLocation(indicatorProgram, "squareColour"), 1, glm::value_ptr(inColour));
 		} else {
 			glUniform3fv(glGetUniformLocation(indicatorProgram, "squareColour"), 1, glm::value_ptr(notInColour));
 		}
 
-		//glUniformMatrix4fv "model", "projection"
+		//remember it is SCREEN coordinates, ie. 1 to -1 both axes.
+		//
+		float translateScale = hyperDepth - i;
+
+		glm::mat4 squareTransform = glm::mat4(1.0f);//glm::translate(glm::mat4(1.0f), glm::vec3(-0.01f, -0.005f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(3000.0f, 3000.0f, 1.0f)) * translateScale;
+
+		glUniformMatrix4fv(glGetUniformLocation(indicatorProgram, "model"), 1, GL_FALSE, glm::value_ptr(squareTransform));
+		//how do we get ortho in
+		//glUniformMatrix4fv(glGetUniformLocation(indicatorProgram, "projection"), 1, GL_FALSE, glm::value_ptr());
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	}
 
-	//glEnable(GL_CULL_FACE);
+	glBindVertexArray(0);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 }
 
 void FourDLocationIndicatorRenderer::cleanup() {
-	glDeleteProgram(indicatorProgram);
+	std::cout << "Cleaning up 4D indicator renderer..." << std::endl;
+	deleteProgramIfExists(indicatorProgram, "indicatorProgram");
+
+	std::cout << "Done." << std::endl;
+}
+
+void FourDLocationIndicatorRenderer::setWViewing(int w) {
+	wViewing = w;
 }

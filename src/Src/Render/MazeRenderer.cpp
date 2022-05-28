@@ -1,11 +1,15 @@
 #include <Render/MazeRenderer.h>
 
-MazeRenderer::MazeRenderer(std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ) {
+MazeRenderer::MazeRenderer(PerspectiveCamera camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ) : Renderer(std::make_shared<PerspectiveCamera>(camera)) {
     selectedPath = MazePath(maze->width, maze->height, maze->depth, maze->hyperDepth);
     mazeCenterX = centerX;
     mazeCenterY = centerY;
     mazeCenterZ = centerZ;
     this->maze = maze;
+    //Debug
+    //this->camera = camera;
+
+    //std::cout << "cam1: " << (this->camera == nullptr) << ", cam2: " << (camera == nullptr) << std::endl;
 }
 
 MazeRenderer::~MazeRenderer() {
@@ -120,33 +124,14 @@ void MazeRenderer::setup() {
 
 void MazeRenderer::cleanup() {
     std::cout << "Cleaning up Maze Renderer..." << std::endl;
-    int cellCenterExists, mazePathExists;
 
     if (cellCenterProgram != 0) {
-        glGetProgramiv(cellCenterProgram, GL_DELETE_STATUS, &cellCenterExists);
-
-        if (cellCenterExists != GL_TRUE) {
-            std::cout << "Cleaning up cellCenterProgram..." << std::endl;
-            glDeleteProgram(cellCenterProgram);
-        } else {
-            std::cout << "cellCenterProgram was already deleted, skipping..." << std::endl;
-        }
+        deleteProgramIfExists(cellCenterProgram, "cellCenterProgram");
     }
 
     if (mazePathProgram != 0) {
-        glGetProgramiv(mazePathProgram, GL_DELETE_STATUS, &mazePathExists);
-
-        if (mazePathExists != GL_TRUE) {
-            std::cout << "Cleaning up mazePathProgram..." << std::endl;
-            glDeleteProgram(mazePathProgram);
-        } else {
-            std::cout << "mazePathProgram was already deleted, skipping..." << std::endl;
-        }
+        deleteProgramIfExists(mazePathProgram, "mazePathProgram");
     }
-}
-
-void MazeRenderer::setCamera(std::shared_ptr<Camera> camera) {
-    this->camera = camera;
 }
 
 void MazeRenderer::setMazeCenterProgram(int program) {
@@ -204,10 +189,15 @@ glm::mat4 MazeRenderer::mazeCellPathTransform(glm::vec3 initialCoords, float rot
 
 void MazeRenderer::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
     if (mazeW == currentW) {
+        //PerspectiveCamera perspCam = static_cast<PerspectiveCamera&>(camera);
         //TODO: store these vecs in a lookup buffer to save performance and memory
+        //std::cout << "persp: " << (perspCam == nullptr) << std::endl;
+
+        //PerspectiveCamera& perspCam = *camera;
+
         glm::vec3 coords = glm::vec3((maze->width - mazeX) + mazeCenterX, mazeY + mazeCenterY, mazeZ + mazeCenterZ);
         glm::mat4 model = glm::translate(glm::mat4(1.0f), coords);
-        glm::mat4 view = camera->getViewMatrix();
+        glm::mat4 view = camera->getView();
 
         glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());
         glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -234,12 +224,17 @@ void MazeRenderer::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW
 
 void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW) {
     if (mazeW == currentW) {
+        //PerspectiveCamera perspCam = static_cast<PerspectiveCamera&>(camera);
+        //std::shared_ptr<PerspectiveCamera> perspCamera = std::dynamic_pointer_cast<PerspectiveCamera>(camera);
+
         std::vector<int> mazeCoords = { mazeX, mazeY, mazeZ, mazeW };
         glm::vec3 modelCoords = glm::vec3((maze->width - mazeX) + mazeCenterX, mazeY + mazeCenterY, mazeZ + mazeCenterZ);
         //translation to get it to the same modelCoords as the center piece, from which we then translate it again into the proper position
         glm::mat4 initialTranslate = glm::translate(glm::mat4(1.0f), modelCoords);
-        glm::mat4 view = camera->getViewMatrix();
+        glm::mat4 view = camera->getView();
         float wLerp = 1.0f;
+
+        float debug = camera->getXPos();
 
         glm::vec3 lightPos = glm::vec3(camera->getXPos(), camera->getYPos(), camera->getZPos());
         glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);

@@ -4,7 +4,7 @@
 //#include <glfw3/glfw3.h>
 //#include <glm/glm.hpp>
 
-#include <Render/Camera.h>
+#include <Render/PerspectiveCamera.h>
 #include <Render/MazeRenderer.h>
 #include <Render/RenderManager.h>
 #include <Maze/Maze.h>
@@ -29,10 +29,10 @@ public:
 	int getWidth();
 	int getHeight();
 	void setMazeUsing(std::shared_ptr<Maze> maze);
-	std::shared_ptr<Camera> getCamera();
+	std::shared_ptr<Camera> getCamera() override;
 
 	glm::mat4 projection;
-	std::shared_ptr<Camera> camera;
+	PerspectiveCamera camera;
 	std::unique_ptr<MazeRenderer> mazeRenderer;
 	bool showPath = true;
 
