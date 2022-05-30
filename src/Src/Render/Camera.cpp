@@ -18,17 +18,5 @@ glm::mat4 Camera::getProjection() {
 	return projection;
 }
 
-float Camera::getXPos() {
-	return xPosition;
-}
-
-float Camera::getYPos() {
-	return yPosition;
-}
-
-float Camera::getZPos() {
-	return zPosition;
-}
-
 void Camera::updateProjection() {
 }

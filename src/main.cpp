@@ -64,47 +64,47 @@ void handleInput(GLFWwindow* window) {
     }
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        renderer->camera.rotateAround(
-            renderer->camera.getXLookingAt(), 
-            renderer->camera.getYLookingAt(),
-            renderer->camera.getZLookingAt(),
+        renderer->camera->rotateAround(
+            renderer->camera->getXLookingAt(), 
+            renderer->camera->getYLookingAt(),
+            renderer->camera->getZLookingAt(),
             -360.0f * camSpeed, 0.0f, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        renderer->camera.rotateAround(
-            renderer->camera.getXLookingAt(),
-            renderer->camera.getYLookingAt(),
-            renderer->camera.getZLookingAt(),
+        renderer->camera->rotateAround(
+            renderer->camera->getXLookingAt(),
+            renderer->camera->getYLookingAt(),
+            renderer->camera->getZLookingAt(),
             360.0f * camSpeed, 0.0f, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        renderer->camera.rotateAround(
-            renderer->camera.getXLookingAt(),
-            renderer->camera.getYLookingAt(),
-            renderer->camera.getZLookingAt(),
+        renderer->camera->rotateAround(
+            renderer->camera->getXLookingAt(),
+            renderer->camera->getYLookingAt(),
+            renderer->camera->getZLookingAt(),
             0.0f, -360.0f * camSpeed, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        renderer->camera.rotateAround(
-            renderer->camera.getXLookingAt(),
-            renderer->camera.getYLookingAt(),
-            renderer->camera.getZLookingAt(),
+        renderer->camera->rotateAround(
+            renderer->camera->getXLookingAt(),
+            renderer->camera->getYLookingAt(),
+            renderer->camera->getZLookingAt(),
             0.0f, 360.0f * camSpeed, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-        renderer->camera.reset();
+        renderer->camera->reset();
     }
 
     if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
-        renderer->camera.zoom(zoomSpeed);
+        renderer->camera->zoom(zoomSpeed);
     }
 
     if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-        renderer->camera.zoom(-zoomSpeed);
+        renderer->camera->zoom(-zoomSpeed);
     }
 
     if (glfwGetTime() > lastWShift + 0.2) {

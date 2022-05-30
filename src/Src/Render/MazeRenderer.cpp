@@ -1,6 +1,6 @@
 #include <Render/MazeRenderer.h>
 
-MazeRenderer::MazeRenderer(PerspectiveCamera camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ) : Renderer(std::make_shared<PerspectiveCamera>(camera)) {
+MazeRenderer::MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ) : Renderer(camera) {
     selectedPath = MazePath(maze->width, maze->height, maze->depth, maze->hyperDepth);
     mazeCenterX = centerX;
     mazeCenterY = centerY;

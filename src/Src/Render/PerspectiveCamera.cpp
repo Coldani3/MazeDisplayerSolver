@@ -42,13 +42,29 @@ glm::mat4 PerspectiveCamera::getProjection() {
 }
 
 glm::mat4 PerspectiveCamera::getView() {
-	//std::cout << "t" << std::endl;
+	//for some reason, x/y/zPosition are all reset to the default when entering this method?
+	//but then goes back to what they should be outside of this method???
 	glm::vec3 camPos = glm::vec3(xPosition, yPosition, zPosition);
 	glm::vec3 lookingAtPos = glm::vec3(xLookingAt, yLookingAt, zLookingAt);
 
 	glm::mat4 lookAtMat = glm::lookAt(camPos, lookingAtPos, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	return lookAtMat;
+}
+
+//these are always returning the initial value of <x>Position for some reason that is set in the constructor, even though
+//the <x>Position variables can be markedly proven to change throughout the program via a Watch and various Breakpoints.
+//c++ inheritance is weird.
+float PerspectiveCamera::getXPos() {
+	return xPosition;
+}
+
+float PerspectiveCamera::getYPos() {
+	return yPosition;
+}
+
+float PerspectiveCamera::getZPos() {
+	return zPosition;
 }
 
 void PerspectiveCamera::setXPos(float x) {
@@ -171,9 +187,6 @@ void PerspectiveCamera::rotateAround(float xPos, float yPos, float zPos, float x
 
 	lookAt(xPos, yPos, zPos);
 	updateRotation();
-	/*xLookingAt = xPos;
-	yLookingAt = yPos;
-	zLookingAt = zPos;*/
 
 	//std::cout << xPosition << "," << yPosition << "," << zPosition << std::endl;
 }

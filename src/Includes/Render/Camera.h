@@ -8,9 +8,6 @@
 class Camera {
 public:
 	int screenWidth, screenHeight;
-	float xPosition = 0;
-	float yPosition = 0;
-	float zPosition = 0;
 
 	Camera();
 	Camera(int width, int height);
@@ -18,9 +15,9 @@ public:
 	virtual glm::mat4 getProjection();
 
 	//return 0,0,0 if camera has no position
-	virtual float getXPos();
-	virtual float getYPos();
-	virtual float getZPos();
+	virtual float getXPos() = 0;
+	virtual float getYPos() = 0;
+	virtual float getZPos() = 0;
 
 	virtual void updateProjection();
 

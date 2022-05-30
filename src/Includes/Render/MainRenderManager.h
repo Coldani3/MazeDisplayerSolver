@@ -32,7 +32,7 @@ public:
 	std::shared_ptr<Camera> getCamera() override;
 
 	glm::mat4 projection;
-	PerspectiveCamera camera;
+	std::shared_ptr<PerspectiveCamera> camera;
 	std::unique_ptr<MazeRenderer> mazeRenderer;
 	bool showPath = true;
 

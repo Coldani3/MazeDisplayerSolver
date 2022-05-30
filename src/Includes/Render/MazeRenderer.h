@@ -147,7 +147,7 @@ public:
     //101, 106, 201 - bluey
     const glm::vec3 kataColour = glm::vec3(0.396f, 0.415f, 0.788f);
 
-	MazeRenderer(PerspectiveCamera camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ);
+	MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ);
 	~MazeRenderer();
 
 	void render();

@@ -12,7 +12,7 @@ enum class CameraMode {
 //TODO: abstract this into a base class and then two subclasses, PerspectiveCamera and OrthoCamera
 class PerspectiveCamera : public Camera {
 private:
-	//float xPosition, yPosition, zPosition;
+	float xPosition, yPosition, zPosition;
 	float xLookingAt, yLookingAt, zLookingAt;
 	//roll unused
 	float pitch = 0;
@@ -49,6 +49,10 @@ public:
 	void setXPos(float);
 	void setYPos(float);
 	void setZPos(float);
+	float getXPos() override;
+	float getYPos() override;
+	float getZPos() override;
+
 	void setPitch(float);
 	void setYaw(float);
 	void setRoll(float);
