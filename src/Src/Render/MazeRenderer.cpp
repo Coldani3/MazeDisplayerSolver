@@ -189,11 +189,7 @@ glm::mat4 MazeRenderer::mazeCellPathTransform(glm::vec3 initialCoords, float rot
 
 void MazeRenderer::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
     if (mazeW == currentW) {
-        //PerspectiveCamera perspCam = static_cast<PerspectiveCamera&>(camera);
         //TODO: store these vecs in a lookup buffer to save performance and memory
-        //std::cout << "persp: " << (perspCam == nullptr) << std::endl;
-
-        //PerspectiveCamera& perspCam = *camera;
 
         glm::vec3 coords = glm::vec3((maze->width - mazeX) + mazeCenterX, mazeY + mazeCenterY, mazeZ + mazeCenterZ);
         glm::mat4 model = glm::translate(glm::mat4(1.0f), coords);

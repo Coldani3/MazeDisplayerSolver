@@ -1,17 +1,17 @@
 #pragma once
 
-#include <Render/Renderer.h>
+#include <Render/GUI/GUIRenderer.h>
 #include <Maze/Maze.h>
 #include <Render/PerspectiveCamera.h>
 #include <Render/GUI/TwoDCamera.h>
 
-class FourDLocationIndicatorRenderer : public Renderer {
+class FourDLocationIndicatorRenderer : public GUIRenderer {
 private:
 	const float guiSquare[12] = {
-		0.95f, 0.95f, 0.0f, // top right
-		0.80f, 0.95f, 0.0f, // top left
-		0.80f, 0.80f, 0.0f, // bottom left
-		0.95f, 0.80f, 0.0f // bottom right
+		1.0f, 1.0f, 0.0f, // top right
+		0.0f, 1.0f, 0.0f, // top left
+		0.0f, 0.0f, 0.0f, // bottom left
+		1.0f, 0.0f, 0.0f // bottom right
 	};
 
 	const unsigned int guiSquareIndices[6] = {
@@ -22,6 +22,8 @@ private:
 	glm::vec3 notInColour = glm::vec3(0.54f, 0.54f, 0.54f);
 	//90, 237, 105 - greenish
 	glm::vec3 inColour = glm::vec3(0.352f, 0.929f, 0.411f);
+	glm::vec3 position = screenRelativeCoords(0.6f, 0.6f);
+	glm::vec3 squareSize = glm::vec3(100.0f, 100.0f, 1.0f);
 
 	unsigned int squareEBO;
 	unsigned int squareVBO;
@@ -35,7 +37,7 @@ private:
 	int wViewing = 0;
 
 public:
-	FourDLocationIndicatorRenderer(TwoDCamera camera, std::shared_ptr<Maze> maze);
+	FourDLocationIndicatorRenderer(std::shared_ptr<TwoDCamera> camera, std::shared_ptr<Maze> maze);
 	~FourDLocationIndicatorRenderer();
 	void setup();
 	void render();

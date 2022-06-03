@@ -146,6 +146,7 @@
     <ClCompile Include="src\Src\Render\Camera.cpp" />
     <ClCompile Include="src\Src\Render\GUI\FourDLocationIndicatorRenderer.cpp" />
     <ClCompile Include="src\Src\Maze\MazePath.cpp" />
+    <ClCompile Include="src\Src\Render\GUI\GUIRenderer.cpp" />
     <ClCompile Include="src\Src\Render\GUI\GUIRenderManager.cpp" />
     <ClCompile Include="src\Src\Render\GUI\TwoDCamera.cpp" />
     <ClCompile Include="src\Src\Render\Renderer.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="src\Includes\Maze\MazePath.h" />
     <ClInclude Include="src\Includes\Render\Camera.h" />
     <ClInclude Include="src\Includes\Render\GUI\FourDLocationIndicatorRenderer.h" />
+    <ClInclude Include="src\Includes\Render\GUI\GUIRenderer.h" />
     <ClInclude Include="src\Includes\Render\GUI\GUIRenderManager.h" />
     <ClInclude Include="src\Includes\Render\GUI\TwoDCamera.h" />
     <ClInclude Include="src\Includes\Render\Renderer.h" />

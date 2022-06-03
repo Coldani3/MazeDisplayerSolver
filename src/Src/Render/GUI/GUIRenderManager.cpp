@@ -2,10 +2,9 @@
 #include <Render/GUI/TwoDCamera.h>
 
 GUIRenderManager::GUIRenderManager(std::shared_ptr<Maze> maze, int width, int height) {
-	camera = TwoDCamera();
+	camera = std::make_shared<TwoDCamera>(width, height);
 	fourDIndicator = std::make_unique<FourDLocationIndicatorRenderer>(camera, maze);
 	this->maze = maze;
-	ortho = glm::ortho(0.0f, (float) width, (float) height, 0.0f, 0.1f, 1.0f);
 }
 
 GUIRenderManager::~GUIRenderManager() {
@@ -17,15 +16,21 @@ void GUIRenderManager::setup() {
 }
 
 void GUIRenderManager::render() {
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
+
 	fourDIndicator->render();
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 }
 
 void GUIRenderManager::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
-	ortho = glm::ortho(0.0f, (float) width, (float) height, 0.0f, 0.1f, 1.0f);
 	this->width = width;
 	this->height = height;
+	camera->updateSizes(width, height);
 }
 
 std::shared_ptr<Camera> GUIRenderManager::getCamera() {
-	return std::make_shared<TwoDCamera>(camera);
+	return camera;
 }

@@ -1,6 +1,6 @@
 #include <Render/GUI/FourDLocationIndicatorRenderer.h>
 
-FourDLocationIndicatorRenderer::FourDLocationIndicatorRenderer(TwoDCamera camera, std::shared_ptr<Maze> maze) : Renderer(std::make_shared<TwoDCamera>(camera)) {
+FourDLocationIndicatorRenderer::FourDLocationIndicatorRenderer(std::shared_ptr<TwoDCamera> camera, std::shared_ptr<Maze> maze) : GUIRenderer(camera) {
 	this->maze = maze;
 }
 
@@ -52,13 +52,12 @@ void FourDLocationIndicatorRenderer::setup() {
 }
 
 void FourDLocationIndicatorRenderer::render() {
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_DEPTH_TEST);
-
 	glUseProgram(indicatorProgram);
 	glBindVertexArray(squareVAO);
 
 	float hyperDepth = (float)maze->hyperDepth;
+	glm::mat4 scale = glm::scale(glm::mat4(1.0f), squareSize);
+	glm::mat4 initialTranslate = glm::translate(glm::mat4(1.0f), position);
 
 	//draw layer 0 on top and at the bottom left of the others by starting with the last layer
 	for (int i = maze->hyperDepth - 1; i >= 0; i--) {
@@ -72,18 +71,21 @@ void FourDLocationIndicatorRenderer::render() {
 		//
 		float translateScale = hyperDepth - i;
 
-		glm::mat4 squareTransform = glm::mat4(1.0f);//glm::translate(glm::mat4(1.0f), glm::vec3(-0.01f, -0.005f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(3000.0f, 3000.0f, 1.0f)) * translateScale;
+		//glm::translate(glm::mat4(1.0f), glm::vec3(-0.01f, -0.005f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(3000.0f, 3000.0f, 1.0f)) * translateScale;
 
-		glUniformMatrix4fv(glGetUniformLocation(indicatorProgram, "model"), 1, GL_FALSE, glm::value_ptr(squareTransform));
-		//how do we get ortho in
-		//glUniformMatrix4fv(glGetUniformLocation(indicatorProgram, "projection"), 1, GL_FALSE, glm::value_ptr());
+		glm::mat4 translate = (glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, 50.0f, 0.0f)) * (translateScale + 1)) * initialTranslate;
+
+		glm::mat4 model = translate * scale;
+
+
+		glUniformMatrix4fv(glGetUniformLocation(indicatorProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+
+		glUniformMatrix4fv(glGetUniformLocation(indicatorProgram, "projection"), 1, GL_FALSE, glm::value_ptr(camera->getProjection()));
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	}
 
 	glBindVertexArray(0);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
 }
 
 void FourDLocationIndicatorRenderer::cleanup() {
@@ -94,5 +96,7 @@ void FourDLocationIndicatorRenderer::cleanup() {
 }
 
 void FourDLocationIndicatorRenderer::setWViewing(int w) {
-	wViewing = w;
+	if (w >= 0 && w < maze->hyperDepth) {
+		wViewing = w;
+	}
 }

@@ -1,7 +1,9 @@
 #include <Render/GUI/TwoDCamera.h>
 
-TwoDCamera::TwoDCamera() {
-
+TwoDCamera::TwoDCamera(int screenWidth, int screenHeight) {
+    projection = glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f, -1.0f, 1.0f);
+    this->screenWidth = screenWidth;
+    this->screenHeight = screenHeight;
 }
 
 float TwoDCamera::getXPos() {
@@ -14,4 +16,8 @@ float TwoDCamera::getYPos() {
 
 float TwoDCamera::getZPos() {
     return 0.0f;
+}
+
+void TwoDCamera::updateSizes(int newWidth, int newHeight) {
+    projection = glm::ortho(0.0f, static_cast<float>(newWidth), static_cast<float>(newHeight), 0.0f, 0.1f, 1.0f);
 }

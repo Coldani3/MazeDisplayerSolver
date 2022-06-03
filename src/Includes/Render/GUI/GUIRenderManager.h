@@ -7,7 +7,6 @@ class GUIRenderManager : public RenderManager {
 public:
 	std::shared_ptr<Maze> maze;
 	std::unique_ptr<FourDLocationIndicatorRenderer> fourDIndicator;
-	glm::mat4 ortho;
 
 	int width, height;
 
@@ -20,6 +19,6 @@ public:
 	std::shared_ptr<Camera> getCamera() override;
 
 private:
-	TwoDCamera camera;
+	std::shared_ptr<TwoDCamera> camera;
 };
 
