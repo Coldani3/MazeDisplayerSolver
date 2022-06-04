@@ -163,12 +163,12 @@ void main() {
 const char* const fourDIndicatorFragmentShader = R"glsl(
 #version 330 core
 
-uniform vec3 squareColour;
+uniform vec4 squareColour;
 
 out vec4 FragColor;
 
 void main() {
-	FragColor = vec4(squareColour, 1.0);
+	FragColor = squareColour;
 }
 )glsl";
 
