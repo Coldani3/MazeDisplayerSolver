@@ -19,5 +19,5 @@ float TwoDCamera::getZPos() {
 }
 
 void TwoDCamera::updateSizes(int newWidth, int newHeight) {
-    projection = glm::ortho(0.0f, static_cast<float>(newWidth), static_cast<float>(newHeight), 0.0f, 0.1f, 1.0f);
+    projection = glm::ortho(0.0f, static_cast<float>(newWidth), static_cast<float>(newHeight), 0.0f, -1.0f, 1.0f);
 }

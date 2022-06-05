@@ -61,6 +61,7 @@ void handleInput(GLFWwindow* window) {
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
+        running = false;
     }
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {

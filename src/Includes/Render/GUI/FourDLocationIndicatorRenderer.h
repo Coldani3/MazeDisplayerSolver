@@ -22,7 +22,7 @@ private:
 	glm::vec3 notInColour = glm::vec3(0.54f, 0.54f, 0.54f);
 	//90, 237, 105 - greenish
 	glm::vec3 inColour = glm::vec3(0.352f, 0.929f, 0.411f);
-	glm::vec3 position = screenRelativeCoords(0.8f, -0.8f);
+	glm::vec3 position = screenRelativeCoords(0.9f, -0.9f);
 	glm::vec3 squareSize = glm::vec3(100.0f, 100.0f, 1.0f);
 
 	unsigned int squareEBO;

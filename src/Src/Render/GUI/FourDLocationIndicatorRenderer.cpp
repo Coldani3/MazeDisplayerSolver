@@ -59,6 +59,9 @@ void FourDLocationIndicatorRenderer::render() {
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), squareSize);
 	glm::mat4 initialTranslate = glm::translate(glm::mat4(1.0f), position);
 
+	float xTransPerSlice = -200.0f / hyperDepth;
+	float yTransPerSlice = 80.0f / hyperDepth;
+
 	//draw layer 0 on top and at the bottom left of the others by starting with the last layer
 	for (int i = maze->hyperDepth - 1; i >= 0; i--) {
 		if (i == wViewing) {
@@ -73,8 +76,8 @@ void FourDLocationIndicatorRenderer::render() {
 
 		//glm::translate(glm::mat4(1.0f), glm::vec3(-0.01f, -0.005f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(3000.0f, 3000.0f, 1.0f)) * translateScale;
 
-		//TODO: scale translation by how many slices there are.
-		glm::mat4 translate = (glm::translate(glm::mat4(1.0f), glm::vec3(-50.0f, 20.0f, 0.0f) * translateScale)) * initialTranslate;
+		//TODO: scale translation by how many slices there are (max 200pxX80px?).
+		glm::mat4 translate = (glm::translate(glm::mat4(1.0f), glm::vec3(xTransPerSlice, yTransPerSlice, 0.0f) * translateScale)) * initialTranslate;
 
 		glm::mat4 model = translate * scale;
 
