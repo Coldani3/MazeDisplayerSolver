@@ -42,6 +42,7 @@ public:
 	void setup();
 	void render();
 	void cleanup();
+	void updatePosition();
 
 	void setWViewing(int);
 };

@@ -99,6 +99,10 @@ void FourDLocationIndicatorRenderer::cleanup() {
 	std::cout << "Done." << std::endl;
 }
 
+void FourDLocationIndicatorRenderer::updatePosition() {
+	position = screenRelativeCoords(0.9f, -0.9f);
+}
+
 void FourDLocationIndicatorRenderer::setWViewing(int w) {
 	if (w >= 0 && w < maze->hyperDepth) {
 		wViewing = w;
