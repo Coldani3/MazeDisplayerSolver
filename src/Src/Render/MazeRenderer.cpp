@@ -6,10 +6,6 @@ MazeRenderer::MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::share
     mazeCenterY = centerY;
     mazeCenterZ = centerZ;
     this->maze = maze;
-    //Debug
-    //this->camera = camera;
-
-    //std::cout << "cam1: " << (this->camera == nullptr) << ", cam2: " << (camera == nullptr) << std::endl;
 }
 
 MazeRenderer::~MazeRenderer() {
@@ -159,11 +155,9 @@ int MazeRenderer::getWViewing() {
 glm::vec3 MazeRenderer::getCellColour(std::vector<int> coords) {
     if (coords == maze->mazeEntrance) {
         return mazeEntranceColour;
-    }
-    else if (coords == maze->mazeExit) {
+    } else if (coords == maze->mazeExit) {
         return mazeExitColour;
-    }
-    else {
+    } else {
         if (selectedPath.pathSize() > 0 && showPath) {
             if (selectedPath.visitedCell(coords)) {
                 return visitedCellColour;
