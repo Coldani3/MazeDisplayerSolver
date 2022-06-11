@@ -13,11 +13,28 @@
 class Renderer {
 public:
 	Renderer(std::shared_ptr<Camera> camera);
+	/*
+	 * Perform your OpenGL rendering setup (instantiating buffer objects, VAOs, shaders, shader programs etc.) as
+	 * well as your other setup needed for this renderer.
+	 */
 	virtual void setup() = 0;
+	/*
+	 * Render what this renderer is meant to render, as well as update render logic.
+	 */
 	virtual void render() = 0;
+	/*
+	 * Cleanup your OpenGL stuff here. You can use deleteProgramIfExists to help with this, especially given you will
+	 * probably want to call this in your destructor to stay in line with RAII but also potentially manually call it.
+	 */
 	virtual void cleanup() = 0;
 
 	virtual void setCamera(std::shared_ptr<Camera> camera);
+
+	/*
+	 * This will be called once a frame. Use this to perform non performance intensive key checks with glfwGetKey(),
+	 * such as to make sure you get input every frame. Performance issues here *will* cause FPS drops.
+	 */
+	virtual void getRenderPollInput(GLFWwindow* window) = 0;
 
     void checkShaderCompileSuccess(unsigned int shader);
 	void checkProgramCompileSuccess(unsigned int program);

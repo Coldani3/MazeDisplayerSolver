@@ -45,15 +45,6 @@ std::vector<int> DepthFirstSolver::pickNextCellFrom(std::vector<int> from) {
 	for (int i = 0; i < touchingSides.size(); i++) {
 		std::vector<int> trying = addCoords(touchingSides[i], from);
 
-		/*std::cout << "picking: {" << trying.size() << "} ";
-		std::cout << trying[0];
-
-		if (trying.size() > 1) {
-			std::cout << ", " << trying[1] << ", " << trying[2] << ", " << trying[3] << std::endl;
-		} else {
-			std::cout << std::endl;
-		}*/
-
 		if (maze->inBounds(trying) && !renderer->mazeRenderer->selectedPath.visitedCell(trying) && canAccessFrom(from, trying)) {
 			return trying;
 		}
@@ -64,8 +55,6 @@ std::vector<int> DepthFirstSolver::pickNextCellFrom(std::vector<int> from) {
 
 bool DepthFirstSolver::canGoAnywhereFrom(std::vector<int> from) {
 	return pickNextCellFrom(from) != std::vector<int> {-1};
-
-	//return false;
 }
 
 bool DepthFirstSolver::visitedCell(std::vector<int> cell) {

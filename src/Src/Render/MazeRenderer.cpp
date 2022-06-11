@@ -148,6 +148,9 @@ void MazeRenderer::setWViewing(int w) {
     }
 }
 
+void MazeRenderer::getRenderPollInput(GLFWwindow* window) {
+}
+
 int MazeRenderer::getWViewing() {
     return currentW;
 }

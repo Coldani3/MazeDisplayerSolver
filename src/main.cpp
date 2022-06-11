@@ -20,7 +20,8 @@
 
 #pragma once
 
-std::shared_ptr<MainRenderManager> renderer = nullptr;
+//TODO: make these not global or namespace them or something
+std::shared_ptr<MainRenderManager> threeDRenderer = nullptr;
 std::shared_ptr<GUIRenderManager> guiRenderer = nullptr;
 bool running = true;
 double lastFrame;
@@ -35,7 +36,7 @@ double lastSolverShift = 0;
 float camMoveSpeedMod = 1.0f;
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height) {    
-    renderer->framebufferSizeCallback(window, width, height);
+    threeDRenderer->framebufferSizeCallback(window, width, height);
     guiRenderer->framebufferSizeCallback(window, width, height);
 }
 
@@ -65,60 +66,60 @@ void handleInput(GLFWwindow* window) {
     }
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        renderer->camera->rotateAround(
-            renderer->camera->getXLookingAt(), 
-            renderer->camera->getYLookingAt(),
-            renderer->camera->getZLookingAt(),
+        threeDRenderer->camera->rotateAround(
+            threeDRenderer->camera->getXLookingAt(), 
+            threeDRenderer->camera->getYLookingAt(),
+            threeDRenderer->camera->getZLookingAt(),
             -360.0f * camSpeed, 0.0f, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        renderer->camera->rotateAround(
-            renderer->camera->getXLookingAt(),
-            renderer->camera->getYLookingAt(),
-            renderer->camera->getZLookingAt(),
+        threeDRenderer->camera->rotateAround(
+            threeDRenderer->camera->getXLookingAt(),
+            threeDRenderer->camera->getYLookingAt(),
+            threeDRenderer->camera->getZLookingAt(),
             360.0f * camSpeed, 0.0f, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        renderer->camera->rotateAround(
-            renderer->camera->getXLookingAt(),
-            renderer->camera->getYLookingAt(),
-            renderer->camera->getZLookingAt(),
+        threeDRenderer->camera->rotateAround(
+            threeDRenderer->camera->getXLookingAt(),
+            threeDRenderer->camera->getYLookingAt(),
+            threeDRenderer->camera->getZLookingAt(),
             0.0f, -360.0f * camSpeed, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        renderer->camera->rotateAround(
-            renderer->camera->getXLookingAt(),
-            renderer->camera->getYLookingAt(),
-            renderer->camera->getZLookingAt(),
+        threeDRenderer->camera->rotateAround(
+            threeDRenderer->camera->getXLookingAt(),
+            threeDRenderer->camera->getYLookingAt(),
+            threeDRenderer->camera->getZLookingAt(),
             0.0f, 360.0f * camSpeed, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-        renderer->camera->reset();
+        threeDRenderer->camera->reset();
     }
 
     if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
-        renderer->camera->zoom(zoomSpeed);
+        threeDRenderer->camera->zoom(zoomSpeed);
     }
 
     if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-        renderer->camera->zoom(-zoomSpeed);
+        threeDRenderer->camera->zoom(-zoomSpeed);
     }
 
     if (glfwGetTime() > lastWShift + 0.2) {
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-            int w = renderer->mazeRenderer->getWViewing() - 1;
-            renderer->mazeRenderer->setWViewing(w);
+            int w = threeDRenderer->mazeRenderer->getWViewing() - 1;
+            threeDRenderer->mazeRenderer->setWViewing(w);
             guiRenderer->fourDIndicator->setWViewing(w);
             lastWShift = glfwGetTime();
         }
 
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-            int w = renderer->mazeRenderer->getWViewing() + 1;
-            renderer->mazeRenderer->setWViewing(w);
+            int w = threeDRenderer->mazeRenderer->getWViewing() + 1;
+            threeDRenderer->mazeRenderer->setWViewing(w);
             guiRenderer->fourDIndicator->setWViewing(w);
             lastWShift = glfwGetTime();
         }
@@ -126,7 +127,7 @@ void handleInput(GLFWwindow* window) {
 
     if (glfwGetTime() > lastPathShowChange + 0.2) {
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
-            renderer->mazeRenderer->setShowPath(!renderer->mazeRenderer->showPath);
+            threeDRenderer->mazeRenderer->setShowPath(!threeDRenderer->mazeRenderer->showPath);
             lastPathShowChange = glfwGetTime();
         }
     }
@@ -145,7 +146,7 @@ void handleInput(GLFWwindow* window) {
 }
 
 int beginRenderLoop(std::shared_ptr<Maze> maze) {
-    if (renderer->getWindow() == NULL) {
+    if (threeDRenderer->getWindow() == NULL) {
         std::cerr << "Could not create window" << std::endl;
         glfwTerminate();
         return -1;
@@ -159,14 +160,14 @@ int beginRenderLoop(std::shared_ptr<Maze> maze) {
     }
 
     //resize viewport
-    glViewport(0, 0, renderer->getWidth(), renderer->getHeight());
+    glViewport(0, 0, threeDRenderer->getWidth(), threeDRenderer->getHeight());
 
     //adjust viewport based on window resize (we set the callback here because C++ doesn't let you use member methods as callbacks)
-    glfwSetFramebufferSizeCallback(renderer->getWindow(), framebufferSizeCallback);
+    glfwSetFramebufferSizeCallback(threeDRenderer->getWindow(), framebufferSizeCallback);
     //set other callbacks
     std::cout << "Done." << std::endl;
 
-    renderer->setup();
+    threeDRenderer->setup();
     guiRenderer->setup();
 
     //setup solvers thread
@@ -174,18 +175,18 @@ int beginRenderLoop(std::shared_ptr<Maze> maze) {
     std::cout << "Entering main loop..." << std::endl;
     double startDraw;
     //main render loop
-    while (!glfwWindowShouldClose(renderer->getWindow())) {
+    while (!glfwWindowShouldClose(threeDRenderer->getWindow())) {
         startDraw = glfwGetTime();
 
-        renderer->render();
+        threeDRenderer->render();
         guiRenderer->render();
-        glfwSwapBuffers(renderer->getWindow());
+        glfwSwapBuffers(threeDRenderer->getWindow());
 
         delta = startDraw - lastFrame;
         lastFrame = startDraw;
         fps = 1 / delta;
 
-        handleInput(renderer->getWindow());
+        handleInput(threeDRenderer->getWindow());
         glfwPollEvents();
     }
 
@@ -215,14 +216,15 @@ void runSolver(std::shared_ptr<Solver> solver, std::shared_ptr<Maze> maze, std::
 
     std::cout << " Steps Taken: " << solver->stepsTaken << " in " << finish - start << " milliseconds " << std::endl;
 
-    glfwSetWindowTitle(renderer->getWindow(), ("Maze Displayer and Solver - " + solverName).c_str());
+    glfwSetWindowTitle(threeDRenderer->getWindow(), ("Maze Displayer and Solver - " + solverName).c_str());
 }
 
+//TODO: SolverManager class to handle this logic
 void aiThreadMethod(std::shared_ptr<Maze> maze) {
     std::cout << "[AI] Initialising solvers..." << std::endl;
-    SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1, maze, renderer);
-    DepthFirstSolver depthSolver(maze, renderer);
-    FloodFillSolver floodFillSolver(maze, renderer);
+    SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1, maze, threeDRenderer);
+    DepthFirstSolver depthSolver(maze, threeDRenderer);
+    FloodFillSolver floodFillSolver(maze, threeDRenderer);
 
     std::vector<std::pair<std::string, std::shared_ptr<Solver>>> solversToNames = {
         {"Psuedo Right-Hand Rule Depth First Solver", std::make_shared<DepthFirstSolver>(depthSolver)},
@@ -237,9 +239,8 @@ void aiThreadMethod(std::shared_ptr<Maze> maze) {
             if (solverIndex != lastSolverIndex) {
                 //run next solver
 
-                renderer->mazeRenderer->selectedPath.clearVisitedCells();
+                threeDRenderer->mazeRenderer->selectedPath.clearVisitedCells();
                 
-
                 if (solverIndex >= 0 && solverIndex < solversToNames.size()) {
                     solversToNames[solverIndex].second->clear();
                     solversToNames[solverIndex].second->stepsTaken = 0;
@@ -251,10 +252,6 @@ void aiThreadMethod(std::shared_ptr<Maze> maze) {
             }
         //}
     }
-
-    //runSolver(std::make_unique<DepthFirstSolver>(depthSolver), maze, "Psuedo Right-Hand Rule Depth First Solver");
-
-    //solver.solve();
 }
 
 int main() {
@@ -291,7 +288,7 @@ int main() {
     glfwGetMonitorWorkarea(monitor, &xpos, &ypos, &width, &height);
 
     std::cout << "Initialising renderers..." << std::endl;
-    renderer = std::make_shared<MainRenderManager>(width, height/*800, 600*/, maze);
+    threeDRenderer = std::make_shared<MainRenderManager>(width, height/*800, 600*/, maze);
     guiRenderer = std::make_shared<GUIRenderManager>(maze, width, height);
     std::cout << "Done." << std::endl;
 

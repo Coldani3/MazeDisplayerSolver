@@ -9,7 +9,23 @@
 
 class MazeRenderer : public Renderer {
 public:
+    /*
+     * The path that has been selected to be gradually displayed (ie. NOT the one that is displayed) 
+     */
 	MazePath selectedPath;
+
+    /*
+     * The path that describes what is being shown to the user and is highlighted gradually. 
+     */
+    MazePath renderedPath;
+    double lastPathAddTime = 0;
+    //Index of selected path to be rendered.
+    int selectedPathIndex = 0;
+    /* Describes how many times the path 'updates' (ie. is copied from the result to the output gradually)
+     * per second with formula (1 / p).
+     * e.g 0.1f = 10 updates per second
+     */
+    const float pathUpdateSpeed = 0.1f;
 	bool showPath;
 	float mazeCenterX = 500.0f;
 	float mazeCenterY = 500.0f;
@@ -157,6 +173,7 @@ public:
 	void setMazePathProgram(int program);
 	void setShowPath(bool showPath);
 	void setWViewing(int w);
+    virtual void getRenderPollInput(GLFWwindow* window) override;
 	int getWViewing();
 
 	glm::vec3 getCellColour(std::vector<int> coords);

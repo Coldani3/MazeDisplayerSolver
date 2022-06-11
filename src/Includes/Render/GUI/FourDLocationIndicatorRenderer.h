@@ -44,6 +44,8 @@ public:
 	void cleanup();
 	void updatePosition();
 
+	void getRenderPollInput(GLFWwindow* window) override;
+
 	void setWViewing(int);
 };
 

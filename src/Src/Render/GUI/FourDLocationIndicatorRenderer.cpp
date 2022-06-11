@@ -103,6 +103,10 @@ void FourDLocationIndicatorRenderer::updatePosition() {
 	position = screenRelativeCoords(0.9f, -0.9f);
 }
 
+void FourDLocationIndicatorRenderer::getRenderPollInput(GLFWwindow* window) {
+
+}
+
 void FourDLocationIndicatorRenderer::setWViewing(int w) {
 	if (w >= 0 && w < maze->hyperDepth) {
 		wViewing = w;
