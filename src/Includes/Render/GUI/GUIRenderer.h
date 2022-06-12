@@ -10,6 +10,7 @@ public:
 	//used for starting coords so we can have GUI components relative to the screen but keep ortho
 	glm::vec3 screenRelativeCoords(float x, float y);
 
-private:
+protected:
+	std::shared_ptr<TwoDCamera> camera;
 };
 

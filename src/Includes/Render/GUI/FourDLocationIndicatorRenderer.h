@@ -32,7 +32,7 @@ private:
 	unsigned int indicatorProgram;
 
 private:
-	std::shared_ptr<Maze> maze;
+	std::shared_ptr<Maze> maze = nullptr;
 
 	int wViewing = 0;
 
@@ -44,7 +44,9 @@ public:
 	void cleanup();
 	void updatePosition();
 
-	void getRenderPollInput(GLFWwindow* window) override;
+	virtual std::shared_ptr<Camera> getCamera() override;
+
+	void getRenderPollInput(GLFWwindow* window, double delta) override;
 
 	void setWViewing(int);
 };

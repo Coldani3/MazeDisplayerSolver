@@ -1,11 +1,12 @@
 #include <Render/MazeRenderer.h>
 
-MazeRenderer::MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ) : Renderer(camera) {
+MazeRenderer::MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ) {
     selectedPath = MazePath(maze->width, maze->height, maze->depth, maze->hyperDepth);
     mazeCenterX = centerX;
     mazeCenterY = centerY;
     mazeCenterZ = centerZ;
     this->maze = maze;
+    this->camera = camera;
 }
 
 MazeRenderer::~MazeRenderer() {
@@ -32,39 +33,35 @@ void MazeRenderer::render() {
 
 void MazeRenderer::setup() {
     //create shaders
-    std::cout << "Initialising Shaders..." << std::endl;
-    std::cout << "genericCubeShaderVert..." << std::endl;
+    std::cout << "Initialising Shaders..." << '\n';
+    std::cout << "genericCubeShaderVert..." << '\n';
     unsigned int genericCubeShaderVert = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(genericCubeShaderVert, 1, &mazeCellPathVertexShader, NULL);
     glCompileShader(genericCubeShaderVert);
     checkShaderCompileSuccess(genericCubeShaderVert);
 
-    std::cout << "genericCubeShaderFrag..." << std::endl;
+    std::cout << "genericCubeShaderFrag..." << '\n';
     unsigned int genericCubeShaderFrag = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(genericCubeShaderFrag, 1, &mazeCellPathFragmentShader, NULL);
     glCompileShader(genericCubeShaderFrag);
     checkShaderCompileSuccess(genericCubeShaderFrag);
 
-    std::cout << "cellCenterCubeShaderVert..." << std::endl;
+    std::cout << "cellCenterCubeShaderVert..." << '\n';
     unsigned int cellCenterCubeShaderVert = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(cellCenterCubeShaderVert, 1, &mazeCellCenterCubeVertexShader, NULL);
     glCompileShader(cellCenterCubeShaderVert);
     checkShaderCompileSuccess(cellCenterCubeShaderVert);
 
-    std::cout << "cellCenterCubeShaderFrag..." << std::endl;
+    std::cout << "cellCenterCubeShaderFrag..." << '\n';
     unsigned int cellCenterCubeShaderFrag = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(cellCenterCubeShaderFrag, 1, &mazeCellCenterCubeFragmentShader, NULL);
     glCompileShader(cellCenterCubeShaderFrag);
     checkShaderCompileSuccess(cellCenterCubeShaderFrag);
 
-    /*unsigned int genericNormalsGeometryShader = glCreateShader(GL_GEOMETRY_SHADER);
-    glShaderSource(genericNormalsGeometryShader, 1, &normalsGeometryShader, NULL);
-    glCompileShader(genericNormalsGeometryShader);
-    checkShaderCompileSuccess(genericNormalsGeometryShader);*/
-    std::cout << "Done." << std::endl;
+    std::cout << "Done." << '\n';
 
     //create programs
-    std::cout << "Creating OpenGL Programs..." << std::endl;
+    std::cout << "Creating OpenGL Programs..." << '\n';
     mazePathProgram = glCreateProgram();
     glAttachShader(mazePathProgram, genericCubeShaderVert);
     glAttachShader(mazePathProgram, genericCubeShaderFrag);
@@ -78,7 +75,7 @@ void MazeRenderer::setup() {
     checkProgramCompileSuccess(cellCenterProgram);
     std::cout << "Done." << std::endl;
 
-    std::cout << "Cleaning up Shaders..." << std::endl;
+    std::cout << "Cleaning up Shaders..." << '\n';
     //clean up unecessary shaders
     glDeleteShader(genericCubeShaderVert);
     glDeleteShader(genericCubeShaderFrag);
@@ -86,8 +83,7 @@ void MazeRenderer::setup() {
     glDeleteShader(cellCenterCubeShaderFrag);
     std::cout << "Done." << std::endl;
 
-    // we will transform the cubes into the appropriate positions in the shader
-    std::cout << "Creating and populating buffers..." << std::endl;
+    std::cout << "Creating and populating buffers..." << '\n';
 
     //cube buffers
     glGenBuffers(1, &mazeCenterVBO);
@@ -148,7 +144,57 @@ void MazeRenderer::setWViewing(int w) {
     }
 }
 
-void MazeRenderer::getRenderPollInput(GLFWwindow* window) {
+void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
+    float camSpeed = 0.1 * delta;
+    float zoomSpeed = 2.5 * delta;
+
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        camera->rotateAround(
+            camera->getXLookingAt(),
+            camera->getYLookingAt(),
+            camera->getZLookingAt(),
+            -360.0f * camSpeed, 0.0f, 0.0f);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        camera->rotateAround(
+            camera->getXLookingAt(),
+            camera->getYLookingAt(),
+            camera->getZLookingAt(),
+            360.0f * camSpeed, 0.0f, 0.0f);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+        camera->rotateAround(
+            camera->getXLookingAt(),
+            camera->getYLookingAt(),
+            camera->getZLookingAt(),
+            0.0f, -360.0f * camSpeed, 0.0f);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        camera->rotateAround(
+            camera->getXLookingAt(),
+            camera->getYLookingAt(),
+            camera->getZLookingAt(),
+            0.0f, 360.0f * camSpeed, 0.0f);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+        camera->reset();
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
+        camera->zoom(zoomSpeed);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
+        camera->zoom(-zoomSpeed);
+    }
+}
+
+std::shared_ptr<Camera> MazeRenderer::getCamera() {
+    return camera;
 }
 
 int MazeRenderer::getWViewing() {

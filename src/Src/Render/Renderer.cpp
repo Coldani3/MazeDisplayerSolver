@@ -1,15 +1,6 @@
 #include <Render/Renderer.h>
 #include <iostream>
 
-Renderer::Renderer(std::shared_ptr<Camera> camera) {
-    //std::cout << "c" << std::endl;
-    this->camera = camera;
-}
-
-void Renderer::setCamera(std::shared_ptr<Camera> camera) {
-    this->camera = camera;
-}
-
 void Renderer::checkShaderCompileSuccess(unsigned int shader) {
     int success;
     char infoLog[512];

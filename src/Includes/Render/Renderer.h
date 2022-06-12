@@ -12,7 +12,6 @@
 
 class Renderer {
 public:
-	Renderer(std::shared_ptr<Camera> camera);
 	/*
 	 * Perform your OpenGL rendering setup (instantiating buffer objects, VAOs, shaders, shader programs etc.) as
 	 * well as your other setup needed for this renderer.
@@ -28,20 +27,17 @@ public:
 	 */
 	virtual void cleanup() = 0;
 
-	virtual void setCamera(std::shared_ptr<Camera> camera);
+	virtual std::shared_ptr<Camera> getCamera() = 0;
 
 	/*
 	 * This will be called once a frame. Use this to perform non performance intensive key checks with glfwGetKey(),
 	 * such as to make sure you get input every frame. Performance issues here *will* cause FPS drops.
 	 */
-	virtual void getRenderPollInput(GLFWwindow* window) = 0;
+	virtual void getRenderPollInput(GLFWwindow* window, double delta) = 0;
 
     void checkShaderCompileSuccess(unsigned int shader);
 	void checkProgramCompileSuccess(unsigned int program);
 
 	void deleteProgramIfExists(unsigned int program, std::string name);
-
-protected:
-	std::shared_ptr<Camera> camera;
 };
 

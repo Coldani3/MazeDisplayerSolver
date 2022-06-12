@@ -59,54 +59,13 @@ void handleInput(GLFWwindow* window) {
     /*camSpeed += camMoveSpeedMod;
     zoomSpeed += camMoveSpeedMod;*/
     
+    //TODO: programmatically access the renderers in a container of some sort and call them iteratively
+    threeDRenderer->mazeRenderer->getRenderPollInput(window, delta);
+    guiRenderer->fourDIndicator->getRenderPollInput(window, delta);
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
         running = false;
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        threeDRenderer->camera->rotateAround(
-            threeDRenderer->camera->getXLookingAt(), 
-            threeDRenderer->camera->getYLookingAt(),
-            threeDRenderer->camera->getZLookingAt(),
-            -360.0f * camSpeed, 0.0f, 0.0f);
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        threeDRenderer->camera->rotateAround(
-            threeDRenderer->camera->getXLookingAt(),
-            threeDRenderer->camera->getYLookingAt(),
-            threeDRenderer->camera->getZLookingAt(),
-            360.0f * camSpeed, 0.0f, 0.0f);
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        threeDRenderer->camera->rotateAround(
-            threeDRenderer->camera->getXLookingAt(),
-            threeDRenderer->camera->getYLookingAt(),
-            threeDRenderer->camera->getZLookingAt(),
-            0.0f, -360.0f * camSpeed, 0.0f);
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        threeDRenderer->camera->rotateAround(
-            threeDRenderer->camera->getXLookingAt(),
-            threeDRenderer->camera->getYLookingAt(),
-            threeDRenderer->camera->getZLookingAt(),
-            0.0f, 360.0f * camSpeed, 0.0f);
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-        threeDRenderer->camera->reset();
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
-        threeDRenderer->camera->zoom(zoomSpeed);
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-        threeDRenderer->camera->zoom(-zoomSpeed);
     }
 
     if (glfwGetTime() > lastWShift + 0.2) {

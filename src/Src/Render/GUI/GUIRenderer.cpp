@@ -1,7 +1,7 @@
 #include <Render/GUI/GUIRenderer.h>
 
-GUIRenderer::GUIRenderer(std::shared_ptr<TwoDCamera> camera) : Renderer(camera) {
-
+GUIRenderer::GUIRenderer(std::shared_ptr<TwoDCamera> camera) {
+    this->camera = camera;
 }
 
 /*Coordinates are provided the same as if they were drawing directly to a square screen via OpenGL, so -1 to 1 on both

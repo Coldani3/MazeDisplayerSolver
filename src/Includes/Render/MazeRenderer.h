@@ -173,7 +173,8 @@ public:
 	void setMazePathProgram(int program);
 	void setShowPath(bool showPath);
 	void setWViewing(int w);
-    virtual void getRenderPollInput(GLFWwindow* window) override;
+    virtual void getRenderPollInput(GLFWwindow* window, double delta) override;
+    virtual std::shared_ptr<Camera> getCamera() override;
 	int getWViewing();
 
 	glm::vec3 getCellColour(std::vector<int> coords);
@@ -183,7 +184,8 @@ public:
 	void drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW);
 
 private:
-    std::shared_ptr<Maze> maze;
+    std::shared_ptr<Maze> maze = nullptr;
+    std::shared_ptr<PerspectiveCamera> camera = nullptr;
 	int currentW = 0;
 #pragma region GL_Vars
 	int cellCenterProgram;
