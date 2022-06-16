@@ -28,7 +28,6 @@ double lastFrame;
 double delta = 0;
 int fps = 0;
 double lastWShift = 0;
-double lastPathShowChange = 0;
 int solverIndex = 0;
 int lastSolverIndex = -1;
 double lastSolverShift = 0;
@@ -40,25 +39,7 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
     guiRenderer->framebufferSizeCallback(window, width, height);
 }
 
-void handleInput(GLFWwindow* window) {
-    float camSpeed = 0.1 * delta;
-    float zoomSpeed = 2.5 * delta;
-
-    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
-        camMoveSpeedMod += 1.0 * delta;
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS) {
-        camMoveSpeedMod -= 1.0 * delta;
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
-        camMoveSpeedMod = 1.0;
-    }
-
-    /*camSpeed += camMoveSpeedMod;
-    zoomSpeed += camMoveSpeedMod;*/
-    
+void handleInput(GLFWwindow* window) {    
     //TODO: programmatically access the renderers in a container of some sort and call them iteratively
     threeDRenderer->mazeRenderer->getRenderPollInput(window, delta);
     guiRenderer->fourDIndicator->getRenderPollInput(window, delta);
@@ -84,19 +65,12 @@ void handleInput(GLFWwindow* window) {
         }
     }
 
-    if (glfwGetTime() > lastPathShowChange + 0.2) {
-        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
-            threeDRenderer->mazeRenderer->setShowPath(!threeDRenderer->mazeRenderer->showPath);
-            lastPathShowChange = glfwGetTime();
-        }
-    }
-
     if (glfwGetTime() > lastSolverShift + 1.0) {
-        if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
             ++solverIndex;
             std::cout << "Incrementing Solver Index!" << std::endl;
             lastSolverShift = glfwGetTime();
-        } else if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+        } else if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
             --solverIndex;
             std::cout << "Decrementing Solver Index!" << std::endl;
             lastSolverShift = glfwGetTime();

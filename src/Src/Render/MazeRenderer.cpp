@@ -7,6 +7,23 @@ MazeRenderer::MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::share
     mazeCenterZ = centerZ;
     this->maze = maze;
     this->camera = camera;
+    glm::mat4 identity = glm::mat4(1.0f);
+
+    for (int i = 0; i < cellPathTransformations.size(); i++) {
+        
+        float rotateAngleX = cellPathTransformationsValues[i][0];
+        float rotateAngleY = cellPathTransformationsValues[i][1];
+        float translateX = cellPathTransformationsValues[i][2];
+        float translateY = cellPathTransformationsValues[i][3];
+        float translateZ = cellPathTransformationsValues[i][4];
+        
+
+        glm::mat4 rotateY = glm::rotate(identity, glm::radians(rotateAngleY), glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::mat4 rotateX = glm::rotate(identity, glm::radians(rotateAngleX), glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 translate = glm::translate(identity, glm::vec3(translateX, translateY, translateZ));
+
+        cellPathTransformations[i] = translate * rotateX * rotateY;
+    }
 }
 
 MazeRenderer::~MazeRenderer() {
@@ -148,6 +165,21 @@ void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
     float camSpeed = 0.1 * delta;
     float zoomSpeed = 2.5 * delta;
 
+    /*if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
+        camMoveSpeedMod += 1.0 * delta;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS) {
+        camMoveSpeedMod -= 1.0 * delta;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
+        camMoveSpeedMod = 1.0;
+    }*/
+
+    /*camSpeed += camMoveSpeedMod;
+    zoomSpeed += camMoveSpeedMod;*/
+
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
         camera->rotateAround(
             camera->getXLookingAt(),
@@ -191,6 +223,18 @@ void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
     if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
         camera->zoom(-zoomSpeed);
     }
+
+    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS && glfwGetTime() >= (lastIndicatorToggle + 0.5)) {
+        show4DIndicators = !show4DIndicators;
+        lastIndicatorToggle = glfwGetTime();
+    }
+
+    if (glfwGetTime() > lastPathShowChange + 0.2) {
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+            setShowPath(!showPath);
+            lastPathShowChange = glfwGetTime();
+        }
+    }
 }
 
 std::shared_ptr<Camera> MazeRenderer::getCamera() {
@@ -217,17 +261,15 @@ glm::vec3 MazeRenderer::getCellColour(std::vector<int> coords) {
     }
 }
 
-glm::mat4 MazeRenderer::mazeCellPathTransform(glm::vec3 initialCoords, float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ) {
+glm::mat4 MazeRenderer::mazeCellPathTransform(glm::vec3 initialCoords, glm::mat4 transformation) {
     glm::mat4 identity = glm::mat4(1.0f);
 
     glm::mat4 toOrigin = glm::translate(identity, -initialCoords);
     glm::mat4 andBack = glm::translate(identity, initialCoords);
 
-    glm::mat4 rotateY = glm::rotate(identity, glm::radians(rotateAngleY), glm::vec3(1.0f, 0.0f, 0.0f));
-    glm::mat4 rotateX = glm::rotate(identity, glm::radians(rotateAngleX), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 translate = glm::translate(identity, glm::vec3(translateX, translateY, translateZ));
+    
 
-    return andBack * translate * rotateX * rotateY * toOrigin;
+    return andBack * transformation * toOrigin;
 }
 
 void MazeRenderer::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
@@ -292,14 +334,18 @@ void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int 
             unsigned int bitChecking = 1 << i;
 
             if ((mazeCellData & bitChecking) > 0) {
-                std::vector<float> transformation = cellPathTransformations[i];
+                //std::vector<float> transformation = cellPathTransformations[i];
                 //TODO: move all matrix multiplications into the shaders?
-                glm::mat4 model = mazeCellPathTransform(modelCoords, transformation[0], transformation[1], transformation[2], transformation[3], transformation[4]) * initialTranslate;
+                glm::mat4 model = mazeCellPathTransform(modelCoords, cellPathTransformations[i]) * initialTranslate;
                 glm::vec3 cellColour = getCellColour(mazeCoords);
                 //perform this out of the shader as inverse is bad on the GPU due to performance
                 glm::mat3 normalTransform = glm::transpose(glm::inverse(glm::mat3(model)));
 
                 if (i >= 6) {
+                    if (!show4DIndicators) {
+                        continue;
+                    }
+
                     if (bitChecking == ANA) {
                         cellColour = anaColour;
                     }

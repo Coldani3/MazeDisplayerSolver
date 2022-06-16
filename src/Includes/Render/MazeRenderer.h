@@ -6,6 +6,7 @@
 #include <Render/Renderer.h>
 
 #include <vector>
+#include <array>
 
 class MazeRenderer : public Renderer {
 public:
@@ -138,7 +139,7 @@ public:
 
     //xRot, yRot, xTrans, yTrans, zTrans - front = 0 deg
 //0.0625 + 0.21875 = 0.28125
-    const std::vector<std::vector<float>> cellPathTransformations = {
+    const std::vector<std::array<float, 5>> cellPathTransformationsValues = {
         {0.0f, 90.0f, 0.0f, 0.28125f, 0.0f},  //up 
         {0.0f, -90.0f, 0.0f, -0.28125f, 0.0f}, //down  
         {270.0f, 0.0f, -0.28125f, 0.0f, 0.0f}, //left
@@ -152,6 +153,8 @@ public:
         {-135.0f, -35.0f, -0.0625, -0.0625f, 0.0625f} //kata
 
     };
+
+    std::array<glm::mat4, 8> cellPathTransformations;
 
     const glm::vec3 defaultCellColour = glm::vec3(0.54f, 0.54f, 0.54f);
     //177, 3, 252 - purpley
@@ -178,7 +181,7 @@ public:
 	int getWViewing();
 
 	glm::vec3 getCellColour(std::vector<int> coords);
-	glm::mat4 mazeCellPathTransform(glm::vec3 initialCoords, float rotateAngleX, float rotateAngleY, float translateX, float translateY, float translateZ);
+	glm::mat4 mazeCellPathTransform(glm::vec3 initialCoords, glm::mat4 transformation);
 
 	void drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW);
 	void drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW);
@@ -186,10 +189,13 @@ public:
 private:
     std::shared_ptr<Maze> maze = nullptr;
     std::shared_ptr<PerspectiveCamera> camera = nullptr;
+    bool show4DIndicators = true;
 	int currentW = 0;
 #pragma region GL_Vars
 	int cellCenterProgram;
 	int mazePathProgram;
+    double lastPathShowChange = 0;
+    double lastIndicatorToggle = 0;
 	unsigned int mazeCenterVBO;
 	unsigned int mazePathVBO;
 
