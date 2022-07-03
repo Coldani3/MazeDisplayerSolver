@@ -12,6 +12,8 @@ public:
 	void clearVisitedCells();
 	int pathSize();
 
+	std::vector<int> operator[](int index);
+
 private:
 	std::vector<bool> visited;
 	std::vector<std::vector<int>> visitedPath;

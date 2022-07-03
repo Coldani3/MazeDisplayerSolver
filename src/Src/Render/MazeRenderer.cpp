@@ -2,6 +2,7 @@
 
 MazeRenderer::MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ) {
     selectedPath = MazePath(maze->width, maze->height, maze->depth, maze->hyperDepth);
+    renderedPath = MazePath(maze->width, maze->height, maze->depth, maze->hyperDepth);
     mazeCenterX = centerX;
     mazeCenterY = centerY;
     mazeCenterZ = centerZ;
@@ -32,6 +33,20 @@ MazeRenderer::~MazeRenderer() {
 }
 
 void MazeRenderer::render() {
+    //TODO: separate thread for timings? also account for lag spikes
+
+    if (showPath && glfwGetTime() > lastPathAddTime + pathUpdateSpeed && selectedPath.pathSize() > 0) {
+        std::vector<int> coords = selectedPath[renderedPath.pathSize()];
+
+        if (coords[3] != currentW) {
+            setWViewing(coords[3]);
+        }
+
+        if (selectedPath.pathSize() > renderedPath.pathSize()) {
+            renderedPath.markCellVisited(selectedPath[renderedPath.pathSize()]);
+        }
+    }
+
     for (int x = 0; x < maze->width; x++) {
         for (int y = 0; y < maze->height; y++) {
             for (int z = 0; z < maze->depth; z++) {
@@ -224,7 +239,7 @@ void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
         camera->zoom(-zoomSpeed);
     }
 
-    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS && glfwGetTime() >= (lastIndicatorToggle + 0.5)) {
+    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS && glfwGetTime() >= (lastIndicatorToggle + 0.2)) {
         show4DIndicators = !show4DIndicators;
         lastIndicatorToggle = glfwGetTime();
     }
@@ -251,8 +266,8 @@ glm::vec3 MazeRenderer::getCellColour(std::vector<int> coords) {
     } else if (coords == maze->mazeExit) {
         return mazeExitColour;
     } else {
-        if (selectedPath.pathSize() > 0 && showPath) {
-            if (selectedPath.visitedCell(coords)) {
+        if (/*selectedPath*/renderedPath.pathSize() > 0 && showPath) {
+            if (/*selectedPath*/renderedPath.visitedCell(coords)) {
                 return visitedCellColour;
             }
         }
@@ -334,7 +349,6 @@ void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int 
             unsigned int bitChecking = 1 << i;
 
             if ((mazeCellData & bitChecking) > 0) {
-                //std::vector<float> transformation = cellPathTransformations[i];
                 //TODO: move all matrix multiplications into the shaders?
                 glm::mat4 model = mazeCellPathTransform(modelCoords, cellPathTransformations[i]) * initialTranslate;
                 glm::vec3 cellColour = getCellColour(mazeCoords);
@@ -343,7 +357,7 @@ void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int 
 
                 if (i >= 6) {
                     if (!show4DIndicators) {
-                        continue;
+                        break;
                     }
 
                     if (bitChecking == ANA) {

@@ -34,5 +34,9 @@ void MazePath::clearVisitedCells() {
 }
 
 int MazePath::pathSize() {
-    return visited.size();
+    return visitedPath.size();
+}
+
+std::vector<int> MazePath::operator[](int index) {
+    return visitedPath[index];
 }

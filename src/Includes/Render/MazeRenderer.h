@@ -191,20 +191,17 @@ private:
     std::shared_ptr<PerspectiveCamera> camera = nullptr;
     bool show4DIndicators = true;
 	int currentW = 0;
+    double lastPathShowChange = 0;
+    double lastIndicatorToggle = 0;
 #pragma region GL_Vars
 	int cellCenterProgram;
 	int mazePathProgram;
-    double lastPathShowChange = 0;
-    double lastIndicatorToggle = 0;
+
 	unsigned int mazeCenterVBO;
 	unsigned int mazePathVBO;
 
 	unsigned int mazeCenterVAO;
 	unsigned int mazePathVAO;
-#pragma endregion
-
-#pragma region Maze_Logic_Vars
-	//PerspectiveCamera camera;
 #pragma endregion
 };
 
