@@ -35,16 +35,18 @@ MazeRenderer::~MazeRenderer() {
 void MazeRenderer::render() {
     //TODO: separate thread for timings? also account for lag spikes
 
-    if (showPath && glfwGetTime() > lastPathAddTime + pathUpdateSpeed && selectedPath.pathSize() > 0) {
+    if (showPath && 
+        glfwGetTime() > lastPathAddTime + pathUpdateSpeed && 
+        selectedPath.pathSize() > 0 && 
+        selectedPath.pathSize() > renderedPath.pathSize()) {
+        
         std::vector<int> coords = selectedPath[renderedPath.pathSize()];
 
         if (coords[3] != currentW) {
             setWViewing(coords[3]);
         }
 
-        if (selectedPath.pathSize() > renderedPath.pathSize()) {
-            renderedPath.markCellVisited(selectedPath[renderedPath.pathSize()]);
-        }
+        renderedPath.markCellVisited(coords);
     }
 
     for (int x = 0; x < maze->width; x++) {
