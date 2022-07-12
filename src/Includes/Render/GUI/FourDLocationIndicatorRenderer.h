@@ -34,8 +34,6 @@ private:
 private:
 	std::shared_ptr<Maze> maze = nullptr;
 
-	//int wViewing = 0;
-
 public:
 	FourDLocationIndicatorRenderer(std::shared_ptr<TwoDCamera> camera, std::shared_ptr<Maze> maze);
 	~FourDLocationIndicatorRenderer();

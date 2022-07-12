@@ -188,7 +188,6 @@ private:
     std::shared_ptr<Maze> maze = nullptr;
     std::shared_ptr<PerspectiveCamera> camera = nullptr;
     bool show4DIndicators = true;
-	//int currentW = 0;
     double lastPathShowChange = 0;
     double lastIndicatorToggle = 0;
 #pragma region GL_Vars

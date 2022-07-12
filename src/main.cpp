@@ -56,8 +56,6 @@ void handleInput(GLFWwindow* window, std::shared_ptr<Maze> maze) {
 
             if (w >= 0) {
                 threeDRenderer->mazeRenderInfo->wViewing = w;
-                /*threeDRenderer->mazeRenderer->setWViewing(w);
-                guiRenderer->fourDIndicator->setWViewing(w);*/
                 lastWShift = glfwGetTime();
             }
         }
@@ -67,8 +65,6 @@ void handleInput(GLFWwindow* window, std::shared_ptr<Maze> maze) {
 
             if (w < maze->hyperDepth) {
                 threeDRenderer->mazeRenderInfo->wViewing = w;
-                /*threeDRenderer->mazeRenderer->setWViewing(w);
-                guiRenderer->fourDIndicator->setWViewing(w);*/
                 lastWShift = glfwGetTime();
             }
         }

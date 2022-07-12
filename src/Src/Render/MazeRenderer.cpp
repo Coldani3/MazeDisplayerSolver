@@ -43,7 +43,6 @@ void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
         std::vector<int> coords = selectedPath[renderedPath.pathSize()];
 
         if (coords[3] != mazeRenderInfo->wViewing) {
-            //setWViewing(coords[3]);
             mazeRenderInfo->wViewing = coords[3];
         }
 
@@ -259,8 +258,8 @@ glm::vec3 MazeRenderer::getCellColour(std::vector<int> coords) {
     } else if (coords == maze->mazeExit) {
         return mazeExitColour;
     } else {
-        if (/*selectedPath*/renderedPath.pathSize() > 0 && showPath) {
-            if (/*selectedPath*/renderedPath.visitedCell(coords)) {
+        if (renderedPath.pathSize() > 0 && showPath) {
+            if (renderedPath.visitedCell(coords)) {
                 return visitedCellColour;
             }
         }
@@ -307,9 +306,6 @@ void MazeRenderer::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW
 }
 
 void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW) {
-    //PerspectiveCamera perspCam = static_cast<PerspectiveCamera&>(camera);
-    //std::shared_ptr<PerspectiveCamera> perspCamera = std::dynamic_pointer_cast<PerspectiveCamera>(camera);
-
     std::vector<int> mazeCoords = { mazeX, mazeY, mazeZ, mazeW };
     glm::vec3 modelCoords = glm::vec3((maze->width - mazeX) + mazeCenterX, mazeY + mazeCenterY, mazeZ + mazeCenterZ);
     //translation to get it to the same modelCoords as the center piece, from which we then translate it again into the proper position
