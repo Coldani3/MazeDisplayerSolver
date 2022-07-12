@@ -23,6 +23,7 @@
 //TODO: make these not global or namespace them or something
 std::shared_ptr<MainRenderManager> threeDRenderer = nullptr;
 std::shared_ptr<GUIRenderManager> guiRenderer = nullptr;
+
 bool running = true;
 double lastFrame;
 double delta = 0;
@@ -39,7 +40,7 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
     guiRenderer->framebufferSizeCallback(window, width, height);
 }
 
-void handleInput(GLFWwindow* window) {    
+void handleInput(GLFWwindow* window, std::shared_ptr<Maze> maze) {    
     //TODO: programmatically access the renderers in a container of some sort and call them iteratively
     threeDRenderer->mazeRenderer->getRenderPollInput(window, delta);
     guiRenderer->fourDIndicator->getRenderPollInput(window, delta);
@@ -51,17 +52,25 @@ void handleInput(GLFWwindow* window) {
 
     if (glfwGetTime() > lastWShift + 0.2) {
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-            int w = threeDRenderer->mazeRenderer->getWViewing() - 1;
-            threeDRenderer->mazeRenderer->setWViewing(w);
-            guiRenderer->fourDIndicator->setWViewing(w);
-            lastWShift = glfwGetTime();
+            int w = threeDRenderer->mazeRenderInfo->wViewing - 1;
+
+            if (w >= 0) {
+                threeDRenderer->mazeRenderInfo->wViewing = w;
+                /*threeDRenderer->mazeRenderer->setWViewing(w);
+                guiRenderer->fourDIndicator->setWViewing(w);*/
+                lastWShift = glfwGetTime();
+            }
         }
 
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-            int w = threeDRenderer->mazeRenderer->getWViewing() + 1;
-            threeDRenderer->mazeRenderer->setWViewing(w);
-            guiRenderer->fourDIndicator->setWViewing(w);
-            lastWShift = glfwGetTime();
+            int w = threeDRenderer->mazeRenderInfo->wViewing + 1;
+
+            if (w < maze->hyperDepth) {
+                threeDRenderer->mazeRenderInfo->wViewing = w;
+                /*threeDRenderer->mazeRenderer->setWViewing(w);
+                guiRenderer->fourDIndicator->setWViewing(w);*/
+                lastWShift = glfwGetTime();
+            }
         }
     }
 
@@ -119,7 +128,7 @@ int beginRenderLoop(std::shared_ptr<Maze> maze) {
         lastFrame = startDraw;
         fps = 1 / delta;
 
-        handleInput(threeDRenderer->getWindow());
+        handleInput(threeDRenderer->getWindow(), maze);
         glfwPollEvents();
     }
 
@@ -219,10 +228,12 @@ int main() {
 
     int xpos, ypos, width, height;
     glfwGetMonitorWorkarea(monitor, &xpos, &ypos, &width, &height);
-
+    std::shared_ptr<MazeRenderInfo> mazeRenderInfo = std::make_shared<MazeRenderInfo>(0);
     std::cout << "Initialising renderers..." << std::endl;
     threeDRenderer = std::make_shared<MainRenderManager>(width, height/*800, 600*/, maze);
+    threeDRenderer->mazeRenderInfo = mazeRenderInfo;
     guiRenderer = std::make_shared<GUIRenderManager>(maze, width, height);
+    guiRenderer->mazeRenderInfo = mazeRenderInfo;
     std::cout << "Done." << std::endl;
 
     std::thread aiThread(aiThreadMethod, maze);

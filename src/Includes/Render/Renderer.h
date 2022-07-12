@@ -9,6 +9,7 @@
 
 #include <Render/Shaders.h>
 #include <Render/Camera.h>
+#include <Render/MazeRenderInfo.h>
 
 class Renderer {
 public:
@@ -20,7 +21,7 @@ public:
 	/*
 	 * Render what this renderer is meant to render, as well as update render logic.
 	 */
-	virtual void render() = 0;
+	virtual void render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) = 0;
 	/*
 	 * Cleanup your OpenGL stuff here. You can use deleteProgramIfExists to help with this, especially given you will
 	 * probably want to call this in your destructor to stay in line with RAII but also potentially manually call it.

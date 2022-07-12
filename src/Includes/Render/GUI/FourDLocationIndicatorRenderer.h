@@ -34,20 +34,18 @@ private:
 private:
 	std::shared_ptr<Maze> maze = nullptr;
 
-	int wViewing = 0;
+	//int wViewing = 0;
 
 public:
 	FourDLocationIndicatorRenderer(std::shared_ptr<TwoDCamera> camera, std::shared_ptr<Maze> maze);
 	~FourDLocationIndicatorRenderer();
 	void setup();
-	void render();
+	void render(std::shared_ptr<MazeRenderInfo> mazeRendererInfo);
 	void cleanup();
 	void updatePosition();
 
 	virtual std::shared_ptr<Camera> getCamera() override;
 
 	void getRenderPollInput(GLFWwindow* window, double delta) override;
-
-	void setWViewing(int);
 };
 

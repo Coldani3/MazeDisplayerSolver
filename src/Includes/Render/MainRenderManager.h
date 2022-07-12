@@ -1,9 +1,5 @@
 #pragma once
 
-//#include <glad/glad.h>
-//#include <glfw3/glfw3.h>
-//#include <glm/glm.hpp>
-
 #include <Render/PerspectiveCamera.h>
 #include <Render/MazeRenderer.h>
 #include <Render/RenderManager.h>
@@ -13,9 +9,6 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-
-//#include <glm/gtc/matrix_transform.hpp>
-//#include <glm/gtc/type_ptr.hpp>
 
 class MainRenderManager : public RenderManager
 {

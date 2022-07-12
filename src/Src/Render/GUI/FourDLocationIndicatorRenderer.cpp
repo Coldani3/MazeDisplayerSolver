@@ -51,7 +51,7 @@ void FourDLocationIndicatorRenderer::setup() {
 	std::cout << "[FourDLocationManager] Done." << std::endl;
 }
 
-void FourDLocationIndicatorRenderer::render() {
+void FourDLocationIndicatorRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
 	glUseProgram(indicatorProgram);
 	glBindVertexArray(squareVAO);
 
@@ -64,7 +64,7 @@ void FourDLocationIndicatorRenderer::render() {
 
 	//draw layer 0 on top and at the bottom left of the others by starting with the last layer
 	for (int i = maze->hyperDepth - 1; i >= 0; i--) {
-		if (i == wViewing) {
+		if (i == mazeRenderInfo->wViewing) {
 			glUniform4fv(glGetUniformLocation(indicatorProgram, "squareColour"), 1, glm::value_ptr(glm::vec4(inColour, 0.9f)));
 		} else {
 			glUniform4fv(glGetUniformLocation(indicatorProgram, "squareColour"), 1, glm::value_ptr(glm::vec4(notInColour, 0.6f)));
@@ -109,10 +109,4 @@ std::shared_ptr<Camera> FourDLocationIndicatorRenderer::getCamera() {
 
 void FourDLocationIndicatorRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
 
-}
-
-void FourDLocationIndicatorRenderer::setWViewing(int w) {
-	if (w >= 0 && w < maze->hyperDepth) {
-		wViewing = w;
-	}
 }

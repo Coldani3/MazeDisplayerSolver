@@ -87,6 +87,6 @@ void MainRenderManager::render() {
     glClearColor(0.8470f, 0.8823f, 0.9098f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    mazeRenderer->render();
+    mazeRenderer->render(mazeRenderInfo);
 }
 #pragma endregion

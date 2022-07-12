@@ -169,16 +169,14 @@ public:
 	MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ);
 	~MazeRenderer();
 
-	void render();
+	void render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo);
 	void setup();
 	void cleanup();
 	void setMazeCenterProgram(int program);
 	void setMazePathProgram(int program);
 	void setShowPath(bool showPath);
-	void setWViewing(int w);
     virtual void getRenderPollInput(GLFWwindow* window, double delta) override;
     virtual std::shared_ptr<Camera> getCamera() override;
-	int getWViewing();
 
 	glm::vec3 getCellColour(std::vector<int> coords);
 	glm::mat4 mazeCellPathTransform(glm::vec3 initialCoords, glm::mat4 transformation);
@@ -190,7 +188,7 @@ private:
     std::shared_ptr<Maze> maze = nullptr;
     std::shared_ptr<PerspectiveCamera> camera = nullptr;
     bool show4DIndicators = true;
-	int currentW = 0;
+	//int currentW = 0;
     double lastPathShowChange = 0;
     double lastIndicatorToggle = 0;
 #pragma region GL_Vars

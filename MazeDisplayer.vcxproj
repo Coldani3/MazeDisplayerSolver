@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Src\Render\MazeRenderInfo.cpp" />
     <ClCompile Include="src\Src\Render\Camera.cpp" />
     <ClCompile Include="src\Src\Render\GUI\FourDLocationIndicatorRenderer.cpp" />
     <ClCompile Include="src\Src\Maze\MazePath.cpp" />
@@ -169,6 +170,7 @@
     <Library Include="lib\glfw3\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Includes\Render\MazeRenderInfo.h" />
     <ClInclude Include="src\Includes\Maze\MazePath.h" />
     <ClInclude Include="src\Includes\Render\Camera.h" />
     <ClInclude Include="src\Includes\Render\GUI\FourDLocationIndicatorRenderer.h" />

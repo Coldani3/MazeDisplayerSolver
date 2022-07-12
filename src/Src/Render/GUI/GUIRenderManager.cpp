@@ -21,7 +21,7 @@ void GUIRenderManager::render() {
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);
 
-	fourDIndicator->render();
+	fourDIndicator->render(mazeRenderInfo);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
