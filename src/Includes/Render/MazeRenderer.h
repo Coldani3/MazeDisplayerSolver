@@ -12,6 +12,7 @@ class MazeRenderer : public Renderer {
 public:
     /*
      * The path that has been selected to be gradually displayed (ie. NOT the one that is displayed) 
+     * TODO: these really should be smart pointers
      */
 	MazePath selectedPath;
 

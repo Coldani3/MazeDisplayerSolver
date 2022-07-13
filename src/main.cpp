@@ -173,35 +173,31 @@ void aiThreadMethod(std::shared_ptr<Maze> maze) {
     std::cout << "[AI] Done." << std::endl;
 
     while (running) {
-        //if (glfwGetTime() > lastSolverShift + 0.15) {
-            if (solverIndex != lastSolverIndex) {
-                //run next solver
+        if (solverIndex != lastSolverIndex) {
+            //run next solver
 
-                threeDRenderer->mazeRenderer->selectedPath.clearVisitedCells();
+            threeDRenderer->mazeRenderer->selectedPath.clearVisitedCells();
                 
-                if (solverIndex >= 0 && solverIndex < solversToNames.size()) {
-                    solversToNames[solverIndex].second->clear();
-                    solversToNames[solverIndex].second->stepsTaken = 0;
-                    solversToNames[solverIndex].second->success = false;
-                    runSolver(solversToNames[solverIndex].second, maze, solversToNames[solverIndex].first);
-                }
-
-                lastSolverIndex = solverIndex;
+            if (solverIndex >= 0 && solverIndex < solversToNames.size()) {
+                solversToNames[solverIndex].second->clear();
+                solversToNames[solverIndex].second->stepsTaken = 0;
+                solversToNames[solverIndex].second->success = false;
+                runSolver(solversToNames[solverIndex].second, maze, solversToNames[solverIndex].first);
             }
-        //}
+
+            lastSolverIndex = solverIndex;
+        }
     }
 }
 
 int main() {
-    Maze mazeObj;
-    mazeObj.loadFromFile("maze.cd3mazs");
+    //Mazes can get pretty big in memory so pointers are the call here.
+    std::shared_ptr<Maze> maze = std::make_shared<Maze>();
+    maze->loadFromFile("maze.cd3mazs");
 
     std::cout << "Maze loaded" << std::endl;
-    std::cout << "Maze entrance coords: " << mazeObj.mazeEntrance[0] << ", " << mazeObj.mazeEntrance[1] << ", " << mazeObj.mazeEntrance[2] << ", " << mazeObj.mazeEntrance[3] << std::endl;
-    std::cout << "Maze exit coords: " << mazeObj.mazeExit[0] << ", " << mazeObj.mazeExit[1] << ", " << mazeObj.mazeExit[2] << ", " << mazeObj.mazeExit[3] << std::endl;
-
-    //Mazes can get pretty big in memory so pointers are the call here.
-    std::shared_ptr<Maze> maze = std::make_shared<Maze>(mazeObj);
+    std::cout << "Maze entrance coords: " << maze->mazeEntrance[0] << ", " << maze->mazeEntrance[1] << ", " << maze->mazeEntrance[2] << ", " << maze->mazeEntrance[3] << std::endl;
+    std::cout << "Maze exit coords: " << maze->mazeExit[0] << ", " << maze->mazeExit[1] << ", " << maze->mazeExit[2] << ", " << maze->mazeExit[3] << std::endl;
 
     //initialise it here as renderer needs to be not null
     std::cout << "Initialising GLFW..." << std::endl;

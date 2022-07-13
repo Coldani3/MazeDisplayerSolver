@@ -9,7 +9,7 @@ FourDLocationIndicatorRenderer::~FourDLocationIndicatorRenderer() {
 }
 
 void FourDLocationIndicatorRenderer::setup() {
-	std::cout << "[FourDLocationManager] Setting up shaders..." << std::endl;
+	std::cout << "[FourDLocationManager] Setting up shaders..." << '\n';
 	unsigned int indicatorVertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(indicatorVertexShader, 1, &fourDIndicatorVertexShader, NULL);
 	glCompileShader(indicatorVertexShader);
@@ -19,22 +19,22 @@ void FourDLocationIndicatorRenderer::setup() {
 	glShaderSource(indicatorFragmentShader, 1, &fourDIndicatorFragmentShader, NULL);
 	glCompileShader(indicatorFragmentShader);
 	checkShaderCompileSuccess(indicatorFragmentShader);
-	std::cout << "[FourDLocationManager] Done." << std::endl;
+	std::cout << "[FourDLocationManager] Done." << '\n';
 
-	std::cout << "[FourDLocationManager] Setting up programs..." << std::endl;
+	std::cout << "[FourDLocationManager] Setting up programs..." << '\n';
 	indicatorProgram = glCreateProgram();
 	glAttachShader(indicatorProgram, indicatorVertexShader);
 	glAttachShader(indicatorProgram, indicatorFragmentShader);
 	glLinkProgram(indicatorProgram);
 	checkProgramCompileSuccess(indicatorProgram);
-	std::cout << "[FourDLocationManager] Done." << std::endl;
+	std::cout << "[FourDLocationManager] Done." << '\n';
 
-	std::cout << "[FourDLocationManager] Cleaning up shaders..." << std::endl;
+	std::cout << "[FourDLocationManager] Cleaning up shaders..." << '\n';
 	glDeleteShader(indicatorVertexShader);
 	glDeleteShader(indicatorFragmentShader);
-	std::cout << "[FourDLocationManager] Done." << std::endl;
+	std::cout << "[FourDLocationManager] Done." << '\n';
 
-	std::cout << "[FourDLocationManager] Genning buffers..." << std::endl;
+	std::cout << "[FourDLocationManager] Genning buffers..." << '\n';
 	glGenBuffers(1, &squareVBO);
 	glGenVertexArrays(1, &squareVAO);
 	glGenBuffers(1, &squareEBO);
@@ -93,7 +93,7 @@ void FourDLocationIndicatorRenderer::render(std::shared_ptr<MazeRenderInfo> maze
 }
 
 void FourDLocationIndicatorRenderer::cleanup() {
-	std::cout << "Cleaning up 4D indicator renderer..." << std::endl;
+	std::cout << "Cleaning up 4D indicator renderer..." << '\n';
 	deleteProgramIfExists(indicatorProgram, "indicatorProgram");
 
 	std::cout << "Done." << std::endl;

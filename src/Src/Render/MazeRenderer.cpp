@@ -17,7 +17,6 @@ MazeRenderer::MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::share
         float translateX = cellPathTransformationsValues[i][2];
         float translateY = cellPathTransformationsValues[i][3];
         float translateZ = cellPathTransformationsValues[i][4];
-        
 
         glm::mat4 rotateY = glm::rotate(identity, glm::radians(rotateAngleY), glm::vec3(1.0f, 0.0f, 0.0f));
         glm::mat4 rotateX = glm::rotate(identity, glm::radians(rotateAngleX), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -107,7 +106,7 @@ void MazeRenderer::setup() {
     glAttachShader(cellCenterProgram, cellCenterCubeShaderFrag);
     glLinkProgram(cellCenterProgram);
     checkProgramCompileSuccess(cellCenterProgram);
-    std::cout << "Done." << std::endl;
+    std::cout << "Done." << '\n';
 
     std::cout << "Cleaning up Shaders..." << '\n';
     //clean up unecessary shaders
@@ -115,7 +114,7 @@ void MazeRenderer::setup() {
     glDeleteShader(genericCubeShaderFrag);
     glDeleteShader(cellCenterCubeShaderVert);
     glDeleteShader(cellCenterCubeShaderFrag);
-    std::cout << "Done." << std::endl;
+    std::cout << "Done." << '\n';
 
     std::cout << "Creating and populating buffers..." << '\n';
 
@@ -274,13 +273,11 @@ glm::mat4 MazeRenderer::mazeCellPathTransform(glm::vec3 initialCoords, glm::mat4
     glm::mat4 toOrigin = glm::translate(identity, -initialCoords);
     glm::mat4 andBack = glm::translate(identity, initialCoords);
 
-    
-
     return andBack * transformation * toOrigin;
 }
 
 void MazeRenderer::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW) {
-    //TODO: store these vecs in a lookup buffer to save performance and memory
+    //TODO: store these vecs in a lookup buffer to save performance and memory?
 
     glm::vec3 coords = glm::vec3((maze->width - mazeX) + mazeCenterX, mazeY + mazeCenterY, mazeZ + mazeCenterZ);
     glm::mat4 model = glm::translate(glm::mat4(1.0f), coords);
