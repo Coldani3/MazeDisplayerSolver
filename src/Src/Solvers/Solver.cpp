@@ -6,6 +6,7 @@ Solver::Solver(std::shared_ptr<Maze> maze, std::shared_ptr<MainRenderManager> re
 }
 
 float Solver::distanceBetween(std::vector<int> coords1, std::vector<int> coords2) {
+	//4D pythagoras = sqrt(a^2 + b^2 + c^2 + d^2)
 	return sqrtf(pow(abs(coords2[0] - coords1[0]), 2) + pow(abs(coords2[2] - coords1[1]), 2) + pow(abs(coords2[2] - coords1[2]), 2) + pow(abs(coords2[3] - coords1[3]), 2));
 }
 
@@ -27,7 +28,7 @@ std::vector<float> Solver::floatify(std::vector<int> vec) {
 	std::vector<float> out(vec.size());
 
 	for (int i = 0; i < vec.size(); i++) {
-		out[i] = (float)vec[i];
+		out[i] = static_cast<float>(vec[i]);
 	}
 
 	return out;
@@ -37,17 +38,17 @@ std::vector<int> Solver::intify(std::vector<float> vec) {
 	std::vector<int> out(vec.size());
 
 	for (int i = 0; i < vec.size(); i++) {
-		out[i] = (int)vec[i];
+		out[i] = static_cast<int>(vec[i]);
 	}
 
 	return out;
 }
 
 std::vector<int> Solver::minusCoords(std::vector<int> coords1, std::vector<int> coords2) {
-	std::vector<int> out;
+	std::vector<int> out(4);
 
 	for (int i = 0; i < 4; i++) {
-		out.push_back(coords1[i] - coords2[i]);
+		out[i] = coords1[i] - coords2[i];
 	}
 
 	return out;
@@ -60,26 +61,27 @@ bool Solver::canAccessFrom(std::vector<int> fromCoords, std::vector<int> targetC
 	for (int i = 0; i < difference.size(); i++) {
 		if (difference[i] != 0) {
 			switch (i) {
+				//TODO: I'm fairly sure that this is a temporary thing because of my maze generator using the wrong
+				//directions. Go back to that and fix that change adn then fix it here.
+				//X
 				case 0:
 					if (difference[i] > 0) {
 						side = RIGHT;
-					}
-					else {
+					} else {
 						side = LEFT;
 					}
 
 					break;
+				//Y
 				case 1:
-					
-
 					if (difference[i] > 0) {
 						side = UP;
-					}
-					else {
+					} else {
 						side = DOWN;
 					}
 
 					break;
+				//Z
 				case 2:
 					if (difference[i] > 0) {
 						side = FORWARD;
@@ -87,6 +89,7 @@ bool Solver::canAccessFrom(std::vector<int> fromCoords, std::vector<int> targetC
 						side = BACKWARD;
 					}
 					break;
+				//W
 				case 3:
 					if (difference[i] > 0) {
 						side = ANA;
@@ -100,7 +103,8 @@ bool Solver::canAccessFrom(std::vector<int> fromCoords, std::vector<int> targetC
 	
 	unsigned int opposite = 0;
 
-	//AAA because we eliminated the visited bit when saving from the generator
+	//AAA because we eliminated the visited bit when saving from the generator. AAA represents a 101010 type pattern.
+	//check if this is the left of each direction bit pair
 	if ((side & 0xAAAAAAAAAAAAAAAA) > 0) {
 		//if it is, shift one way, getting the opposite
 		opposite = side >> 1;

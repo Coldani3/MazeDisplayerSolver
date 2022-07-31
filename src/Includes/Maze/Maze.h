@@ -38,6 +38,7 @@ public:
 	//Provide the byte representing the cell at coordinates as a reference to modify
 	unsigned char& operator[](std::vector<int> coordinates);
 	bool inBounds(std::vector<int> coordinates);
+	bool canAccessFrom(std::vector<int> fromCoords, std::vector<int> toCoords);
 
 private:
 	//The data that makes up the maze.

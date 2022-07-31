@@ -1,11 +1,13 @@
 #include <Render/MazeRenderer.h>
 
+#include <algorithm>
+
 MazeRenderer::MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ) {
     selectedPath = MazePath(maze->width, maze->height, maze->depth, maze->hyperDepth);
     renderedPath = MazePath(maze->width, maze->height, maze->depth, maze->hyperDepth);
-    mazeCenterX = centerX;
-    mazeCenterY = centerY;
-    mazeCenterZ = centerZ;
+    mazeCenterX = static_cast<float>(centerX);
+    mazeCenterY = static_cast<float>(centerY);
+    mazeCenterZ = static_cast<float>(centerZ);
     this->maze = maze;
     this->camera = camera;
     glm::mat4 identity = glm::mat4(1.0f);
@@ -34,12 +36,16 @@ MazeRenderer::~MazeRenderer() {
 void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
     //TODO: separate thread for timings? also account for lag spikes
 
+    //handle animation of solved path being displayed
+    int selectedPathSize = selectedPath.pathSize();
+    int renderedPathSize = renderedPath.pathSize();
+
     if (showPath && 
         glfwGetTime() > lastPathAddTime + pathUpdateSpeed && 
-        selectedPath.pathSize() > 0 && 
-        selectedPath.pathSize() > renderedPath.pathSize()) {
+        selectedPathSize > 0 && 
+        selectedPathSize > renderedPathSize) {
         
-        std::vector<int> coords = selectedPath[renderedPath.pathSize()];
+        std::vector<int> coords = selectedPath[renderedPathSize];
 
         if (coords[3] != mazeRenderInfo->wViewing) {
             mazeRenderInfo->wViewing = coords[3];
@@ -48,6 +54,7 @@ void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
         renderedPath.markCellVisited(coords);
     }
 
+    //actually draw the maze
     for (int x = 0; x < maze->width; x++) {
         for (int y = 0; y < maze->height; y++) {
             for (int z = 0; z < maze->depth; z++) {
@@ -55,10 +62,38 @@ void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
 
                 unsigned char data = (*maze)[coords];
 
+                //default to 1.0f to avoid funny stuck slightly wrong mazes because of the animation.
+                float scale = 1.0f;
+
+                if (mazeRenderInfo->wTransitioning) {
+                    /*
+                    * For w transition animation, get change with formula 1.0 - ((lastWChange + speed - glfwGetTime()) / speed)
+                    * and clamp between 0.0 and 1.0. Then check to see the change on each 3d side - if both that side of this
+                    * cell and the touching side of this cell are both still present (ie. there's a path between the cells in that
+                    * direction) in the next w slice then pass an unchanged transition value to the shader.
+                    */
+
+                    scale = std::clamp<float>(1.0f - ((mazeRenderInfo->lastWChange + mazeRenderInfo->mazeTransitionAnimationSpeed - glfwGetTime()) / mazeRenderInfo->mazeTransitionAnimationSpeed), 0.0f, 1.0f);
+
+                    //std::vector<std::vector<int>> 
+
+                    //for (int i = 0; i < touchingSides.size(); ++i) {
+                    //    //get opposite direction
+                    //    std::vector<int> direction = touchingSides[i];
+                        //std::vector<int> oppositeDirection = touchingSidesOpposite[i];
+                    for (const std::vector<int> direction : touchingSides) {
+                        unsigned char directionData = (*maze)[direction];
+
+                        //FUTURE ME: remember to use wasTransitioning in mazerenderer
+                    }
+                }
+
                 if (data > 0) {
                     drawMazeCellPaths(data, x, y, z, mazeRenderInfo->wViewing);
                     drawMazeCellCenter(x, y, z, mazeRenderInfo->wViewing);
                 }
+
+                //TODO: large box indicator for where the path head currently is.
             }
         }
     }
@@ -159,6 +194,7 @@ void MazeRenderer::cleanup() {
     }
 }
 
+//TODO: what is the point of these?
 void MazeRenderer::setMazeCenterProgram(int program) {
     cellCenterProgram = program;
 }
@@ -172,8 +208,9 @@ void MazeRenderer::setShowPath(bool showPath) {
 }
 
 void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
-    float camSpeed = 0.1 * delta;
-    float zoomSpeed = 2.5 * delta;
+    float deltaFloat = static_cast<float>(delta);
+    float camSpeed = 0.1f * deltaFloat;
+    float zoomSpeed = 2.5f * deltaFloat;
 
     /*if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
         camMoveSpeedMod += 1.0 * delta;
@@ -195,7 +232,7 @@ void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
             camera->getXLookingAt(),
             camera->getYLookingAt(),
             camera->getZLookingAt(),
-            -360.0f * camSpeed, 0.0f, 0.0f);
+            -360.0f * static_cast<float>(camSpeed), 0.0f, 0.0f);
     }
 
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {

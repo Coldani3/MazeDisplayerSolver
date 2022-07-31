@@ -119,6 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Src\Math\Coordinate.cpp" />
     <ClCompile Include="src\Src\Render\MazeRenderInfo.cpp" />
     <ClCompile Include="src\Src\Render\Camera.cpp" />
     <ClCompile Include="src\Src\Render\GUI\FourDLocationIndicatorRenderer.cpp" />
@@ -170,6 +172,7 @@
     <Library Include="lib\glfw3\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Includes\Maths\Coordinate.h" />
     <ClInclude Include="src\Includes\Render\MazeRenderInfo.h" />
     <ClInclude Include="src\Includes\Maze\MazePath.h" />
     <ClInclude Include="src\Includes\Render\Camera.h" />

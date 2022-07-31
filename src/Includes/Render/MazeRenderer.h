@@ -29,6 +29,8 @@ public:
      */
     const float pathUpdateSpeed = 0.1f;
 	bool showPath;
+    //set true to track to see if last frame the transition animation was happening.
+    bool wasTransitioning = false;
 	float mazeCenterX = 500.0f;
 	float mazeCenterY = 500.0f;
 	float mazeCenterZ = 500.0f;
@@ -191,6 +193,29 @@ private:
     bool show4DIndicators = true;
     double lastPathShowChange = 0;
     double lastIndicatorToggle = 0;
+
+    const std::vector<std::vector<int>> touchingSides = {
+        {1, 0, 0, 0},
+        {-1, 0, 0, 0},
+        {0, 1, 0, 0},
+        {0, -1, 0, 0},
+        {0, 0, 1, 0},
+        {0, 0, -1, 0},
+        {0, 0, 0, 1},
+        {0, 0, 0, -1}
+    };
+
+    const std::vector<std::vector<int>> touchingSidesOpposite = {
+        {-1, 0, 0, 0},
+        {1, 0, 0, 0},
+        {0, -1, 0, 0},
+        {0, 1, 0, 0},
+        {0, 0, -1, 0},
+        {0, 0, 1, 0},
+        {0, 0, 0, -1},
+        {0, 0, 0, 1}
+    };
+
 #pragma region GL_Vars
 	int cellCenterProgram;
 	int mazePathProgram;

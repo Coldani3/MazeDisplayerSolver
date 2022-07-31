@@ -69,7 +69,6 @@ void SimpleNeuralNetworkSolver::solve() {
 	for (int i = 0; i < paths.size(); i++) {
 		std::vector<int> lastCoord = paths[i].back();
 
-		//4D pythagoras = sqrt(a^2 + b^2 + c^2 + d^2)
 		float distance = distanceBetween(lastCoord, maze->mazeExit);//sqrtf(pow(lastCoord[0], 2) + pow(lastCoord[1], 2) + pow(lastCoord[2], 2) + pow(lastCoord[3], 2));
 
 		successes[i] = distance;
