@@ -94,8 +94,6 @@ void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
                         if (maze->inBounds(addedCoords)) {
                             unsigned char directionData = (*maze)[addedCoords];
                         }
-
-                        //FUTURE ME: remember to use wasTransitioning in mazerenderer
                     }
                 } else if (!mazeRenderInfo->wTransitioning && wasTransitioning) {
                     wasTransitioning = false;
