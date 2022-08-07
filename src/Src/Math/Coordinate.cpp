@@ -1,5 +1,8 @@
 #include <Maths/Coordinate.h>
 #include <stdexcept>
+#include <string>
+#pragma once
+
 
 template<class T>
 Coordinate<T>::Coordinate(std::vector<T> coords) {
@@ -40,7 +43,7 @@ T& Coordinate<T>::operator[](int index) {
 	if (index < coords.size() && index > -1) {
 		return coords[index];
 	} else {
-		throw std::out_of_range("Index out of bounds for coordinate (received index of " + index +").");
+		throw std::out_of_range("Index out of bounds for coordinate (received index of " + std::to_string(index) + ").");
 	}
 }
 
@@ -49,7 +52,7 @@ T Coordinate<T>::operator[](int index) const {
 	if (index < coords.size() && index > -1) {
 		return coords[index];
 	} else {
-		throw std::out_of_range("Index out of bounds for coordinate (received index of " + index + ").");
+		throw std::out_of_range("Index out of bounds for coordinate (received index of " + std::to_string(index) + ").");
 	}
 }
 

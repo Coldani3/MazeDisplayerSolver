@@ -12,8 +12,8 @@ class MazeRenderInfo {
 public:
 	int wViewing = 0;
 	int nextW = 0;
-	double lastWChange = 0;
-	//how long it takes the 4D maze transition animation to complete in seconds. Usually used with lastWChange.
+	double wChangeAnimStart = 0;
+	//how long it takes the 4D maze transition animation to complete in seconds. Usually used with wChangeAnimStart.
 	double mazeTransitionAnimationSpeed = 0.5;
 	bool wTransitioning = false;
 

@@ -17,6 +17,7 @@
 #include <Solvers/DepthFirstSolver.h>
 #include <Solvers/FloodFillSolver.h>
 #include <Render/PerspectiveCamera.h>
+#include <Render/MazeRenderInfo.h>
 
 #pragma once
 
@@ -27,7 +28,7 @@ std::shared_ptr<GUIRenderManager> guiRenderer = nullptr;
 bool running = true;
 double lastFrame;
 double delta = 0;
-int fps = 0;
+float fps = 0;
 double lastWShift = 0;
 int solverIndex = 0;
 int lastSolverIndex = -1;
@@ -50,25 +51,27 @@ void handleInput(GLFWwindow* window, std::shared_ptr<Maze> maze) {
         running = false;
     }
 
-    if (glfwGetTime() > lastWShift + 0.2) {
-        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-            int w = threeDRenderer->mazeRenderInfo->wViewing - 1;
+    //DRY, not using the smart pointers as we don't need to own it and the smart pointer already handles ownership
+    MazeRenderInfo *rendererInfo = threeDRenderer->mazeRenderInfo.get();
 
-            if (w >= 0) {
-                //threeDRenderer->mazeRenderInfo->wViewing = w;
-                threeDRenderer->mazeRenderInfo->beginWTransitionAnim(w);//changeWViewingForAnims(w);
-                lastWShift = glfwGetTime();
-            }
+    //TODO: prevent these from being pressed during the transition OR skip the transition along.
+    if (glfwGetTime() > lastWShift + 0.2 && glfwGetTime() > rendererInfo->wChangeAnimStart + rendererInfo->mazeTransitionAnimationSpeed) {
+        bool fourDChangePressed = false;
+        int w = rendererInfo->wViewing;
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+            w -= 1;
+            fourDChangePressed = true;
         }
 
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-            int w = threeDRenderer->mazeRenderInfo->wViewing + 1;
+            w += 1;
+            fourDChangePressed = true;
+        }
 
-            if (w < maze->hyperDepth) {
-                //threeDRenderer->mazeRenderInfo->wViewing = w;
-                threeDRenderer->mazeRenderInfo->beginWTransitionAnim(w);//changeWViewingForAnims(w);
-                lastWShift = glfwGetTime();
-            }
+        if (w >= 0 && w < maze->hyperDepth && fourDChangePressed) {
+            //threeDRenderer->mazeRenderInfo->wViewing = w;
+            rendererInfo->beginWTransitionAnim(w);//changeWViewingForAnims(w);
+            lastWShift = glfwGetTime();
         }
     }
 
@@ -124,7 +127,7 @@ int beginRenderLoop(std::shared_ptr<Maze> maze) {
 
         delta = startDraw - lastFrame;
         lastFrame = startDraw;
-        fps = 1 / delta;
+        fps = 1.0f / delta;
 
         handleInput(threeDRenderer->getWindow(), maze);
         glfwPollEvents();
@@ -133,6 +136,7 @@ int beginRenderLoop(std::shared_ptr<Maze> maze) {
     std::cout << "Closing program..." << std::endl;
     glfwTerminate();
     running = false;
+    return 1;
 }
 
 long now() {
@@ -162,7 +166,7 @@ void runSolver(std::shared_ptr<Solver> solver, std::shared_ptr<Maze> maze, std::
 //TODO: SolverManager class to handle this logic
 void aiThreadMethod(std::shared_ptr<Maze> maze) {
     std::cout << "[AI] Initialising solvers..." << std::endl;
-    SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1, maze, threeDRenderer);
+    SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1f, maze, threeDRenderer);
     DepthFirstSolver depthSolver(maze, threeDRenderer);
     FloodFillSolver floodFillSolver(maze, threeDRenderer);
 

@@ -61,6 +61,10 @@ bool Maze::inBounds(std::vector<int> coordinates) {
 		(coordinates[3] >= 0 && coordinates[3] < sizes[3]);
 }
 
+bool Maze::canAccessFrom(std::vector<int> fromCoords, std::vector<int> toCoords) {
+	return false;
+}
+
 Maze::Maze() {}
 
 Maze::Maze(std::vector<int> dimensionsVec) {

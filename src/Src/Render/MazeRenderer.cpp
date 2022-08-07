@@ -67,25 +67,39 @@ void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
 
                 if (mazeRenderInfo->wTransitioning) {
                     /*
-                    * For w transition animation, get change with formula 1.0 - ((lastWChange + speed - glfwGetTime()) / speed)
+                    * For w transition animation, get change with formula 1.0 - ((wChangeAnimStart + speed - glfwGetTime()) / speed)
                     * and clamp between 0.0 and 1.0. Then check to see the change on each 3d side - if both that side of this
                     * cell and the touching side of this cell are both still present (ie. there's a path between the cells in that
                     * direction) in the next w slice then pass an unchanged transition value to the shader.
                     */
 
-                    scale = std::clamp<float>(1.0f - ((mazeRenderInfo->lastWChange + mazeRenderInfo->mazeTransitionAnimationSpeed - glfwGetTime()) / mazeRenderInfo->mazeTransitionAnimationSpeed), 0.0f, 1.0f);
+                    float endTransitionTime = mazeRenderInfo->wChangeAnimStart + mazeRenderInfo->mazeTransitionAnimationSpeed;
+
+                    scale = std::clamp<float>(1.0f - ((endTransitionTime - glfwGetTime()) / mazeRenderInfo->mazeTransitionAnimationSpeed), 0.0f, 1.0f);
+                    
+                    if (!wasTransitioning) {
+                        wasTransitioning = true;
+                    }
+
+                    if (glfwGetTime() > endTransitionTime) {
+                        mazeRenderInfo->finishWTransitionAnim();
+                    }
 
                     //std::vector<std::vector<int>> 
 
-                    //for (int i = 0; i < touchingSides.size(); ++i) {
-                    //    //get opposite direction
-                    //    std::vector<int> direction = touchingSides[i];
-                        //std::vector<int> oppositeDirection = touchingSidesOpposite[i];
                     for (const std::vector<int> direction : touchingSides) {
-                        unsigned char directionData = (*maze)[direction];
+                        //TODO: use Coordinate here
+                        std::vector<int> addedCoords = { coords[0] + direction[0], coords[1] + direction[1], coords[2] + direction[2], coords[3] + direction[3] };
+
+                        if (maze->inBounds(addedCoords)) {
+                            unsigned char directionData = (*maze)[addedCoords];
+                        }
 
                         //FUTURE ME: remember to use wasTransitioning in mazerenderer
                     }
+                } else if (!mazeRenderInfo->wTransitioning && wasTransitioning) {
+                    wasTransitioning = false;
+                    mazeRenderInfo->finishWTransitionAnim();
                 }
 
                 if (data > 0) {
