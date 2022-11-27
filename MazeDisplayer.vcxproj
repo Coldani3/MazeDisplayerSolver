@@ -144,7 +144,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Src\AI\AIManager.cpp" />
     <ClCompile Include="src\Src\Math\Coordinate.cpp" />
+    <ClCompile Include="src\Src\MazeMain.cpp" />
     <ClCompile Include="src\Src\Render\MazeRenderInfo.cpp" />
     <ClCompile Include="src\Src\Render\Camera.cpp" />
     <ClCompile Include="src\Src\Render\GUI\FourDLocationIndicatorRenderer.cpp" />
@@ -167,12 +169,15 @@
     <ClCompile Include="src\Src\Render\MainRenderManager.cpp" />
     <ClCompile Include="src\Src\Maze\Maze.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw3\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Includes\AI\AIManager.h" />
     <ClInclude Include="src\Includes\Maths\Coordinate.h" />
+    <ClInclude Include="src\Includes\MazeMain.h" />
     <ClInclude Include="src\Includes\Render\MazeRenderInfo.h" />
     <ClInclude Include="src\Includes\Maze\MazePath.h" />
     <ClInclude Include="src\Includes\Render\Camera.h" />
@@ -200,6 +205,8 @@
     <ClInclude Include="src\Includes\Solvers\Solver.h" />
     <ClInclude Include="src\Includes\Render\MainRenderManager.h" />
     <ClInclude Include="src\Includes\Maze\Maze.h" />
+    <ClInclude Include="src\Includes\TimeUtil.h" />
+    <ClInclude Include="src\Includes\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="maze.cd3mazs" />

@@ -1,14 +1,12 @@
-#ifndef __gl_h
-#include <glad/glad.h>
-#endif
 
-#include <glfw3/glfw3.h>
 #include <iostream>
 #include <memory>
 #include <chrono>
 #include <vector>
 #include <thread>
 #include <map>
+
+#include "Includes/MazeMain.h"
 
 #include <Maze/Maze.h>
 #include <Render/MainRenderManager.h>
@@ -92,7 +90,7 @@ void handleInput(GLFWwindow* window, std::shared_ptr<Maze> maze) {
 }
 
 int beginRenderLoop(std::shared_ptr<Maze> maze) {
-    if (threeDRenderer->getWindow() == NULL) {
+    if (threeDRenderer->window->getWindow() == NULL) {
         std::cerr << "Could not create window" << std::endl;
         glfwTerminate();
         return -1;
@@ -109,7 +107,7 @@ int beginRenderLoop(std::shared_ptr<Maze> maze) {
     glViewport(0, 0, threeDRenderer->getWidth(), threeDRenderer->getHeight());
 
     //adjust viewport based on window resize (we set the callback here because C++ doesn't let you use member methods as callbacks)
-    glfwSetFramebufferSizeCallback(threeDRenderer->getWindow(), framebufferSizeCallback);
+    glfwSetFramebufferSizeCallback(threeDRenderer->window->getWindow(), framebufferSizeCallback);
     //set other callbacks
     std::cout << "Done." << std::endl;
 
@@ -121,18 +119,18 @@ int beginRenderLoop(std::shared_ptr<Maze> maze) {
     std::cout << "Entering main loop..." << std::endl;
     double startDraw;
     //main render loop
-    while (!glfwWindowShouldClose(threeDRenderer->getWindow())) {
+    while (!glfwWindowShouldClose(threeDRenderer->window->getWindow())) {
         startDraw = glfwGetTime();
 
         threeDRenderer->render();
         guiRenderer->render();
-        glfwSwapBuffers(threeDRenderer->getWindow());
+        glfwSwapBuffers(threeDRenderer->window->getWindow());
 
         delta = startDraw - lastFrame;
         lastFrame = startDraw;
         fps = 1.0f / delta;
 
-        handleInput(threeDRenderer->getWindow(), maze);
+        handleInput(threeDRenderer->window->getWindow(), maze);
         glfwPollEvents();
     }
 
@@ -142,100 +140,9 @@ int beginRenderLoop(std::shared_ptr<Maze> maze) {
     return 1;
 }
 
-long now() {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-}
-
-void runSolver(std::shared_ptr<Solver> solver, std::shared_ptr<Maze> maze, std::string solverName) {
-    std::cout << "[AI] Beginning " << solverName << " Solver..." << std::endl;
-
-    long start = now();
-
-    solver->solve();
-
-    long finish = now();
-
-    if (solver->success) {
-        std::cout << "[AI] Success!";
-    } else {
-        std::cout << "[AI] Failed.";
-    }
-
-    std::cout << " Steps Taken: " << solver->stepsTaken << " in " << finish - start << " milliseconds " << std::endl;
-
-    glfwSetWindowTitle(threeDRenderer->getWindow(), ("Maze Displayer and Solver - " + solverName).c_str());
-}
-
-//TODO: SolverManager class to handle this logic
-void aiThreadMethod(std::shared_ptr<Maze> maze) {
-    std::cout << "[AI] Initialising solvers..." << std::endl;
-    SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1f, maze, threeDRenderer);
-    DepthFirstSolver depthSolver(maze, threeDRenderer);
-    FloodFillSolver floodFillSolver(maze, threeDRenderer);
-
-    std::vector<std::pair<std::string, std::shared_ptr<Solver>>> solversToNames = {
-        {"Psuedo Right-Hand Rule Depth First Solver", std::make_shared<DepthFirstSolver>(depthSolver)},
-        {"Flood Fill Solver", std::make_shared<FloodFillSolver>(floodFillSolver)}
-
-    };
-
-    std::cout << "[AI] Done." << std::endl;
-
-    while (running) {
-        if (solverIndex != lastSolverIndex) {
-            //run next solver
-
-            threeDRenderer->mazeRenderer->selectedPath.clearVisitedCells();
-                
-            if (solverIndex >= 0 && solverIndex < solversToNames.size()) {
-                solversToNames[solverIndex].second->clear();
-                solversToNames[solverIndex].second->stepsTaken = 0;
-                solversToNames[solverIndex].second->success = false;
-                runSolver(solversToNames[solverIndex].second, maze, solversToNames[solverIndex].first);
-            }
-
-            lastSolverIndex = solverIndex;
-        }
-    }
-}
-
 int main() {
-    //Mazes can get pretty big in memory so pointers are the call here.
-    std::shared_ptr<Maze> maze = std::make_shared<Maze>();
-    maze->loadFromFile("maze.cd3mazs");
-
-    std::cout << "Maze loaded" << std::endl;
-    std::cout << "Maze entrance coords: " << maze->mazeEntrance[0] << ", " << maze->mazeEntrance[1] << ", " << maze->mazeEntrance[2] << ", " << maze->mazeEntrance[3] << std::endl;
-    std::cout << "Maze exit coords: " << maze->mazeExit[0] << ", " << maze->mazeExit[1] << ", " << maze->mazeExit[2] << ", " << maze->mazeExit[3] << std::endl;
-
-    //initialise it here as renderer needs to be not null
-    std::cout << "Initialising GLFW..." << std::endl;
-    //initialise glfw
-    glfwInit();
-
-    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-
-    glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-    glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-    glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-    glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-
-    //tell glfw we're using opengl 3.3 with the core profile, instead of the old method
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    int xpos, ypos, width, height;
-    glfwGetMonitorWorkarea(monitor, &xpos, &ypos, &width, &height);
-    std::shared_ptr<MazeRenderInfo> mazeRenderInfo = std::make_shared<MazeRenderInfo>(0);
-    std::cout << "Initialising renderers..." << std::endl;
-    threeDRenderer = std::make_shared<MainRenderManager>(width, height/*800, 600*/, maze);
-    threeDRenderer->mazeRenderInfo = mazeRenderInfo;
-    guiRenderer = std::make_shared<GUIRenderManager>(maze, width, height);
-    guiRenderer->mazeRenderInfo = mazeRenderInfo;
-    std::cout << "Done." << std::endl;
+    MazeMain main;
+    return main.main();
 
     std::thread aiThread(aiThreadMethod, maze);
 

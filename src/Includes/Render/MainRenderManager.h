@@ -5,6 +5,7 @@
 #include <Render/RenderManager.h>
 #include <Maze/Maze.h>
 #include <Maze/MazePath.h>
+#include "Window.h"
 
 #include <iostream>
 #include <memory>
@@ -13,12 +14,12 @@
 class MainRenderManager : public RenderManager
 {
 public:
-	MainRenderManager(int width, int height, std::shared_ptr<Maze> initialMaze);
+	MainRenderManager(std::shared_ptr<Window> window, std::shared_ptr<Maze> initialMaze);
 	~MainRenderManager();
 	void setup();
 	void render();
 	void framebufferSizeCallback(GLFWwindow* window, int width, int height);
-	GLFWwindow* getWindow();
+	//GLFWwindow* getWindow();
 	int getWidth();
 	int getHeight();
 	void setMazeUsing(std::shared_ptr<Maze> maze);
@@ -28,12 +29,13 @@ public:
 	std::shared_ptr<PerspectiveCamera> camera;
 	std::unique_ptr<MazeRenderer> mazeRenderer;
 	bool showPath = true;
+	std::shared_ptr<Window> window;
 
 	float centerX = 500.0f;
 	float centerY = 500.0f;
 	float centerZ = 500.0f;
 private:
-	GLFWwindow* window;
+	//GLFWwindow* window;
 	int width;
 	int height;
 	int defaultWidth;
