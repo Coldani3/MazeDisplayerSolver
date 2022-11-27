@@ -173,8 +173,6 @@ void main() {
 )glsl";
 
 #pragma endregion
-
-
 #pragma endregion
 #pragma endregion
 

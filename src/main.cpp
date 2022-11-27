@@ -51,8 +51,11 @@ void handleInput(GLFWwindow* window, std::shared_ptr<Maze> maze) {
         running = false;
     }
 
+    //hmm ok so I had no idea what I was doing here, the fact it's stored in a variable itself is ownership
     //DRY, not using the smart pointers as we don't need to own it and the smart pointer already handles ownership
-    MazeRenderInfo *rendererInfo = threeDRenderer->mazeRenderInfo.get();
+    //MazeRenderInfo *rendererInfo = threeDRenderer->mazeRenderInfo.get();
+
+    std::shared_ptr<MazeRenderInfo> rendererInfo = threeDRenderer->mazeRenderInfo;
 
     //TODO: prevent these from being pressed during the transition OR skip the transition along.
     if (glfwGetTime() > lastWShift + 0.2 && glfwGetTime() > rendererInfo->wChangeAnimStart + rendererInfo->mazeTransitionAnimationSpeed) {

@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <array>
+//#include <glm/gtx/transform.hpp>
 
 class MazeRenderer : public Renderer {
 public:
@@ -185,7 +186,7 @@ public:
 	glm::mat4 mazeCellPathTransform(glm::vec3 initialCoords, glm::mat4 transformation);
 
 	void drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW);
-	void drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW);
+	void drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW, int lastW, float transitionScale);
 
 private:
     std::shared_ptr<Maze> maze = nullptr;
