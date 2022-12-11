@@ -1,13 +1,27 @@
 #include <Solvers/Solver.h>
 
-Solver::Solver(std::shared_ptr<Maze> maze, std::shared_ptr<MainRenderManager> renderer) {
+Solver::Solver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager) {
 	this->maze = maze;
-	this->renderer = renderer;
+	this->pathManager = pathManager;
 }
 
-float Solver::distanceBetween(std::vector<int> coords1, std::vector<int> coords2) {
+constexpr float Solver::distanceBetween(std::vector<int> coords1, std::vector<int> coords2) {
 	//4D pythagoras = sqrt(a^2 + b^2 + c^2 + d^2)
-	return sqrtf(pow(abs(coords2[0] - coords1[0]), 2) + pow(abs(coords2[2] - coords1[1]), 2) + pow(abs(coords2[2] - coords1[2]), 2) + pow(abs(coords2[3] - coords1[3]), 2));
+	return sqrtf(
+			pow(
+				abs(coords2[0] - coords1[0]), 
+				2
+			) + pow(
+				abs(coords2[2] - coords1[1]), 
+				2
+			) + pow(
+				abs(coords2[2] - coords1[2]), 
+				2
+			) + pow(
+				abs(coords2[3] - coords1[3]), 
+				2
+			)
+	);
 }
 
 void Solver::solve() {

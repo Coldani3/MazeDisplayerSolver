@@ -1,5 +1,5 @@
 #include "MazeMain.h"
-#include "AI/AIManager.h"
+
 
 int MazeMain::main() {
     loadMaze();
@@ -11,28 +11,33 @@ int MazeMain::main() {
     setupRenderers();
 
     aiManager = std::make_unique<AIManager>(maze, running);
+    mazePathManager = std::make_shared<MazePathManager>();
     return 0;
 }
 
 #pragma region Setup
 void MazeMain::loadMaze() {
-    //Mazes can get pretty big in memory so pointers are the call here.
-    maze = std::make_shared<Maze>();
-    maze->loadFromFile("maze.cd3mazs");
+    //Mazes can be several kilos of memory on their own - if not stored as pointers they may end up being copied and eating memory
+    maze = loadMazeFromFile("maze.cd3mazs");
 
     std::cout << "Maze loaded" << std::endl;
     std::cout << "Maze entrance coords: " << maze->mazeEntrance[0] << ", " << maze->mazeEntrance[1] << ", " << maze->mazeEntrance[2] << ", " << maze->mazeEntrance[3] << std::endl;
     std::cout << "Maze exit coords: " << maze->mazeExit[0] << ", " << maze->mazeExit[1] << ", " << maze->mazeExit[2] << ", " << maze->mazeExit[3] << std::endl;
 }
 
-void MazeMain::setupGLFW() {
-    //initialise it here as renderer needs to be not null
+std::shared_ptr<Maze> MazeMain::loadMazeFromFile(std::string path) {
+    std::shared_ptr<Maze> out = std::make_shared<Maze>();
+    out->loadFromFile(path);
+
+    return maze;
+}
+
+void MazeMain::setupGLFW() noexcept {
     std::cout << "Initialising GLFW..." << std::endl;
-    //initialise glfw
     glfwInit();
 }
 
-void MazeMain::setupMonitor() {
+void MazeMain::setupMonitor() noexcept {
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
@@ -50,7 +55,7 @@ void MazeMain::setupMonitor() {
     glfwGetMonitorWorkarea(monitor, &windowXPos, &windowYPos, &windowWidth, &windowHeight);
 }
 
-void MazeMain::setupRenderers() {
+void MazeMain::setupRenderers() noexcept {
     std::shared_ptr<MazeRenderInfo> mazeRenderInfo = std::make_shared<MazeRenderInfo>(0);
 
     std::cout << "Initialising renderers..." << std::endl;
@@ -63,5 +68,9 @@ void MazeMain::setupRenderers() {
 
     std::cout << "Done." << std::endl;
 }
+
+#pragma endregion
+
+#pragma region Main Exectuion
 
 #pragma endregion

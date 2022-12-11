@@ -1,6 +1,6 @@
 #include <Solvers/FungalSolver.h>
 
-FungalSolver::FungalSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MainRenderManager> renderer, int maxSpreadPerNode) : Solver(maze, renderer) {
+FungalSolver::FungalSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager, int maxSpreadPerNode) : Solver(maze, pathManager) {
 	this->maxSpreadPerNode = maxSpreadPerNode;
 }
 

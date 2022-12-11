@@ -10,7 +10,7 @@ public:
 	const int maxQueries = 4;
 	const int trainsPerCycle = 50;
 
-	SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, std::shared_ptr<Maze> maze, std::shared_ptr<MainRenderManager> renderer);
+	SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager);
 	void solve();
 	void train(NeuralNetwork network, std::vector<std::vector<int>> path);
 

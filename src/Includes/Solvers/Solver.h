@@ -2,13 +2,15 @@
 #include <Render/MainRenderManager.h>
 #include <memory>
 
+#include "../Maze/MazePathManager.h"
+
 #pragma once
 class Solver
 {
 public:
-	Solver(std::shared_ptr<Maze> maze, std::shared_ptr<MainRenderManager> renderer);
+	Solver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager);
 	virtual void solve();
-	float distanceBetween(std::vector<int>, std::vector<int>);
+	constexpr float distanceBetween(std::vector<int>, std::vector<int>);
 	std::vector<int> addCoords(std::vector<int> coords1, std::vector<int> coords2) const;
 	std::vector<float> floatify(std::vector<int> vec);
 	std::vector<int> intify(std::vector<float> vec);
@@ -21,6 +23,6 @@ public:
 
 protected:
 	std::shared_ptr<Maze> maze;
-	std::shared_ptr<MainRenderManager> renderer;
+	std::shared_ptr<MazePathManager> pathManager;
 };
 

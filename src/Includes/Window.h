@@ -6,6 +6,7 @@
 #include <string>
 
 #pragma once
+//Wrapper around the GLFWwindow* object and various GLFW window functions.
 class Window {
 	GLFWwindow* window;
 	int width, height, defaultWidth, defaultHeight;
@@ -14,6 +15,7 @@ public:
 
 	void setWindowTitle(std::string title);
 	bool shouldClose();
+	void setShouldClose();
 	void swapBuffers();
 	GLFWwindow* getWindow();
 };

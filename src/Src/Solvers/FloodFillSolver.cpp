@@ -1,6 +1,6 @@
 #include <Solvers/FloodFillSolver.h>
 
-FloodFillSolver::FloodFillSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MainRenderManager> renderer) : Solver(maze, renderer) {
+FloodFillSolver::FloodFillSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager) : Solver(maze, pathManager) {
 	navQueue = std::queue<std::vector<int>>();
 	visited = std::vector<std::vector<int>>();
 }
@@ -17,7 +17,7 @@ void FloodFillSolver::solve() {
 			break;
 		}
 
-		renderer->mazeRenderer->selectedPath.markCellVisited(top);
+		pathManager->activePath->markCellVisited(top);
 		visited.push_back(top);
 
 		for (int i = 0; i < floodTouchingSides.size(); i++) {

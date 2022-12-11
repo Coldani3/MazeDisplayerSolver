@@ -1,7 +1,7 @@
 #include <Solvers/DepthFirstSolver.h>
 #include <algorithm>
 
-DepthFirstSolver::DepthFirstSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MainRenderManager> renderer) : Solver(maze, renderer) {
+DepthFirstSolver::DepthFirstSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager) : Solver(maze, pathManager) {
 	visited = std::vector<std::vector<int>>();
 	navStack = std::stack<std::vector<int>>();
 }
@@ -9,7 +9,7 @@ DepthFirstSolver::DepthFirstSolver(std::shared_ptr<Maze> maze, std::shared_ptr<M
 void DepthFirstSolver::solve() {
 	navStack.push(maze->mazeEntrance);
 	visited.push_back(maze->mazeEntrance);
-	renderer->mazeRenderer->selectedPath.markCellVisited(maze->mazeEntrance);
+	pathManager->activePath->markCellVisited(maze->mazeEntrance);
 
 	std::cout << "[Depth First] Begin loop..." << std::endl;
 
@@ -18,7 +18,7 @@ void DepthFirstSolver::solve() {
 			std::vector<int> next = pickNextCellFrom(navStack.top());
 
 			visited.push_back(next);
-			renderer->mazeRenderer->selectedPath.markCellVisited(next);
+			pathManager->activePath->markCellVisited(next);
 
 			navStack.push(next);
 
@@ -45,7 +45,7 @@ std::vector<int> DepthFirstSolver::pickNextCellFrom(std::vector<int> from) {
 	for (int i = 0; i < touchingSides.size(); i++) {
 		std::vector<int> trying = addCoords(touchingSides[i], from);
 
-		if (maze->inBounds(trying) && !renderer->mazeRenderer->selectedPath.visitedCell(trying) && canAccessFrom(from, trying)) {
+		if (maze->inBounds(trying) && !pathManager->activePath->visitedCell(trying) && canAccessFrom(from, trying)) {
 			return trying;
 		}
 	}

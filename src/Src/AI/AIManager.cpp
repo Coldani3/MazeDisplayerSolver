@@ -1,11 +1,13 @@
 #include "AI/AIManager.h"
 
-AIManager::AIManager(bool& running) {
-    this->running = running;
+AIManager::AIManager(bool& runningRef, std::shared_ptr<Window> window, std::shared_ptr<MazePathManager> mazePaths) : running(runningRef) {
+    //this->running = running;
+    this->window = window;
     //initSolvers(maze);
+    this->pathManager = mazePaths;
 }
 
-void AIManager::run(std::shared_ptr<Maze> maze, std::shared_ptr<Window> window) {
+void AIManager::run(std::shared_ptr<Maze> maze) {
     initSolvers(maze);
 
     //TODO: Store solved maze paths and feed them to the renderer somehow
@@ -14,7 +16,7 @@ void AIManager::run(std::shared_ptr<Maze> maze, std::shared_ptr<Window> window) 
         if (solverIndex != lastSolverIndex) {
             //run next solver
 
-            threeDRenderer->mazeRenderer->selectedPath.clearVisitedCells();
+            pathManager->activePath->clearVisitedCells();
 
             if (solverIndex >= 0 && solverIndex < solvers.size()) {
                 solvers[solverIndex].second->clear();
@@ -39,21 +41,20 @@ void AIManager::runSolver(std::shared_ptr<Solver> solver, std::shared_ptr<Maze> 
 
     if (solver->success) {
         std::cout << "[AI] Success!";
-    }
-    else {
+    } else {
         std::cout << "[AI] Failed.";
     }
 
     std::cout << " Steps Taken: " << solver->stepsTaken << " in " << finish - start << " milliseconds " << std::endl;
 
-    glfwSetWindowTitle(threeDRenderer->window->getWindow(), ("Maze Displayer and Solver - " + solverName).c_str());
+    window->setWindowTitle("Maze Displayer and Solver - " + solverName);
 }
 
 void AIManager::initSolvers(std::shared_ptr<Maze> maze) {
     std::cout << "[AI] Initialising solvers..." << std::endl;
-    SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1f, maze, threeDRenderer);
-    DepthFirstSolver depthSolver(maze, threeDRenderer);
-    FloodFillSolver floodFillSolver(maze, threeDRenderer);
+    SimpleNeuralNetworkSolver snnSolver({ 12, 10, 10, 4 }, 20, 0.1f, maze, pathManager);
+    DepthFirstSolver depthSolver(maze, pathManager);
+    FloodFillSolver floodFillSolver(maze, pathManager);
 
     solvers = {
         {"Psuedo Right-Hand Rule Depth First Solver", std::make_shared<DepthFirstSolver>(depthSolver)},
