@@ -13,7 +13,6 @@
 #pragma once
 class AIManager
 {
-	bool& running;
 	int solverIndex = 0;
 	int lastSolverIndex = -1;
 	std::vector<std::pair<std::string, std::shared_ptr<Solver>>> solvers;
@@ -27,8 +26,8 @@ class AIManager
 	void initSolvers(std::shared_ptr<Maze> maze);
 
 public:
-	AIManager(bool& runningRef, std::shared_ptr<Window> window, std::shared_ptr<MazePathManager> mazePaths);
-	void run(std::shared_ptr<Maze> maze);
+	AIManager(std::shared_ptr<Window> window, std::shared_ptr<MazePathManager> mazePaths);
+	void run(std::shared_ptr<Maze> maze, bool& running);
 	
 };
 

@@ -5,6 +5,7 @@
 #include <glfw3/glfw3.h>
 #include <memory>
 #include <string>
+#include <thread>
 
 #include "Render/MainRenderManager.h"
 #include "Render/GUI/GUIRenderManager.h"
@@ -21,7 +22,7 @@ class MazeMain
 	std::shared_ptr<MainRenderManager> threeDRenderer = nullptr;
 	std::shared_ptr<GUIRenderManager> guiRenderer = nullptr;
 	std::shared_ptr<Maze> maze;
-	std::unique_ptr<AIManager> aiManager;
+	std::shared_ptr<AIManager> aiManager;
 	std::shared_ptr<Window> window;
 	std::shared_ptr<MazePathManager> mazePathManager;
 	int windowXPos, windowYPos, windowWidth, windowHeight;
@@ -38,5 +39,14 @@ public:
 	void setupGLFW() noexcept;
 	void setupMonitor() noexcept;
 	void setupRenderers() noexcept;
+
+	//TODO: move into Window?
+	bool checkWindowInitialised(const Window& window);
+	bool initialiseGLAD();
+
+	void setupViewport();
+	void setupFramebufferCallback();
+
+	void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 };
 

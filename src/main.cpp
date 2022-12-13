@@ -144,11 +144,11 @@ int main() {
     MazeMain main;
     return main.main();
 
-    std::thread aiThread(aiThreadMethod, maze);
+    //std::thread aiThread(aiThreadMethod, maze);
 
     int result = beginRenderLoop(maze);
 
-    aiThread.join();
+    //aiThread.join();
 
 	return result;
 }

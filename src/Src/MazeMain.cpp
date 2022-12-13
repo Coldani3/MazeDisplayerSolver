@@ -10,14 +10,32 @@ int MazeMain::main() {
 
     setupRenderers();
 
-    aiManager = std::make_unique<AIManager>(maze, running);
     mazePathManager = std::make_shared<MazePathManager>();
+    aiManager = std::make_shared<AIManager>(window, mazePathManager);//std::make_unique<AIManager>(maze, running);
+
+    if (!checkWindowInitialised(*window) || !initialiseGLAD()) {
+        std::cerr << "Failed GLAD and/or GLFW initialisation!" << '\n';
+        
+        glfwTerminate();
+
+        return -1;
+    }
+
+    setupViewport();
+    setupFramebufferCallback();
+
+    std::thread aiThread([this]() {
+        this->aiManager->run(this->maze, this->running);
+    });
+
+    aiThread.join();
     return 0;
 }
 
 #pragma region Setup
 void MazeMain::loadMaze() {
-    //Mazes can be several kilos of memory on their own - if not stored as pointers they may end up being copied and eating memory
+    //Mazes can be several kilos of memory on their own - if not stored as pointers they may end up being inadvertently 
+    //copied and eating memory
     maze = loadMazeFromFile("maze.cd3mazs");
 
     std::cout << "Maze loaded" << std::endl;
@@ -69,8 +87,30 @@ void MazeMain::setupRenderers() noexcept {
     std::cout << "Done." << std::endl;
 }
 
+bool MazeMain::checkWindowInitialised(const Window& window) {
+    return !(window.getWindow() == NULL);
+}
+
+bool MazeMain::initialiseGLAD() {
+    return !gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+}
+
+void MazeMain::setupViewport() {
+    glViewport(0, 0, threeDRenderer->getWidth(), threeDRenderer->getHeight());
+}
+
+void MazeMain::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
+    threeDRenderer->framebufferSizeCallback(window, width, height);
+    guiRenderer->framebufferSizeCallback(window, width, height);
+}
+
+void MazeMain::setupFramebufferCallback() {
+    glfwSetFramebufferSizeCallback(threeDRenderer->window->getWindow(), [=](GLFWwindow* window, int width, int height) {
+        framebufferSizeCallback(window, width, height); 
+    });
+}
+
 #pragma endregion
 
 #pragma region Main Exectuion
-
 #pragma endregion

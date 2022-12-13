@@ -1,13 +1,11 @@
 #include "AI/AIManager.h"
 
-AIManager::AIManager(bool& runningRef, std::shared_ptr<Window> window, std::shared_ptr<MazePathManager> mazePaths) : running(runningRef) {
-    //this->running = running;
+AIManager::AIManager(std::shared_ptr<Window> window, std::shared_ptr<MazePathManager> mazePaths) {
     this->window = window;
-    //initSolvers(maze);
     this->pathManager = mazePaths;
 }
 
-void AIManager::run(std::shared_ptr<Maze> maze) {
+void AIManager::run(std::shared_ptr<Maze> maze, bool& running) {
     initSolvers(maze);
 
     //TODO: Store solved maze paths and feed them to the renderer somehow

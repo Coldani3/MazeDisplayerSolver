@@ -23,7 +23,7 @@ void Window::setWindowTitle(std::string title) {
     glfwSetWindowTitle(window, title.c_str());
 }
 
-bool Window::shouldClose() {
+bool Window::shouldClose() const {
     return glfwWindowShouldClose(window);
 }
 
@@ -35,6 +35,6 @@ void Window::swapBuffers() {
     glfwSwapBuffers(window);
 }
 
-GLFWwindow* Window::getWindow() {
+GLFWwindow* Window::getWindow() const {
     return window;
 }

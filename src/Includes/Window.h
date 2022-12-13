@@ -14,8 +14,8 @@ public:
 	Window(int width, int height, std::string title);
 
 	void setWindowTitle(std::string title);
-	bool shouldClose();
+	bool shouldClose() const;
 	void setShouldClose();
 	void swapBuffers();
-	GLFWwindow* getWindow();
+	GLFWwindow* getWindow() const;
 };
