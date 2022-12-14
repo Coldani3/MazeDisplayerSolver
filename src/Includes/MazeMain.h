@@ -43,8 +43,6 @@ public:
 	void setupMonitor() noexcept;
 	void setupRenderers() noexcept;
 
-	//TODO: move into Window?
-	bool checkWindowInitialised(const Window& window);
 	bool initialiseGLAD();
 
 	void setupViewport();

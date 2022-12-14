@@ -1,6 +1,6 @@
 #include "Maze/MazePathManager.h"
 
-void MazePathManager::setActivePath(const MazePath& path) {
+void MazePathManager::setActivePath(const MazePath& path) noexcept {
 	activePath = std::make_shared<MazePath>(path);
 }
 

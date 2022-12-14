@@ -5,7 +5,7 @@ Solver::Solver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> path
 	this->pathManager = pathManager;
 }
 
-constexpr float Solver::distanceBetween(std::vector<int> coords1, std::vector<int> coords2) {
+float Solver::distanceBetween(std::vector<int> coords1, std::vector<int> coords2) {
 	//4D pythagoras = sqrt(a^2 + b^2 + c^2 + d^2)
 	return sqrtf(
 			pow(

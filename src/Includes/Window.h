@@ -15,7 +15,8 @@ public:
 
 	void setWindowTitle(std::string title);
 	bool shouldClose() const;
-	void setShouldClose();
+	bool initialised() const;
+	void setShouldClose() const;
 	void swapBuffers();
 	GLFWwindow* getWindow() const;
 };

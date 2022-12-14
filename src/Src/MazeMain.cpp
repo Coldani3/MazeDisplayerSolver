@@ -14,7 +14,7 @@ int MazeMain::main() {
     mazePathManager = std::make_shared<MazePathManager>();
     aiManager = std::make_shared<AIManager>(window, mazePathManager);//std::make_unique<AIManager>(maze, running);
 
-    if (!checkWindowInitialised(*window) || !initialiseGLAD()) {
+    if (!window->initialised() || !initialiseGLAD()) {
         std::cerr << "Failed GLAD and/or GLFW initialisation!" << '\n';
         
         glfwTerminate();
@@ -96,10 +96,6 @@ void MazeMain::setupRenderers() noexcept {
     std::cout << "Done." << std::endl;
 }
 
-bool MazeMain::checkWindowInitialised(const Window& window) {
-    return !(window.getWindow() == NULL);
-}
-
 bool MazeMain::initialiseGLAD() {
     return !gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 }
@@ -116,6 +112,7 @@ void MazeMain::framebufferSizeCallback(GLFWwindow* window, int width, int height
 void MazeMain::checkWindowCloseKeyPressed(const Window& window) {
     if (inputManager->getKeyPressed(GLFW_KEY_ESCAPE)) {
         glfwSetWindowShouldClose(window.getWindow(), true);
+        window.setShouldClose();
         running = false;
     }
 }
@@ -126,7 +123,7 @@ void MazeMain::handleFourDManoeuvre(const Window& window) {
     //TODO: prevent these from being pressed during the transition OR skip the transition along.
     if (glfwGetTime() > lastWShift + 0.2 && glfwGetTime() > rendererInfo->wChangeAnimStart + rendererInfo->mazeTransitionAnimationSpeed) {
         bool fourDChangePressed = false;
-        int w = rendererInfo->wViewing;
+        int& w = rendererInfo->wViewing;
 
         if (inputManager->getKeyPressed(GLFW_KEY_Q)) {
             w -= 1;
@@ -193,7 +190,7 @@ void MazeMain::renderLoop() {
     std::cout << "Entering main loop..." << std::endl;
     double startDraw;
     //main render loop
-    while (!glfwWindowShouldClose(window->getWindow())) {
+    while (!window->shouldClose()) {
         startDraw = glfwGetTime();
 
         threeDRenderer->render();

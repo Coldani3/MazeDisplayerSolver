@@ -27,7 +27,11 @@ bool Window::shouldClose() const {
     return glfwWindowShouldClose(window);
 }
 
-void Window::setShouldClose() {
+bool Window::initialised() const {
+    return window != NULL;
+}
+
+void Window::setShouldClose() const {
     glfwSetWindowShouldClose(window, true);
 }
 
