@@ -176,9 +176,11 @@ void MazeMain::handleInput(const Window& window, std::shared_ptr<Maze> maze) {
     handleSolverIndexControls(window);
 }
 
-void MazeMain::setupFramebufferCallback() {
+void MazeMain::setupFramebufferCallback(const Window& window) {
+    glfwSetWindowUserPointer(window.getWindow(), (void*)this);
     glfwSetFramebufferSizeCallback(threeDRenderer->window->getWindow(), [](GLFWwindow* window, int width, int height) {
-        framebufferSizeCallback(window, width, height); 
+        MazeMain* main = (MazeMain*) glfwGetWindowUserPointer(window);
+        main->framebufferSizeCallback(window, width, height); 
     });
 }
 

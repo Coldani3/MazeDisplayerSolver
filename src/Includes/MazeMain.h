@@ -46,7 +46,7 @@ public:
 	bool initialiseGLAD();
 
 	void setupViewport();
-	void setupFramebufferCallback();
+	void setupFramebufferCallback(const Window& window);
 
 	void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 	void checkWindowCloseKeyPressed(const Window& window);
