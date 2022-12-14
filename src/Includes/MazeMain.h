@@ -12,6 +12,7 @@
 #include "Maze/Maze.h"
 #include "Maze/MazePathManager.h"
 #include "AI/AIManager.h"
+#include "InputManager.h"
 
 
 #pragma once
@@ -25,6 +26,7 @@ class MazeMain
 	std::shared_ptr<AIManager> aiManager;
 	std::shared_ptr<Window> window;
 	std::shared_ptr<MazePathManager> mazePathManager;
+	std::shared_ptr<InputManager> inputManager;
 	int windowXPos, windowYPos, windowWidth, windowHeight;
 	double lastFrame, delta = 0, fps = 0, lastWShift = 0, lastSolverShift = 0;
 

@@ -7,6 +7,7 @@ int MazeMain::main() {
     setupMonitor();
 
     window = std::make_shared<Window>(windowWidth, windowHeight, "Maze Displayer and Solver");
+    inputManager = std::make_shared<InputManager>(window);
 
     setupRenderers();
 
@@ -22,7 +23,7 @@ int MazeMain::main() {
     }
 
     setupViewport();
-    setupFramebufferCallback();
+    setupFramebufferCallback(*window);
 
     threeDRenderer->setup();
     guiRenderer->setup();
@@ -113,7 +114,7 @@ void MazeMain::framebufferSizeCallback(GLFWwindow* window, int width, int height
 }
 
 void MazeMain::checkWindowCloseKeyPressed(const Window& window) {
-    if (glfwGetKey(window.getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+    if (inputManager->getKeyPressed(GLFW_KEY_ESCAPE)) {
         glfwSetWindowShouldClose(window.getWindow(), true);
         running = false;
     }
@@ -126,17 +127,18 @@ void MazeMain::handleFourDManoeuvre(const Window& window) {
     if (glfwGetTime() > lastWShift + 0.2 && glfwGetTime() > rendererInfo->wChangeAnimStart + rendererInfo->mazeTransitionAnimationSpeed) {
         bool fourDChangePressed = false;
         int w = rendererInfo->wViewing;
-        if (glfwGetKey(window.getWindow(), GLFW_KEY_Q) == GLFW_PRESS) {
+
+        if (inputManager->getKeyPressed(GLFW_KEY_Q)) {
             w -= 1;
             fourDChangePressed = true;
         }
 
-        if (glfwGetKey(window.getWindow(), GLFW_KEY_E) == GLFW_PRESS) {
+        if (inputManager->getKeyPressed(GLFW_KEY_E)) {
             w += 1;
             fourDChangePressed = true;
         }
 
-        if (w >= 0 && w < maze->hyperDepth && fourDChangePressed) {
+        if (maze->wInBounds(w) && fourDChangePressed) {
             //threeDRenderer->mazeRenderInfo->wViewing = w;
             rendererInfo->beginWTransitionAnim(w);//changeWViewingForAnims(w);
             lastWShift = glfwGetTime();
@@ -146,13 +148,13 @@ void MazeMain::handleFourDManoeuvre(const Window& window) {
 
 void MazeMain::handleSolverIndexControls(const Window& window) {
     if (glfwGetTime() > lastSolverShift + 1.0) {
-        if (glfwGetKey(window.getWindow(), GLFW_KEY_L) == GLFW_PRESS) {
+        if (inputManager->getKeyPressed(GLFW_KEY_L)) {
             aiManager->changeSolverIndex(1);
 
             std::cout << "Incrementing Solver Index!" << std::endl;
 
             lastSolverShift = glfwGetTime();
-        } else if (glfwGetKey(window.getWindow(), GLFW_KEY_K) == GLFW_PRESS) {
+        } else if (inputManager->getKeyPressed(GLFW_KEY_K)) {
             aiManager->changeSolverIndex(-1);
 
             std::cout << "Decrementing Solver Index!" << std::endl;

@@ -30,15 +30,16 @@ public:
 	std::vector<int> sizes;
 
 	Maze();
-	Maze(std::vector<int> dimensions);
+	Maze(const std::vector<int>& dimensions);
 	~Maze();
 	void loadFromFile(std::string fileName);
 	//Read the byte representing the cell at coordinates
-	unsigned char operator[] (std::vector<int> coordinates) const;
+	unsigned char operator[] (const std::vector<int>& coordinates) const;
 	//Provide the byte representing the cell at coordinates as a reference to modify
-	unsigned char& operator[](std::vector<int> coordinates);
-	bool inBounds(std::vector<int> coordinates);
-	bool canAccessFrom(std::vector<int> fromCoords, std::vector<int> toCoords);
+	unsigned char& operator[](const std::vector<int>& coordinates);
+	bool inBounds(const std::vector<int>& coordinates);
+	bool canAccessFrom(const std::vector<int>& fromCoords, const std::vector<int>& toCoords);
+	bool wInBounds(int w);
 
 private:
 	//The data that makes up the maze.
@@ -46,7 +47,7 @@ private:
 
 	//C++ doesn't like this[] with header separated classes :/
 
-	unsigned char getCell(std::vector<int> coordinates) const;
-	void setCell(std::vector<int> coordinates, char to);
+	unsigned char getCell(const std::vector<int>& coordinates) const;
+	void setCell(const std::vector<int>& coordinates, char to);
 	unsigned int getSize();
 };
