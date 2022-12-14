@@ -177,9 +177,9 @@ void MazeMain::handleInput(const Window& window, std::shared_ptr<Maze> maze) {
 }
 
 void MazeMain::setupFramebufferCallback(const Window& window) {
-    glfwSetWindowUserPointer(window.getWindow(), (void*)this);
+    glfwSetWindowUserPointer(window.getWindow(), reinterpret_cast<void*>(this));
     glfwSetFramebufferSizeCallback(threeDRenderer->window->getWindow(), [](GLFWwindow* window, int width, int height) {
-        MazeMain* main = (MazeMain*) glfwGetWindowUserPointer(window);
+        MazeMain* main = reinterpret_cast<MazeMain*>(glfwGetWindowUserPointer(window));
         main->framebufferSizeCallback(window, width, height); 
     });
 }
@@ -191,12 +191,12 @@ void MazeMain::renderLoop() {
     std::cout << "Entering main loop..." << std::endl;
     double startDraw;
     //main render loop
-    while (!glfwWindowShouldClose(threeDRenderer->window->getWindow())) {
+    while (!glfwWindowShouldClose(window->getWindow())) {
         startDraw = glfwGetTime();
 
         threeDRenderer->render();
         guiRenderer->render();
-        glfwSwapBuffers(threeDRenderer->window->getWindow());
+        glfwSwapBuffers(window->getWindow());
 
         delta = startDraw - lastFrame;
         lastFrame = startDraw;
