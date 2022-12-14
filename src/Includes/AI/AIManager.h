@@ -28,6 +28,6 @@ class AIManager
 public:
 	AIManager(std::shared_ptr<Window> window, std::shared_ptr<MazePathManager> mazePaths);
 	void run(std::shared_ptr<Maze> maze, bool& running);
-	
+	void changeSolverIndex(int by);
 };
 

@@ -24,12 +24,20 @@ int MazeMain::main() {
     setupViewport();
     setupFramebufferCallback();
 
+    threeDRenderer->setup();
+    guiRenderer->setup();
+
     std::thread aiThread([this]() {
         this->aiManager->run(this->maze, this->running);
     });
 
+    renderLoop();
+
+    glfwTerminate();
+    running = false;
+
     aiThread.join();
-    return 0;
+    return 1;
 }
 
 #pragma region Setup
@@ -104,13 +112,96 @@ void MazeMain::framebufferSizeCallback(GLFWwindow* window, int width, int height
     guiRenderer->framebufferSizeCallback(window, width, height);
 }
 
+void MazeMain::checkWindowCloseKeyPressed(const Window& window) {
+    if (glfwGetKey(window.getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window.getWindow(), true);
+        running = false;
+    }
+}
+
+void MazeMain::handleFourDManoeuvre(const Window& window) {
+    std::shared_ptr<MazeRenderInfo> rendererInfo = threeDRenderer->mazeRenderInfo;
+
+    //TODO: prevent these from being pressed during the transition OR skip the transition along.
+    if (glfwGetTime() > lastWShift + 0.2 && glfwGetTime() > rendererInfo->wChangeAnimStart + rendererInfo->mazeTransitionAnimationSpeed) {
+        bool fourDChangePressed = false;
+        int w = rendererInfo->wViewing;
+        if (glfwGetKey(window.getWindow(), GLFW_KEY_Q) == GLFW_PRESS) {
+            w -= 1;
+            fourDChangePressed = true;
+        }
+
+        if (glfwGetKey(window.getWindow(), GLFW_KEY_E) == GLFW_PRESS) {
+            w += 1;
+            fourDChangePressed = true;
+        }
+
+        if (w >= 0 && w < maze->hyperDepth && fourDChangePressed) {
+            //threeDRenderer->mazeRenderInfo->wViewing = w;
+            rendererInfo->beginWTransitionAnim(w);//changeWViewingForAnims(w);
+            lastWShift = glfwGetTime();
+        }
+    }
+}
+
+void MazeMain::handleSolverIndexControls(const Window& window) {
+    if (glfwGetTime() > lastSolverShift + 1.0) {
+        if (glfwGetKey(window.getWindow(), GLFW_KEY_L) == GLFW_PRESS) {
+            aiManager->changeSolverIndex(1);
+
+            std::cout << "Incrementing Solver Index!" << std::endl;
+
+            lastSolverShift = glfwGetTime();
+        } else if (glfwGetKey(window.getWindow(), GLFW_KEY_K) == GLFW_PRESS) {
+            aiManager->changeSolverIndex(-1);
+
+            std::cout << "Decrementing Solver Index!" << std::endl;
+
+            lastSolverShift = glfwGetTime();
+        }
+    }
+}
+
+void MazeMain::handleRendererInput(const Window& window, std::shared_ptr<Maze> maze) {
+    GLFWwindow* windowPtr = window.getWindow();
+    threeDRenderer->mazeRenderer->getRenderPollInput(windowPtr, delta);
+    guiRenderer->fourDIndicator->getRenderPollInput(windowPtr, delta);
+}
+
+void MazeMain::handleInput(const Window& window, std::shared_ptr<Maze> maze) {
+    handleRendererInput(window, maze);
+    checkWindowCloseKeyPressed(window);
+
+    handleFourDManoeuvre(window);
+    handleSolverIndexControls(window);
+}
+
 void MazeMain::setupFramebufferCallback() {
-    glfwSetFramebufferSizeCallback(threeDRenderer->window->getWindow(), [=](GLFWwindow* window, int width, int height) {
+    glfwSetFramebufferSizeCallback(threeDRenderer->window->getWindow(), [](GLFWwindow* window, int width, int height) {
         framebufferSizeCallback(window, width, height); 
     });
 }
 
 #pragma endregion
 
-#pragma region Main Exectuion
+#pragma region Main Execution
+void MazeMain::renderLoop() {
+    std::cout << "Entering main loop..." << std::endl;
+    double startDraw;
+    //main render loop
+    while (!glfwWindowShouldClose(threeDRenderer->window->getWindow())) {
+        startDraw = glfwGetTime();
+
+        threeDRenderer->render();
+        guiRenderer->render();
+        glfwSwapBuffers(threeDRenderer->window->getWindow());
+
+        delta = startDraw - lastFrame;
+        lastFrame = startDraw;
+        fps = 1.0f / delta;
+
+        handleInput(*window, maze);
+        glfwPollEvents();
+    }
+}
 #pragma endregion

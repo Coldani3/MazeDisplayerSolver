@@ -28,6 +28,10 @@ void AIManager::run(std::shared_ptr<Maze> maze, bool& running) {
     }
 }
 
+void AIManager::changeSolverIndex(int by) {
+    solverIndex += by;
+}
+
 void AIManager::runSolver(std::shared_ptr<Solver> solver, std::shared_ptr<Maze> maze, std::string solverName) {
     std::cout << "[AI] Beginning " << solverName << " Solver..." << std::endl;
 
