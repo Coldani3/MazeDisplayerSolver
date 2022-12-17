@@ -44,6 +44,6 @@ public:
 
 	virtual std::shared_ptr<Camera> getCamera() override;
 
-	void getRenderPollInput(GLFWwindow* window, double delta) override;
+	void getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) override;
 };
 

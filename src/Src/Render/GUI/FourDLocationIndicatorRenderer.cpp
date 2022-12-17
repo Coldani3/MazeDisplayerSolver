@@ -107,6 +107,6 @@ std::shared_ptr<Camera> FourDLocationIndicatorRenderer::getCamera() {
 	return camera;
 }
 
-void FourDLocationIndicatorRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
+void FourDLocationIndicatorRenderer::getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) {
 
 }

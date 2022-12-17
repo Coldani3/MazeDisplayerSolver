@@ -13,7 +13,7 @@ class InputManager
 
 public:
 	InputManager(std::shared_ptr<Window> window);
-	int getKey(int key) noexcept;
-	bool getKeyPressed(int key) noexcept;
+	int getKey(int key) const noexcept;
+	bool getKeyPressed(int key) const noexcept;
 };
 

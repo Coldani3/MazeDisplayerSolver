@@ -79,7 +79,7 @@ void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
 
                         float endTransitionTime = mazeRenderInfo->wChangeAnimStart + mazeRenderInfo->mazeTransitionAnimationSpeed;
 
-                        scale = std::clamp<float>(1.0f - ((endTransitionTime - now) / mazeRenderInfo->mazeTransitionAnimationSpeed), 0.0f, 1.0f);
+                        scale = calculateScale(endTransitionTime, now, mazeRenderInfo->mazeTransitionAnimationSpeed);
 
                         if (!wasTransitioning) {
                             wasTransitioning = true;
@@ -94,7 +94,12 @@ void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
                         //now check the cells on all sides
                         for (const std::vector<int> direction : touchingSides) {
                             //TODO: use Coordinate here
-                            std::vector<int> addedCoords = { coords[0] + direction[0], coords[1] + direction[1], coords[2] + direction[2], coords[3] + direction[3] };
+                            std::vector<int> addedCoords = { 
+                                coords[0] + direction[0], 
+                                coords[1] + direction[1], 
+                                coords[2] + direction[2], 
+                                coords[3] + direction[3] 
+                            };
 
                             if (maze->inBounds(addedCoords)) {
                                 unsigned char directionData = (*maze)[addedCoords];
@@ -225,7 +230,7 @@ void MazeRenderer::setShowPath(bool showPath) {
     this->showPath = showPath;
 }
 
-void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
+void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) {
     float deltaFloat = static_cast<float>(delta);
     float camSpeed = 0.1f * deltaFloat;
     float zoomSpeed = 2.5f * deltaFloat;
@@ -245,7 +250,7 @@ void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
     /*camSpeed += camMoveSpeedMod;
     zoomSpeed += camMoveSpeedMod;*/
 
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    if (inputManager.getKeyPressed(GLFW_KEY_A)) {
         camera->rotateAround(
             camera->getXLookingAt(),
             camera->getYLookingAt(),
@@ -253,7 +258,7 @@ void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
             -360.0f * camSpeed, 0.0f, 0.0f);
     }
 
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    if (inputManager.getKeyPressed(GLFW_KEY_D)) {
         camera->rotateAround(
             camera->getXLookingAt(),
             camera->getYLookingAt(),
@@ -261,7 +266,7 @@ void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
             360.0f * camSpeed, 0.0f, 0.0f);
     }
 
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+    if (inputManager.getKeyPressed(GLFW_KEY_S)) {
         camera->rotateAround(
             camera->getXLookingAt(),
             camera->getYLookingAt(),
@@ -269,7 +274,7 @@ void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
             0.0f, -360.0f * camSpeed, 0.0f);
     }
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    if (inputManager.getKeyPressed(GLFW_KEY_W)) {
         camera->rotateAround(
             camera->getXLookingAt(),
             camera->getYLookingAt(),
@@ -277,25 +282,25 @@ void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta) {
             0.0f, 360.0f * camSpeed, 0.0f);
     }
 
-    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+    if (inputManager.getKeyPressed(GLFW_KEY_R)) {
         camera->reset();
     }
 
-    if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
+    if (inputManager.getKeyPressed(GLFW_KEY_Z)) {
         camera->zoom(zoomSpeed);
     }
 
-    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
+    if (inputManager.getKeyPressed(GLFW_KEY_X)) {
         camera->zoom(-zoomSpeed);
     }
 
-    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS && glfwGetTime() >= (lastIndicatorToggle + 0.2)) {
+    if (inputManager.getKeyPressed(GLFW_KEY_I) && glfwGetTime() >= (lastIndicatorToggle + 0.2)) {
         show4DIndicators = !show4DIndicators;
         lastIndicatorToggle = glfwGetTime();
     }
 
     if (glfwGetTime() > lastPathShowChange + 0.2) {
-        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+        if (inputManager.getKeyPressed(GLFW_KEY_P)) {
             setShowPath(!showPath);
             lastPathShowChange = glfwGetTime();
         }
@@ -429,4 +434,8 @@ void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int 
     }
 
     glBindVertexArray(0);
+}
+
+float MazeRenderer::calculateScale(float endTransitionTime, float now, float mazeTransitionAnimationSpeed) {
+    return std::clamp<float>(1.0f - ((endTransitionTime - now) / mazeTransitionAnimationSpeed), 0.0f, 1.0f);
 }

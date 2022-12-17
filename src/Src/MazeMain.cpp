@@ -163,8 +163,8 @@ void MazeMain::handleSolverIndexControls(const Window& window) {
 
 void MazeMain::handleRendererInput(const Window& window, std::shared_ptr<Maze> maze) {
     GLFWwindow* windowPtr = window.getWindow();
-    threeDRenderer->mazeRenderer->getRenderPollInput(windowPtr, delta);
-    guiRenderer->fourDIndicator->getRenderPollInput(windowPtr, delta);
+    threeDRenderer->mazeRenderer->getRenderPollInput(windowPtr, delta, *inputManager);
+    guiRenderer->fourDIndicator->getRenderPollInput(windowPtr, delta, *inputManager);
 }
 
 void MazeMain::handleInput(const Window& window, std::shared_ptr<Maze> maze) {
@@ -177,7 +177,7 @@ void MazeMain::handleInput(const Window& window, std::shared_ptr<Maze> maze) {
 
 void MazeMain::setupFramebufferCallback(const Window& window) {
     glfwSetWindowUserPointer(window.getWindow(), reinterpret_cast<void*>(this));
-    glfwSetFramebufferSizeCallback(threeDRenderer->window->getWindow(), [](GLFWwindow* window, int width, int height) {
+    glfwSetFramebufferSizeCallback(window.getWindow(), [](GLFWwindow* window, int width, int height) {
         MazeMain* main = reinterpret_cast<MazeMain*>(glfwGetWindowUserPointer(window));
         main->framebufferSizeCallback(window, width, height); 
     });

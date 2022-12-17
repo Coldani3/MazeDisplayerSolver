@@ -10,6 +10,7 @@
 #include <Render/Shaders.h>
 #include <Render/Camera.h>
 #include <Render/MazeRenderInfo.h>
+#include "../InputManager.h"
 
 class Renderer {
 public:
@@ -34,7 +35,7 @@ public:
 	 * This will be called once a frame. Use this to perform non performance intensive key checks with glfwGetKey(),
 	 * such as to make sure you get input every frame. Performance issues here *will* cause FPS drops.
 	 */
-	virtual void getRenderPollInput(GLFWwindow* window, double delta) = 0;
+	virtual void getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) = 0;
 
     void checkShaderCompileSuccess(unsigned int shader);
 	void checkProgramCompileSuccess(unsigned int program);
