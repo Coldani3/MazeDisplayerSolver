@@ -344,7 +344,7 @@ void MazeRenderer::drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW
     glm::mat4 view = camera->getView();
 
     glm::vec3 lightPos = camera->getCoords();
-    glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
+    glm::vec3 lightColour = defaultLightColour;
 
     prepMazeCenterDraw(model, view, getCellColour({ mazeX, mazeY, mazeZ, mazeW }));
     glDrawArrays(GL_TRIANGLES, 0, 36);

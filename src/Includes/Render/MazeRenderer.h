@@ -233,10 +233,11 @@ private:
 #pragma endregion
 
     glm::vec3 coordsFromMazeCenter(int mazeX, int mazeY, int mazeZ);
+    void prepMazeCenterDraw(const glm::mat4& model, const glm::mat4& view, const glm::vec3& cellColour);
     void useMazePathProgram(const glm::vec3& lightPos, const glm::vec3& lightColour);
     glm::mat3 calculateNormalTransform(const glm::mat4& model);
     void prepMazeDrawUniforms(const glm::vec3& cellColour, const glm::mat4& model, const glm::mat3& normalTransform);
     inline float calculateAdjustedScale(unsigned char prevWData, unsigned char mazeCellData, unsigned char bitChecking, int i, float transitionScale);
-    bool hasCellPathBit(unsigned char mazeCellData, unsigned char bitChecking);
+    inline bool hasCellPathBit(unsigned char mazeCellData, unsigned char bitChecking);
 };
 
