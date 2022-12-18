@@ -169,6 +169,7 @@ public:
     const glm::vec3 anaColour = glm::vec3(0.901f, 0.796f, 0.333f);
     //101, 106, 201 - bluey
     const glm::vec3 kataColour = glm::vec3(0.396f, 0.415f, 0.788f);
+    const glm::vec3 defaultLightColour = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ);
 	~MazeRenderer();
@@ -187,6 +188,7 @@ public:
 
 	void drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW);
 	void drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW, int lastW, float transitionScale);
+    bool drawMazeCellPath(unsigned char mazeCellData, unsigned char prevWData, unsigned int cellPath, const glm::mat4& initialTranslate, const glm::vec3& modelCoords, const std::vector<int>& mazeCoords, float transitionScale);
 
     float calculateScale(float endTransitionTime, float now, float mazeTransitionAnimationSpeed);
 
@@ -229,5 +231,12 @@ private:
 	unsigned int mazeCenterVAO;
 	unsigned int mazePathVAO;
 #pragma endregion
+
+    glm::vec3 coordsFromMazeCenter(int mazeX, int mazeY, int mazeZ);
+    void useMazePathProgram(const glm::vec3& lightPos, const glm::vec3& lightColour);
+    glm::mat3 calculateNormalTransform(const glm::mat4& model);
+    void prepMazeDrawUniforms(const glm::vec3& cellColour, const glm::mat4& model, const glm::mat3& normalTransform);
+    inline float calculateAdjustedScale(unsigned char prevWData, unsigned char mazeCellData, unsigned char bitChecking, int i, float transitionScale);
+    bool hasCellPathBit(unsigned char mazeCellData, unsigned char bitChecking);
 };
 

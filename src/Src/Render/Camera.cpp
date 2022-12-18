@@ -18,5 +18,9 @@ glm::mat4 Camera::getProjection() {
 	return projection;
 }
 
+glm::vec3 Camera::getCoords() {
+	return glm::vec3(getXPos(), getYPos(), getZPos());
+}
+
 void Camera::updateProjection() {
 }

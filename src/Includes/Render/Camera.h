@@ -13,11 +13,14 @@ public:
 	Camera(int width, int height);
 	virtual glm::mat4 getView();
 	virtual glm::mat4 getProjection();
+	
 
 	//return 0,0,0 if camera has no position
 	virtual float getXPos() = 0;
 	virtual float getYPos() = 0;
 	virtual float getZPos() = 0;
+
+	virtual glm::vec3 getCoords();
 
 	virtual void updateProjection();
 
