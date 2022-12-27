@@ -12,13 +12,23 @@ int MazeMain::main() {
     setupRenderers();
 
     mazePathManager = std::make_shared<MazePathManager>();
+    mazePathManager->setActivePath(MazePath(maze->width, maze->height, maze->depth, maze->hyperDepth));
     aiManager = std::make_shared<AIManager>(window, mazePathManager);//std::make_unique<AIManager>(maze, running);
 
-    if (!window->initialised() || !initialiseGLAD()) {
-        std::cerr << "Failed GLAD and/or GLFW initialisation!" << '\n';
-        
-        glfwTerminate();
+    bool terminate = false;
 
+    if (!window->initialised()) {
+        std::cerr << "Failed to load GLFW!" << '\n';
+        terminate = true;
+    }
+
+    if (!initialiseGLAD()) {
+        std::cerr << "Failed to initialise GLAD!" << '\n';
+        terminate = true;
+    }
+
+    if (terminate) {
+        glfwTerminate();
         return -1;
     }
 
@@ -73,7 +83,7 @@ void MazeMain::setupMonitor() noexcept {
     glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
     glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-    //tell glfw we're using opengl 3.3 with the core profile, instead of the old method
+    //use opengl 3.3
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_SAMPLES, 4);
@@ -97,7 +107,7 @@ void MazeMain::setupRenderers() noexcept {
 }
 
 bool MazeMain::initialiseGLAD() {
-    return !gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+    return gladLoadGLLoader((GLADloadproc)glfwGetProcAddress) == 1;
 }
 
 void MazeMain::setupViewport() {

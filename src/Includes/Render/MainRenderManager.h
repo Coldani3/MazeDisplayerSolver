@@ -14,7 +14,7 @@
 class MainRenderManager : public RenderManager
 {
 public:
-	MainRenderManager(std::shared_ptr<Window> window, std::shared_ptr<Maze> initialMaze);
+	MainRenderManager(std::shared_ptr<Window> window, std::shared_ptr<Maze> initialMaze, std::shared_ptr<MazePathManager> pathManager);
 	~MainRenderManager();
 	void setup();
 	void render();

@@ -14,7 +14,7 @@ class MazePathManager {
 public:
 	std::shared_ptr<MazePath> activePath;
 
-	void setActivePath(const MazePath &path) noexcept;
+	void setActivePath(MazePath path) noexcept;
 	MazePath getMazePath(std::string key, int id) const;
 	void putMazePath(std::string key, const MazePath& path) noexcept;
 };

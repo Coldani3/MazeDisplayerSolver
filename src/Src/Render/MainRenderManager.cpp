@@ -2,7 +2,7 @@
 #include <Render/MazeRenderer.h>
 
 #pragma region Class Methods
-MainRenderManager::MainRenderManager(std::shared_ptr<Window> window, std::shared_ptr<Maze> maze) {
+MainRenderManager::MainRenderManager(std::shared_ptr<Window> window, std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager) {
     //Moved to Window
     this->window = window;
     

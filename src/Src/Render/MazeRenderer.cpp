@@ -2,31 +2,16 @@
 
 #include <algorithm>
 
-MazeRenderer::MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ) {
-    selectedPath = MazePath(maze->width, maze->height, maze->depth, maze->hyperDepth);
-    renderedPath = MazePath(maze->width, maze->height, maze->depth, maze->hyperDepth);
+MazeRenderer::MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager, int centerX, int centerY, int centerZ) {
+    this->pathManager = pathManager;
+    renderedPathProgress = std::make_shared<MazePathRenderProgress>(*(pathManager->activePath));
     mazeCenterX = static_cast<float>(centerX);
     mazeCenterY = static_cast<float>(centerY);
     mazeCenterZ = static_cast<float>(centerZ);
     this->maze = maze;
     this->camera = camera;
-    glm::mat4 identity = glm::mat4(1.0f);
     
-    //precompute cell path transformation matrices
-    for (int i = 0; i < cellPathTransformations.size(); i++) {
-        
-        float rotateAngleX = cellPathTransformationsValues[i][0];
-        float rotateAngleY = cellPathTransformationsValues[i][1];
-        float translateX = cellPathTransformationsValues[i][2];
-        float translateY = cellPathTransformationsValues[i][3];
-        float translateZ = cellPathTransformationsValues[i][4];
-
-        glm::mat4 rotateY = glm::rotate(identity, glm::radians(rotateAngleY), glm::vec3(1.0f, 0.0f, 0.0f));
-        glm::mat4 rotateX = glm::rotate(identity, glm::radians(rotateAngleX), glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 translate = glm::translate(identity, glm::vec3(translateX, translateY, translateZ));
-
-        cellPathTransformations[i] = translate * rotateX * rotateY;
-    }
+    precomputeCellPathTransformations();
 }
 
 MazeRenderer::~MazeRenderer() {
@@ -37,23 +22,8 @@ MazeRenderer::~MazeRenderer() {
 void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
     //TODO: separate thread for timings? also account for lag spikes
     double now = glfwGetTime();
-    //handle animation of solved path being displayed
-    int selectedPathSize = selectedPath.pathSize();
-    int renderedPathSize = renderedPath.pathSize();
-
-    if (showPath && 
-        now > lastPathAddTime + pathUpdateSpeed && 
-        selectedPathSize > 0 && 
-        selectedPathSize > renderedPathSize) {
-        
-        std::vector<int> coords = selectedPath[renderedPathSize];
-
-        if (coords[3] != mazeRenderInfo->wViewing) {
-            mazeRenderInfo->wViewing = coords[3];
-        }
-
-        renderedPath.markCellVisited(coords);
-    }
+    
+    progressPath(now, *mazeRenderInfo);
 
     //actually draw the maze
     for (int x = 0; x < maze->width; x++) {
@@ -67,50 +37,7 @@ void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
                 float scale = 1.0f;
 
                 if (data > 0) {
-                    if (mazeRenderInfo->wTransitioning) {
-                        /*
-                        * FUTURE ME NOTE: This transition stuff seems overly complicated. Just lerp between this w and the next w.
-                        * 
-                        * For w transition animation, get change with formula 1.0 - ((wChangeAnimStart + speed - glfwGetTime()) / speed)
-                        * and clamp between 0.0 and 1.0. Then check to see the change on each 3d side - if both that side of this
-                        * cell and the touching side of this cell are both still present (ie. there's a path between the cells in that
-                        * direction) in the next w slice then pass an unchanged transition value to the shader.
-                        */
-
-                        float endTransitionTime = mazeRenderInfo->wChangeAnimStart + mazeRenderInfo->mazeTransitionAnimationSpeed;
-
-                        scale = calculateScale(endTransitionTime, now, mazeRenderInfo->mazeTransitionAnimationSpeed);
-
-                        if (!wasTransitioning) {
-                            wasTransitioning = true;
-                        }
-
-                        if (now > endTransitionTime) {
-                            mazeRenderInfo->finishWTransitionAnim();
-                        }
-
-                        //std::vector<std::vector<int>> 
-
-                        //now check the cells on all sides
-                        for (const std::vector<int> direction : touchingSides) {
-                            //TODO: use Coordinate here
-                            std::vector<int> addedCoords = { 
-                                coords[0] + direction[0], 
-                                coords[1] + direction[1], 
-                                coords[2] + direction[2], 
-                                coords[3] + direction[3] 
-                            };
-
-                            if (maze->inBounds(addedCoords)) {
-                                unsigned char directionData = (*maze)[addedCoords];
-
-                                //TODO: something here I think, not sure if I actually need this though? I think I do though
-                            }
-                        }
-                    } else if (!mazeRenderInfo->wTransitioning && wasTransitioning) {
-                        wasTransitioning = false;
-                        mazeRenderInfo->finishWTransitionAnim();
-                    }
+                    updateTransition(data, scale, now, *mazeRenderInfo, coords);
 
                     drawMazeCellPaths(data, x, y, z, mazeRenderInfo->wViewing, mazeRenderInfo->lastW, scale);
                     drawMazeCellCenter(x, y, z, mazeRenderInfo->wViewing);
@@ -119,6 +46,27 @@ void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
                 //TODO: large box indicator for where the path head currently is.
             }
         }
+    }
+}
+
+void MazeRenderer::progressPath(double now, MazeRenderInfo& mazeRenderInfo) {
+    //handle animation of solved path being displayed
+    int selectedPathSize = pathManager->activePath->pathSize();//selectedPath.pathSize();
+    //TODO: ACCOUNT FOR NULL RENDEREDPATHPROGRESS USING THAT BOOL
+    int renderedPathSize = renderedPath.pathSize();
+
+    if (showPath &&
+        now > lastPathAddTime + pathUpdateSpeed &&
+        selectedPathSize > 0 &&
+        selectedPathSize > renderedPathSize) {
+
+        std::vector<int> coords = (*pathManager->activePath)[renderedPathSize];
+
+        if (coords[3] != mazeRenderInfo.wViewing) {
+            mazeRenderInfo.wViewing = coords[3];
+        }
+
+        renderedPath.markCellVisited(coords);
     }
 }
 
@@ -205,6 +153,26 @@ void MazeRenderer::setup() {
     std::cout << "Done." << std::endl;
 }
 
+void MazeRenderer::precomputeCellPathTransformations() {
+    glm::mat4 identity = glm::mat4(1.0f);
+
+    //precompute cell path transformation matrices
+    for (int i = 0; i < cellPathTransformations.size(); i++) {
+
+        float rotateAngleX = cellPathTransformationsValues[i][0];
+        float rotateAngleY = cellPathTransformationsValues[i][1];
+        float translateX = cellPathTransformationsValues[i][2];
+        float translateY = cellPathTransformationsValues[i][3];
+        float translateZ = cellPathTransformationsValues[i][4];
+
+        glm::mat4 rotateY = glm::rotate(identity, glm::radians(rotateAngleY), glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::mat4 rotateX = glm::rotate(identity, glm::radians(rotateAngleX), glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 translate = glm::translate(identity, glm::vec3(translateX, translateY, translateZ));
+
+        cellPathTransformations[i] = translate * rotateX * rotateY;
+    }
+}
+
 void MazeRenderer::cleanup() {
     std::cout << "Cleaning up Maze Renderer..." << std::endl;
 
@@ -230,10 +198,15 @@ void MazeRenderer::setShowPath(bool showPath) {
     this->showPath = showPath;
 }
 
+void MazeRenderer::changeShownPathTo(const MazePath& newPath) {
+    renderedPathProgress = std::make_shared<MazePathRenderProgress>(newPath);
+    hasActiveRenderedPath = true;
+}
+
 void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) {
     float deltaFloat = static_cast<float>(delta);
-    float camSpeed = 0.1f * deltaFloat;
-    float zoomSpeed = 2.5f * deltaFloat;
+    float camSpeed = camera->camSpeed * deltaFloat;
+    float zoomSpeed = camera->zoomSpeed * deltaFloat;
 
     /*if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
         camMoveSpeedMod += 1.0 * delta;
@@ -383,8 +356,8 @@ bool MazeRenderer::drawMazeCellPath(unsigned char mazeCellData, unsigned char pr
         //TODO: move all matrix multiplications into the shaders?
         //we can scale it like this because the path is the exact same for all directions until the maze cell path transform step
         //scale it in the +z direction as that is where the path 'points' by default
-        glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, adjustedScale));
-        glm::mat4 model = mazeCellPathTransform(modelCoords, cellPathTransformations[cellPath]) * initialTranslate * scale;
+        glm::mat4 adjustedScaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, adjustedScale));
+        glm::mat4 model = mazeCellPathTransform(modelCoords, cellPathTransformations[cellPath]) * initialTranslate * adjustedScaleMat;
         glm::vec3 cellColour = getCellColour(mazeCoords);
         glm::mat3 normalTransform = calculateNormalTransform(model);
 
@@ -404,8 +377,60 @@ bool MazeRenderer::drawMazeCellPath(unsigned char mazeCellData, unsigned char pr
     return true;
 }
 
+void MazeRenderer::updateTransition(const unsigned char data, float& scale, double now, MazeRenderInfo& mazeRenderInfo, std::vector<int> coords) {
+    if (mazeRenderInfo.wTransitioning) {
+        /*
+        * FUTURE ME NOTE: This transition stuff seems overly complicated. Just lerp between this w and the next w.
+        *
+        * For w transition animation, get change with formula 1.0 - ((wChangeAnimStart + speed - glfwGetTime()) / speed)
+        * and clamp between 0.0 and 1.0. Then check to see the change on each 3d side - if both that side of this
+        * cell and the touching side of this cell are both still present (ie. there's a path between the cells in that
+        * direction) in the next w slice then pass an unchanged transition value to the shader.
+        */
+
+        float endTransitionTime = mazeRenderInfo.wChangeAnimStart + mazeRenderInfo.mazeTransitionAnimationSpeed;
+
+        scale = calculateScale(endTransitionTime, now, mazeRenderInfo.mazeTransitionAnimationSpeed);
+
+        if (!wasTransitioning) {
+            wasTransitioning = true;
+        }
+
+        if (now > endTransitionTime) {
+            mazeRenderInfo.finishWTransitionAnim();
+        }
+
+        //std::vector<std::vector<int>> 
+
+        //now check the cells on all sides
+        for (const std::vector<int> direction : touchingSides) {
+            //TODO: use Coordinate here
+            std::vector<int> addedCoords = {
+                coords[0] + direction[0],
+                coords[1] + direction[1],
+                coords[2] + direction[2],
+                coords[3] + direction[3]
+            };
+
+            if (maze->inBounds(addedCoords)) {
+                unsigned char directionData = (*maze)[addedCoords];
+
+                //TODO: something here I think, not sure if I actually need this though? I think I do though
+            }
+        }
+    }
+    else if (!mazeRenderInfo.wTransitioning && wasTransitioning) {
+        wasTransitioning = false;
+        mazeRenderInfo.finishWTransitionAnim();
+    }
+}
+
 float MazeRenderer::calculateScale(float endTransitionTime, float now, float mazeTransitionAnimationSpeed) {
-    return std::clamp<float>(1.0f - ((endTransitionTime - now) / mazeTransitionAnimationSpeed), 0.0f, 1.0f);
+    return std::clamp<float>(
+        1.0f - ((endTransitionTime - now) / mazeTransitionAnimationSpeed), 
+        0.0f, 
+        1.0f
+    );
 }
 
 glm::vec3 MazeRenderer::coordsFromMazeCenter(int mazeX, int mazeY, int mazeZ) {
@@ -452,8 +477,7 @@ void MazeRenderer::prepMazeDrawUniforms(const glm::vec3& cellColour, const glm::
     glUniformMatrix3fv(glGetUniformLocation(mazePathProgram, "normalTransform"), 1, GL_FALSE, glm::value_ptr(normalTransform));
 }
 
-inline float MazeRenderer::calculateAdjustedScale(unsigned char prevWData, unsigned char mazeCellData, unsigned char bitChecking, int i, float transitionScale) {
-    //TODO: uuuuh wait doesn't this mean that if they're different the transitionScale is 0 so the path doesn't display?
+inline float MazeRenderer::calculateAdjustedScale(unsigned char prevWData, unsigned char mazeCellData, unsigned char bitChecking, int direction, float transitionScale) {
         /*
         * 1111000 - a
         * 0001111 - b
@@ -465,7 +489,8 @@ inline float MazeRenderer::calculateAdjustedScale(unsigned char prevWData, unsig
         * 0000001
         *
         */
-    return ((prevWData & mazeCellData & bitChecking) >> i) == 1 ? 1.0f : transitionScale;
+    //& by 255 - 1 so that higher bits are not factored in
+    return (((prevWData & mazeCellData & bitChecking) >> direction) & 0xFE) == 1 ? 1.0f : transitionScale;
 }
 
 inline bool MazeRenderer::hasCellPathBit(unsigned char mazeCellData, unsigned char bitChecking) {

@@ -7,20 +7,23 @@
 
 #include <vector>
 #include <array>
+#include "../Maze/MazePathManager.h"
+#include "../Maze/MazePathRenderProgress.h"
 //#include <glm/gtx/transform.hpp>
 
 class MazeRenderer : public Renderer {
 public:
     /*
      * The path that has been selected to be gradually displayed (ie. NOT the one that is displayed) 
-     * TODO: these really should be smart pointers
      */
-	MazePath selectedPath;
+    std::shared_ptr<MazePathManager> pathManager;
 
     /*
      * The path that describes what is being shown to the user and is highlighted gradually. 
      */
-    MazePath renderedPath;
+    std::shared_ptr<MazePathRenderProgress> renderedPathProgress = nullptr;
+    bool hasActiveRenderedPath = false;
+    //MazePath renderedPath;
     double lastPathAddTime = 0;
     //Index of selected path to be rendered.
     int selectedPathIndex = 0;
@@ -171,15 +174,18 @@ public:
     const glm::vec3 kataColour = glm::vec3(0.396f, 0.415f, 0.788f);
     const glm::vec3 defaultLightColour = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, int centerX, int centerY, int centerZ);
+	MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager, int centerX, int centerY, int centerZ);
 	~MazeRenderer();
 
 	void render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo);
+    void progressPath(double now, MazeRenderInfo& mazeRenderInfo);
 	void setup();
+    void precomputeCellPathTransformations();
 	void cleanup();
 	void setMazeCenterProgram(int program);
 	void setMazePathProgram(int program);
 	void setShowPath(bool showPath);
+    void changeShownPathTo(const MazePath& newPath);
     virtual void getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) override;
     virtual std::shared_ptr<Camera> getCamera() override;
 
@@ -190,6 +196,7 @@ public:
 	void drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW, int lastW, float transitionScale);
     bool drawMazeCellPath(unsigned char mazeCellData, unsigned char prevWData, unsigned int cellPath, const glm::mat4& initialTranslate, const glm::vec3& modelCoords, const std::vector<int>& mazeCoords, float transitionScale);
 
+    void updateTransition(const unsigned char data, float& scale, double now, MazeRenderInfo& mazeRenderInfo, std::vector<int> coords);
     float calculateScale(float endTransitionTime, float now, float mazeTransitionAnimationSpeed);
 
 private:

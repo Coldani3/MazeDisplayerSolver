@@ -8,6 +8,8 @@
 class Camera {
 public:
 	int screenWidth, screenHeight;
+	float camSpeed = 0.1f;
+	float zoomSpeed = 2.5f;
 
 	Camera();
 	Camera(int width, int height);

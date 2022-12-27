@@ -149,6 +149,7 @@
     <ClCompile Include="src\Src\Math\Coordinate.cpp" />
     <ClCompile Include="src\Src\MazeMain.cpp" />
     <ClCompile Include="src\Src\Maze\MazePathManager.cpp" />
+    <ClCompile Include="src\Src\Maze\MazePathRenderProgress.cpp" />
     <ClCompile Include="src\Src\Render\MazeRenderInfo.cpp" />
     <ClCompile Include="src\Src\Render\Camera.cpp" />
     <ClCompile Include="src\Src\Render\GUI\FourDLocationIndicatorRenderer.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="src\Includes\Maths\Coordinate.h" />
     <ClInclude Include="src\Includes\MazeMain.h" />
     <ClInclude Include="src\Includes\Maze\MazePathManager.h" />
+    <ClInclude Include="src\Includes\Maze\MazePathRenderProgress.h" />
     <ClInclude Include="src\Includes\Render\MazeRenderInfo.h" />
     <ClInclude Include="src\Includes\Maze\MazePath.h" />
     <ClInclude Include="src\Includes\Render\Camera.h" />
