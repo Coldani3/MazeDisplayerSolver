@@ -20,10 +20,10 @@ public:
 	void render();
 	void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 	//GLFWwindow* getWindow();
-	int getWidth();
-	int getHeight();
+	int getWidth() const;
+	int getHeight() const;
 	void setMazeUsing(std::shared_ptr<Maze> maze);
-	std::shared_ptr<Camera> getCamera() override;
+	std::shared_ptr<Camera> getCamera() const override;
 
 	glm::mat4 projection;
 	std::shared_ptr<PerspectiveCamera> camera;

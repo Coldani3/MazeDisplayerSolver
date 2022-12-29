@@ -9,6 +9,7 @@
 #include <array>
 #include "../Maze/MazePathManager.h"
 #include "../Maze/MazePathRenderProgress.h"
+#include "../Maths/Coordinate.h"
 //#include <glm/gtx/transform.hpp>
 
 class MazeRenderer : public Renderer {
@@ -23,7 +24,6 @@ public:
      */
     std::shared_ptr<MazePathRenderProgress> renderedPathProgress = nullptr;
     bool hasActiveRenderedPath = false;
-    //MazePath renderedPath;
     double lastPathAddTime = 0;
     //Index of selected path to be rendered.
     int selectedPathIndex = 0;
@@ -187,17 +187,17 @@ public:
 	void setShowPath(bool showPath);
     void changeShownPathTo(const MazePath& newPath);
     virtual void getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) override;
-    virtual std::shared_ptr<Camera> getCamera() override;
+    virtual std::shared_ptr<Camera> getCamera() const override;
 
-	glm::vec3 getCellColour(std::vector<int> coords);
-	glm::mat4 mazeCellPathTransform(glm::vec3 initialCoords, glm::mat4 transformation);
+	glm::vec3 getCellColour(const Coordinate<int>& coords) const;
+	glm::mat4 mazeCellPathTransform(const glm::vec3& initialCoords, const glm::mat4& transformation) const;
 
-	void drawMazeCellCenter(int mazeX, int mazeY, int mazeZ, int mazeW);
-	void drawMazeCellPaths(unsigned char mazeCellData, int mazeX, int mazeY, int mazeZ, int mazeW, int lastW, float transitionScale);
-    bool drawMazeCellPath(unsigned char mazeCellData, unsigned char prevWData, unsigned int cellPath, const glm::mat4& initialTranslate, const glm::vec3& modelCoords, const std::vector<int>& mazeCoords, float transitionScale);
+	void drawMazeCellCenter(const Coordinate<int>& coords);
+	void drawMazeCellPaths(unsigned char mazeCellData, const Coordinate<int>& coords, int lastW, float transitionScale);
+    bool drawMazeCellPath(unsigned char mazeCellData, unsigned char prevWData, unsigned int cellPath, const glm::mat4& initialTranslate, const glm::vec3& modelCoords, const Coordinate<int>& mazeCoords, float transitionScale);
 
-    void updateTransition(const unsigned char data, float& scale, double now, MazeRenderInfo& mazeRenderInfo, std::vector<int> coords);
-    float calculateScale(float endTransitionTime, float now, float mazeTransitionAnimationSpeed);
+    void updateTransition(const unsigned char data, float& scale, double now, MazeRenderInfo& mazeRenderInfo, const Coordinate<int>& coords);
+    float calculateScale(float endTransitionTime, float now, float mazeTransitionAnimationSpeed) const;
 
 private:
     std::shared_ptr<Maze> maze = nullptr;
@@ -206,15 +206,15 @@ private:
     double lastPathShowChange = 0;
     double lastIndicatorToggle = 0;
 
-    const std::vector<std::vector<int>> touchingSides = {
-        {1, 0, 0, 0},
-        {-1, 0, 0, 0},
-        {0, 1, 0, 0},
-        {0, -1, 0, 0},
-        {0, 0, 1, 0},
-        {0, 0, -1, 0},
-        {0, 0, 0, 1},
-        {0, 0, 0, -1}
+    const std::vector<Coordinate<int>> touchingSides = {
+        Coordinate<int>({1, 0, 0, 0}),
+        Coordinate<int>({-1, 0, 0, 0}),
+        Coordinate<int>({0, 1, 0, 0}),
+        Coordinate<int>({0, -1, 0, 0}),
+        Coordinate<int>({0, 0, 1, 0}),
+        Coordinate<int>({0, 0, -1, 0}),
+        Coordinate<int>({0, 0, 0, 1}),
+        Coordinate<int>({0, 0, 0, -1})
     };
 
     const std::vector<std::vector<int>> touchingSidesOpposite = {
@@ -239,12 +239,12 @@ private:
 	unsigned int mazePathVAO;
 #pragma endregion
 
-    glm::vec3 coordsFromMazeCenter(int mazeX, int mazeY, int mazeZ);
+    glm::vec3 coordsFromMazeCenter(int mazeX, int mazeY, int mazeZ) const;
     void prepMazeCenterDraw(const glm::mat4& model, const glm::mat4& view, const glm::vec3& cellColour);
     void useMazePathProgram(const glm::vec3& lightPos, const glm::vec3& lightColour);
-    glm::mat3 calculateNormalTransform(const glm::mat4& model);
+    glm::mat3 calculateNormalTransform(const glm::mat4& model) const;
     void prepMazeDrawUniforms(const glm::vec3& cellColour, const glm::mat4& model, const glm::mat3& normalTransform);
-    inline float calculateAdjustedScale(unsigned char prevWData, unsigned char mazeCellData, unsigned char bitChecking, int i, float transitionScale);
-    inline bool hasCellPathBit(unsigned char mazeCellData, unsigned char bitChecking);
+    inline float calculateAdjustedScale(unsigned char prevWData, unsigned char mazeCellData, unsigned char bitChecking, int i, float transitionScale) const;
+    inline bool hasCellPathBit(unsigned char mazeCellData, unsigned char bitChecking) const;
 };
 

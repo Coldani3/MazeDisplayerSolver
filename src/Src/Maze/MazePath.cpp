@@ -15,13 +15,13 @@ MazePath::MazePath(int mazeWidth, int mazeHeight, int mazeDepth, int mazeHyperDe
 MazePath::~MazePath() {
 }
 
-bool MazePath::visitedCell(std::vector<int> coords) {
-    return visited[(mazeHeight * mazeWidth * mazeDepth * coords[3]) + (mazeHeight * mazeWidth * coords[2]) + (mazeHeight * coords[1]) + coords[0]];
+bool MazePath::visitedCell(const Coordinate<int>& coords) const {
+    return visited[(mazeHeight * mazeWidth * mazeDepth * coords.w()) + (mazeHeight * mazeWidth * coords.z()) + (mazeHeight * coords.y()) + coords.x()];
 }
 
-void MazePath::markCellVisited(std::vector<int> coords) {
+void MazePath::markCellVisited(const Coordinate<int>& coords) {
     if (!(visitedCell(coords))) {
-        visited[(mazeHeight * mazeWidth * mazeDepth * coords[3]) + (mazeHeight * mazeWidth * coords[2]) + (mazeHeight * coords[1]) + coords[0]] = true;
+        visited[(mazeHeight * mazeWidth * mazeDepth * coords.w()) + (mazeHeight * mazeWidth * coords.z()) + (mazeHeight * coords.y()) + coords.x()] = true;
         visitedPath.push_back(coords);
     }
 }
@@ -33,10 +33,10 @@ void MazePath::clearVisitedCells() {
     visitedPath.clear();
 }
 
-int MazePath::pathSize() {
+size_t MazePath::pathSize() const {
     return visitedPath.size();
 }
 
-std::vector<int> MazePath::operator[](int index) {
+Coordinate<int> MazePath::operator[](int index) {
     return visitedPath[index];
 }

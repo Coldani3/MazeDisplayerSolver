@@ -1,22 +1,23 @@
 #pragma once
 
 #include <vector>
+#include "../Maths/Coordinate.h"
 
 class MazePath {
 public:
 	MazePath();
 	MazePath(int mazeWidth, int mazeHeight, int mazeDepth, int mazeHyperDepth);
 	~MazePath();
-	bool visitedCell(std::vector<int> coords);
-	void markCellVisited(std::vector<int> coords);
+	bool visitedCell(const Coordinate<int>& coords) const;
+	void markCellVisited(const Coordinate<int>& coords);
 	void clearVisitedCells();
-	int pathSize();
+	size_t pathSize() const;
 
-	std::vector<int> operator[](int index);
+	Coordinate<int> operator[](int index);
 
 private:
 	std::vector<bool> visited;
-	std::vector<std::vector<int>> visitedPath;
+	std::vector<Coordinate<int>> visitedPath;
 	int mazeHeight = 0;
 	int mazeWidth = 0;
 	int mazeDepth = 0;

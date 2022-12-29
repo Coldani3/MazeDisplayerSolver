@@ -103,7 +103,7 @@ void FourDLocationIndicatorRenderer::updatePosition() {
 	position = screenRelativeCoords(0.9f, -0.9f);
 }
 
-std::shared_ptr<Camera> FourDLocationIndicatorRenderer::getCamera() {
+std::shared_ptr<Camera> FourDLocationIndicatorRenderer::getCamera() const {
 	return camera;
 }
 

@@ -15,6 +15,6 @@ public:
 	virtual void render() = 0;
 	std::shared_ptr<MazeRenderInfo> mazeRenderInfo;
 
-	virtual std::shared_ptr<Camera> getCamera() = 0;
+	virtual std::shared_ptr<Camera> getCamera() const = 0;
 };
 

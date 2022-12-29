@@ -16,7 +16,7 @@ public:
 	void setup();
 	void render();
 	void framebufferSizeCallback(GLFWwindow* window, int width, int height);
-	std::shared_ptr<Camera> getCamera() override;
+	std::shared_ptr<Camera> getCamera() const override;
 
 private:
 	std::shared_ptr<TwoDCamera> camera;

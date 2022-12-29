@@ -29,7 +29,7 @@ public:
 	 */
 	virtual void cleanup() = 0;
 
-	virtual std::shared_ptr<Camera> getCamera() = 0;
+	virtual std::shared_ptr<Camera> getCamera() const = 0;
 
 	/*
 	 * This will be called once a frame. Use this to perform non performance intensive key checks with glfwGetKey(),

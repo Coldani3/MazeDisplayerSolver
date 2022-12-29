@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include "../Maths/Coordinate.h"
 
 #pragma once
 
@@ -25,8 +26,8 @@ public:
 	int depth = 0;
 	int hyperDepth = 0;
 	int dimensions;
-	std::vector<int> mazeEntrance;
-	std::vector<int> mazeExit;
+	Coordinate<int> mazeEntrance;
+	Coordinate<int> mazeExit;
 	std::vector<int> sizes;
 
 	Maze();
@@ -34,11 +35,11 @@ public:
 	~Maze();
 	void loadFromFile(std::string fileName);
 	//Read the byte representing the cell at coordinates
-	unsigned char operator[] (const std::vector<int>& coordinates) const;
+	unsigned char operator[] (const Coordinate<int>& coordinates) const;
 	//Provide the byte representing the cell at coordinates as a reference to modify
-	unsigned char& operator[](const std::vector<int>& coordinates);
-	bool inBounds(const std::vector<int>& coordinates);
-	bool canAccessFrom(const std::vector<int>& fromCoords, const std::vector<int>& toCoords);
+	unsigned char& operator[](const Coordinate<int>& coordinates);
+	bool inBounds(const Coordinate<int>& coordinates);
+	bool canAccessFrom(const Coordinate<int>& fromCoords, const Coordinate<int>& toCoords);
 	bool wInBounds(int w);
 
 private:
@@ -47,7 +48,7 @@ private:
 
 	//C++ doesn't like this[] with header separated classes :/
 
-	unsigned char getCell(const std::vector<int>& coordinates) const;
-	void setCell(const std::vector<int>& coordinates, char to);
+	unsigned char getCell(const Coordinate<int>& coordinates) const;
+	void setCell(const Coordinate<int>& coordinates, char to);
 	unsigned int getSize();
 };

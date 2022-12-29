@@ -97,7 +97,7 @@ void MazeMain::setupRenderers() noexcept {
 
     std::cout << "Initialising renderers..." << std::endl;
 
-    threeDRenderer = std::make_shared<MainRenderManager>(window, maze);
+    threeDRenderer = std::make_shared<MainRenderManager>(window, maze, mazePathManager);
     threeDRenderer->mazeRenderInfo = mazeRenderInfo;
 
     guiRenderer = std::make_shared<GUIRenderManager>(maze, windowWidth, windowHeight);

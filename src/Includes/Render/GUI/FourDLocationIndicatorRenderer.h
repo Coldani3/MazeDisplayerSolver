@@ -42,7 +42,7 @@ public:
 	void cleanup();
 	void updatePosition();
 
-	virtual std::shared_ptr<Camera> getCamera() override;
+	virtual std::shared_ptr<Camera> getCamera() const override;
 
 	void getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) override;
 };

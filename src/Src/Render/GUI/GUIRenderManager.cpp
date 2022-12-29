@@ -34,6 +34,6 @@ void GUIRenderManager::framebufferSizeCallback(GLFWwindow* window, int width, in
 	fourDIndicator->updatePosition();
 }
 
-std::shared_ptr<Camera> GUIRenderManager::getCamera() {
+std::shared_ptr<Camera> GUIRenderManager::getCamera() const {
 	return camera;
 }

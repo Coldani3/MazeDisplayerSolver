@@ -16,52 +16,40 @@ int charToNum(char character) {
 	return character - 48;
 }
 
-unsigned char Maze::getCell(const std::vector<int>& coordinates) const {
-	std::array<int, 4> coordsToFour = { 0, 0, 0, 0 };
-
-	for (int i = 0; i < coordinates.size(); i++) {
-		coordsToFour[i] = coordinates[i];
-	}
-
-	return mazeData[(height * width * depth * coordsToFour[3]) + (height * width * coordsToFour[2]) + (height * coordsToFour[1]) + coordsToFour[0]];
+unsigned char Maze::getCell(const Coordinate<int>& coordinates) const {
+	return mazeData[(height * width * depth * coordinates.w()) + (height * width * coordinates.z()) + (height * coordinates.y()) + coordinates.x()];
 }
 
-void Maze::setCell(const std::vector<int>& coordinates, char to) {
-	std::array<int, 4> coordsToFour = { 0, 0, 0, 0 };
-
-	for (int i = 0; i < coordinates.size(); i++) {
-		coordsToFour[i] = coordinates[i];
-	}
-
-	mazeData[(height * width * depth * coordsToFour[3]) + (height * width * coordsToFour[2]) + (height * coordsToFour[1]) + coordsToFour[0]] = to;
+void Maze::setCell(const Coordinate<int>& coordinates, char to) {
+	mazeData[(height * width * depth * coordinates.w()) + (height * width * coordinates.z()) + (height * coordinates.y()) + coordinates.x()] = to;
 }
 
-unsigned char Maze::operator[](const std::vector<int>& coordinates) const {
+unsigned char Maze::operator[](const Coordinate<int>& coordinates) const {
 	return getCell(coordinates);
 }
 
-unsigned char& Maze::operator[](const std::vector<int>& coordinates) {
+unsigned char& Maze::operator[](const Coordinate<int>& coordinates) {
 	std::array<int, 4> coordsToFour = { 0, 0, 0, 0 };
 
 	for (int i = 0; i < coordinates.size(); i++) {
 		coordsToFour[i] = coordinates[i];
 	}
 
-	return mazeData[(height * width * depth * coordsToFour[3]) + (height * width * coordsToFour[2]) + (height * coordsToFour[1]) + coordsToFour[0]];
+	return mazeData[(height * width * depth * coordinates.w()) + (height * width * coordinates.z()) + (height * coordinates.y()) + coordinates.x()];
 }
 
-bool Maze::inBounds(const std::vector<int>& coordinates) {
+bool Maze::inBounds(const Coordinate<int>& coordinates) {
 	if (coordinates.size() != 4) {
 		return false;
 	}
 
-	return (coordinates[0] >= 0 && coordinates[0] < sizes[0]) && 
-		(coordinates[1] >= 0 && coordinates[1] < sizes[1]) && 
-		(coordinates[2] >= 0 && coordinates[2] < sizes[2]) && 
-		(coordinates[3] >= 0 && coordinates[3] < sizes[3]);
+	return (coordinates.x() >= 0 && coordinates.x() < sizes[0]) &&
+		(coordinates.y() >= 0 && coordinates.y() < sizes[1]) &&
+		(coordinates.z() >= 0 && coordinates.z() < sizes[2]) && 
+		(coordinates.w() >= 0 && coordinates.w() < sizes[3]);
 }
 
-bool Maze::canAccessFrom(const std::vector<int>& fromCoords, const std::vector<int>& toCoords) {
+bool Maze::canAccessFrom(const Coordinate<int>& fromCoords, const Coordinate<int>& toCoords) {
 	return false;
 }
 
@@ -73,7 +61,7 @@ Maze::Maze() {}
 
 Maze::Maze(const std::vector<int>& dimensionsVec) {
 	int length = 1;
-	int dimensionsSize = dimensionsVec.size();
+	size_t dimensionsSize = dimensionsVec.size();
 
 	if (dimensionsSize < 2) {
 		try {
@@ -158,8 +146,8 @@ void Maze::loadFromFile(std::string fileName) {
 		exit[i] = currentChar;
 	}
 
-	mazeExit = exit;
-	mazeEntrance = entrance;
+	mazeExit = Coordinate<int>(exit);
+	mazeEntrance = Coordinate<int>(entrance);
 	this->dimensions = dimensions;
 	width = sizes[0];
 	height = sizes[1];

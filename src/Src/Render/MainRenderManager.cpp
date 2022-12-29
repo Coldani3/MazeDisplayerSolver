@@ -29,7 +29,7 @@ MainRenderManager::MainRenderManager(std::shared_ptr<Window> window, std::shared
     //std::shared_ptr<PerspectiveCamera> perspCam = std::make_shared<PerspectiveCamera>(mazeCenter[0], mazeCenter[1], mazeCenter[2] + -15.0f, defaultWidth, defaultHeight, mazeCenter[0], mazeCenter[1], mazeCenter[2]);
     camera->lookAt(mazeCenter[0], mazeCenter[1], mazeCenter[2]);
 
-    mazeRenderer = std::make_unique<MazeRenderer>(camera, maze, centerX, centerY, centerZ);
+    mazeRenderer = std::make_unique<MazeRenderer>(camera, maze, pathManager, centerX, centerY, centerZ);
     //std::cout << "t" << std::endl;
 
     projection = glm::perspective(
@@ -53,7 +53,7 @@ void MainRenderManager::setMazeUsing(std::shared_ptr<Maze> maze) {
     this->maze = maze;
 }
 
-std::shared_ptr<Camera> MainRenderManager::getCamera() {
+std::shared_ptr<Camera> MainRenderManager::getCamera() const {
     return camera;
 }
 
@@ -64,11 +64,11 @@ void MainRenderManager::framebufferSizeCallback(GLFWwindow* window, int width, i
     camera->setScreenSize(width, height);
 }
 
-int MainRenderManager::getWidth() {
+int MainRenderManager::getWidth() const {
     return width;
 }
 
-int MainRenderManager::getHeight() {
+int MainRenderManager::getHeight() const {
     return height;
 }
 
