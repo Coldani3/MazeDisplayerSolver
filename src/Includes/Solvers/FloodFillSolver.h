@@ -21,11 +21,11 @@ public:
 
     FloodFillSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager);
     void solve();
-    bool visitedCell(std::vector<int> coords);
+    bool visitedCell(const Coordinate<int>& coords);
     void clear();
 
 private:
-    std::queue<std::vector<int>> navQueue;
-    std::vector<std::vector<int>> visited;
+    std::queue<Coordinate<int>> navQueue;
+    std::vector<Coordinate<int>> visited;
 };
 

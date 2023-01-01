@@ -39,8 +39,8 @@ void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
                 if (data > 0) {
                     updateTransition(data, scale, now, *mazeRenderInfo, coords);
 
-                    drawMazeCellPaths(data, x, y, z, mazeRenderInfo->wViewing, mazeRenderInfo->lastW, scale);
-                    drawMazeCellCenter(x, y, z, mazeRenderInfo->wViewing);
+                    drawMazeCellPaths(data, coords, mazeRenderInfo->lastW, scale);
+                    drawMazeCellCenter(coords);
                 }
 
                 //TODO: large box indicator for where the path head currently is.
@@ -52,111 +52,49 @@ void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
 void MazeRenderer::progressPath(double now, MazeRenderInfo& mazeRenderInfo) {
     //handle animation of solved path being displayed
     size_t selectedPathSize = pathManager->activePath->pathSize();//selectedPath.pathSize();
-    //TODO: ACCOUNT FOR NULL RENDEREDPATHPROGRESS USING THAT BOOL
-    int renderedPathSize = renderedPath.pathSize();
+    size_t renderedPathSize = renderedPathProgress->size();
 
     if (showPath &&
         now > lastPathAddTime + pathUpdateSpeed &&
         selectedPathSize > 0 &&
         selectedPathSize > renderedPathSize) {
 
-        std::vector<int> coords = (*pathManager->activePath)[renderedPathSize];
+        Coordinate<int> coords = (*pathManager->activePath)[renderedPathSize];
 
-        if (coords[3] != mazeRenderInfo.wViewing) {
-            mazeRenderInfo.wViewing = coords[3];
+        if (coords.w() != mazeRenderInfo.wViewing) {
+            mazeRenderInfo.wViewing = coords.w();
         }
 
-        renderedPath.markCellVisited(coords);
+        renderedPathProgress->incrementProgress();
+        //renderedPath.markCellVisited(coords);
     }
 }
 
 void MazeRenderer::setup() {
     //create shaders
     std::cout << "Initialising Shaders..." << '\n';
-    std::cout << "genericCubeShaderVert..." << '\n';
-    unsigned int genericCubeShaderVert = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(genericCubeShaderVert, 1, &mazeCellPathVertexShader, NULL);
-    glCompileShader(genericCubeShaderVert);
-    checkShaderCompileSuccess(genericCubeShaderVert);
-
-    std::cout << "genericCubeShaderFrag..." << '\n';
-    unsigned int genericCubeShaderFrag = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(genericCubeShaderFrag, 1, &mazeCellPathFragmentShader, NULL);
-    glCompileShader(genericCubeShaderFrag);
-    checkShaderCompileSuccess(genericCubeShaderFrag);
-
-    std::cout << "cellCenterCubeShaderVert..." << '\n';
-    unsigned int cellCenterCubeShaderVert = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(cellCenterCubeShaderVert, 1, &mazeCellCenterCubeVertexShader, NULL);
-    glCompileShader(cellCenterCubeShaderVert);
-    checkShaderCompileSuccess(cellCenterCubeShaderVert);
-
-    std::cout << "cellCenterCubeShaderFrag..." << '\n';
-    unsigned int cellCenterCubeShaderFrag = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(cellCenterCubeShaderFrag, 1, &mazeCellCenterCubeFragmentShader, NULL);
-    glCompileShader(cellCenterCubeShaderFrag);
-    checkShaderCompileSuccess(cellCenterCubeShaderFrag);
-
+    unsigned int pathShaderVert, pathShaderFrag, cellCenterShaderVert, cellCenterShaderFrag;
+    setupShaders(pathShaderVert, pathShaderFrag, cellCenterShaderVert, cellCenterShaderFrag);
     std::cout << "Done." << '\n';
 
     //create programs
     std::cout << "Creating OpenGL Programs..." << '\n';
-    mazePathProgram = glCreateProgram();
-    glAttachShader(mazePathProgram, genericCubeShaderVert);
-    glAttachShader(mazePathProgram, genericCubeShaderFrag);
-    glLinkProgram(mazePathProgram);
-    checkProgramCompileSuccess(mazePathProgram);
-
-    cellCenterProgram = glCreateProgram();
-    glAttachShader(cellCenterProgram, cellCenterCubeShaderVert);
-    glAttachShader(cellCenterProgram, cellCenterCubeShaderFrag);
-    glLinkProgram(cellCenterProgram);
-    checkProgramCompileSuccess(cellCenterProgram);
+    createOpenGLPrograms(pathShaderVert, pathShaderFrag, cellCenterShaderVert, cellCenterShaderFrag);
     std::cout << "Done." << '\n';
 
     std::cout << "Cleaning up Shaders..." << '\n';
     //clean up unecessary shaders
-    glDeleteShader(genericCubeShaderVert);
-    glDeleteShader(genericCubeShaderFrag);
-    glDeleteShader(cellCenterCubeShaderVert);
-    glDeleteShader(cellCenterCubeShaderFrag);
+    cleanupShaderAddresses({pathShaderVert, pathShaderFrag, cellCenterShaderVert, cellCenterShaderFrag});
     std::cout << "Done." << '\n';
 
     std::cout << "Creating and populating buffers..." << '\n';
-
-    //cube buffers
-    glGenBuffers(1, &mazeCenterVBO);
-    glGenVertexArrays(1, &mazeCenterVAO);
-
-    glBindVertexArray(mazeCenterVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, mazeCenterVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVerticesNormals), cubeVerticesNormals, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    //path buffers
-    glGenBuffers(1, &mazePathVBO);
-    glGenVertexArrays(1, &mazePathVAO);
-
-    glBindVertexArray(mazePathVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, mazePathVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(mazePathVerticesNormals), mazePathVerticesNormals, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
+    createBuffers();
     std::cout << "Done." << std::endl;
 }
 
 void MazeRenderer::precomputeCellPathTransformations() {
     glm::mat4 identity = glm::mat4(1.0f);
 
-    //precompute cell path transformation matrices
     for (int i = 0; i < cellPathTransformations.size(); i++) {
 
         float rotateAngleX = cellPathTransformationsValues[i][0];
@@ -200,7 +138,6 @@ void MazeRenderer::setShowPath(bool showPath) {
 
 void MazeRenderer::changeShownPathTo(const MazePath& newPath) {
     renderedPathProgress = std::make_shared<MazePathRenderProgress>(newPath);
-    hasActiveRenderedPath = true;
 }
 
 void MazeRenderer::getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) {
@@ -290,8 +227,8 @@ glm::vec3 MazeRenderer::getCellColour(const Coordinate<int>& coords) const {
     } else if (coords == maze->mazeExit) {
         return mazeExitColour;
     } else {
-        if (renderedPath.pathSize() > 0 && showPath) {
-            if (renderedPath.visitedCell(coords)) {
+        if (renderedPathProgress->size() > 0 && showPath) {
+            if (renderedPathProgress->currentPath().visitedCell(coords)) {
                 return visitedCellColour;
             }
         }
@@ -327,7 +264,7 @@ void MazeRenderer::drawMazeCellCenter(const Coordinate<int>& coords) {
 
 void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, const Coordinate<int>& mazeCoords, int lastW, float transitionScale) {
     //Coordinate<int> mazeCoords({ mazeX, mazeY, mazeZ, mazeW });
-    unsigned char prevWData = (*maze)[{mazeCoords.x(), mazeCoords.y(), mazeCoords.z(), lastW}];
+    unsigned char prevWData = (*maze)[Coordinate<int>({mazeCoords.x(), mazeCoords.y(), mazeCoords.z(), lastW})];
     glm::vec3 modelCoords = coordsFromMazeCenter(mazeCoords.x(), mazeCoords.y(), mazeCoords.z());
     //translation to get it to the same modelCoords as the center piece, from which we then translate it again into the proper position
     glm::mat4 initialTranslate = glm::translate(glm::mat4(1.0f), modelCoords);
@@ -339,7 +276,14 @@ void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, const Coordinat
     glBindVertexArray(mazePathVAO);
 
     for (unsigned int i = 0; i < 8; i++) {
-        if (!drawMazeCellPath(mazeCellData, prevWData, i, initialTranslate, modelCoords, mazeCoords, transitionScale)) {
+        if (!drawMazeCellPath(
+            mazeCellData, 
+            prevWData, 
+            i, 
+            initialTranslate, 
+            modelCoords, 
+            mazeCoords, 
+            transitionScale)) {
             break;
         }
     }
@@ -494,4 +438,90 @@ inline float MazeRenderer::calculateAdjustedScale(unsigned char cell1, unsigned 
 
 inline bool MazeRenderer::hasCellPathBit(unsigned char mazeCellData, unsigned char bitChecking) const {
     return (mazeCellData & bitChecking) > 0;
+}
+
+void MazeRenderer::setupShaders(unsigned int& pathShaderVert, unsigned int& pathShaderFrag, unsigned int& cellCenterShaderVert, unsigned int& cellCenterShaderFrag) {
+    setupPathShaders(pathShaderVert, pathShaderFrag);
+    setupCellCenterShaders(cellCenterShaderVert, cellCenterShaderFrag);
+}
+
+void MazeRenderer::setupPathShaders(unsigned int& pathShaderVert, unsigned int& pathShaderFrag) {
+    std::cout << "genericCubeShaderVert..." << '\n';
+    pathShaderVert = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(pathShaderVert, 1, &mazeCellPathVertexShader, NULL);
+    glCompileShader(pathShaderVert);
+    checkShaderCompileSuccess(pathShaderVert);
+
+    std::cout << "genericCubeShaderFrag..." << '\n';
+    pathShaderFrag = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(pathShaderFrag, 1, &mazeCellPathFragmentShader, NULL);
+    glCompileShader(pathShaderFrag);
+    checkShaderCompileSuccess(pathShaderFrag);
+}
+
+void MazeRenderer::setupCellCenterShaders(unsigned int& cellCenterShaderVert, unsigned int& cellCenterShaderFrag) {
+    std::cout << "cellCenterCubeShaderVert..." << '\n';
+    cellCenterShaderVert = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(cellCenterShaderVert, 1, &mazeCellCenterCubeVertexShader, NULL);
+    glCompileShader(cellCenterShaderVert);
+    checkShaderCompileSuccess(cellCenterShaderVert);
+
+    std::cout << "cellCenterCubeShaderFrag..." << '\n';
+    cellCenterShaderFrag = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(cellCenterShaderFrag, 1, &mazeCellCenterCubeFragmentShader, NULL);
+    glCompileShader(cellCenterShaderFrag);
+    checkShaderCompileSuccess(cellCenterShaderFrag);
+}
+
+void MazeRenderer::createOpenGLPrograms(unsigned int pathShaderVert, unsigned int pathShaderFrag, unsigned int cellCenterShaderVert, unsigned int cellCenterShaderFrag) {
+    mazePathProgram = glCreateProgram();
+    glAttachShader(mazePathProgram, pathShaderVert);
+    glAttachShader(mazePathProgram, pathShaderFrag);
+    glLinkProgram(mazePathProgram);
+    checkProgramCompileSuccess(mazePathProgram);
+
+    cellCenterProgram = glCreateProgram();
+    glAttachShader(cellCenterProgram, cellCenterShaderVert);
+    glAttachShader(cellCenterProgram, cellCenterShaderFrag);
+    glLinkProgram(cellCenterProgram);
+    checkProgramCompileSuccess(cellCenterProgram);
+}
+
+void MazeRenderer::cleanupShaderAddresses(std::vector<unsigned int> shaderAddresses) {
+    for (unsigned int shaderAddress : shaderAddresses) {
+        glDeleteShader(shaderAddress);
+    }
+}
+
+void MazeRenderer::createBuffers() {
+    createCubeBuffers();
+    createPathBuffers();
+}
+
+void MazeRenderer::createCubeBuffers() {
+    glGenBuffers(1, &mazeCenterVBO);
+    glGenVertexArrays(1, &mazeCenterVAO);
+
+    glBindVertexArray(mazeCenterVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, mazeCenterVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVerticesNormals), cubeVerticesNormals, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+}
+
+void MazeRenderer::createPathBuffers() {
+    glGenBuffers(1, &mazePathVBO);
+    glGenVertexArrays(1, &mazePathVAO);
+
+    glBindVertexArray(mazePathVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, mazePathVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(mazePathVerticesNormals), mazePathVerticesNormals, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 }

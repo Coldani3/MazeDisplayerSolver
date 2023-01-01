@@ -8,11 +8,11 @@ void FungalSolver::solve() {
 	spreadFrom(maze->mazeEntrance);
 }
 
-void FungalSolver::spreadFrom(std::vector<int> from) {
+void FungalSolver::spreadFrom(const Coordinate<int>& from) {
 
 }
 
-std::vector<int> FungalSolver::selectNewSpreadFromPoint(std::vector<int> previous) {
+Coordinate<int> FungalSolver::selectNewSpreadFromPoint(const Coordinate<int>& previous) {
 
 	return std::vector<int>();
 }

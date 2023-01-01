@@ -12,6 +12,24 @@ MazePath::MazePath(int mazeWidth, int mazeHeight, int mazeDepth, int mazeHyperDe
     visited.resize(mazeWidth * mazeHeight * mazeDepth * mazeHyperDepth);
 }
 
+MazePath::MazePath(const MazePath& path) noexcept {
+    mazeWidth = path.mazeWidth;
+    mazeHeight = path.mazeHeight;
+    mazeDepth = path.mazeDepth;
+    mazeHyperDepth = path.mazeHyperDepth;
+
+    visited = path.visited;
+}
+
+MazePath::MazePath(MazePath&& path) noexcept {
+    mazeWidth = std::exchange(path.mazeWidth, 0);
+    mazeHeight = std::exchange(path.mazeHeight, 0);
+    mazeDepth = std::exchange(path.mazeDepth, 0);
+    mazeHyperDepth = std::exchange(path.mazeHyperDepth, 0);
+
+    visited = std::move(path.visited);
+}
+
 MazePath::~MazePath() {
 }
 
@@ -20,7 +38,7 @@ bool MazePath::visitedCell(const Coordinate<int>& coords) const {
 }
 
 void MazePath::markCellVisited(const Coordinate<int>& coords) {
-    if (!(visitedCell(coords))) {
+    if (!visitedCell(coords)) {
         visited[(mazeHeight * mazeWidth * mazeDepth * coords.w()) + (mazeHeight * mazeWidth * coords.z()) + (mazeHeight * coords.y()) + coords.x()] = true;
         visitedPath.push_back(coords);
     }

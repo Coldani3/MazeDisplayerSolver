@@ -12,7 +12,12 @@ int MazeMain::main() {
     setupRenderers();
 
     mazePathManager = std::make_shared<MazePathManager>();
-    mazePathManager->setActivePath(MazePath(maze->width, maze->height, maze->depth, maze->hyperDepth));
+
+    //Add a default path to avoid wonkiness with empty paths.
+    MazePath defaultPath(maze->width, maze->height, maze->depth, maze->hyperDepth);
+    defaultPath.markCellVisited(maze->mazeEntrance);
+    mazePathManager->setActivePath(defaultPath);
+
     aiManager = std::make_shared<AIManager>(window, mazePathManager);//std::make_unique<AIManager>(maze, running);
 
     bool terminate = false;
@@ -58,8 +63,8 @@ void MazeMain::loadMaze() {
     maze = loadMazeFromFile("maze.cd3mazs");
 
     std::cout << "Maze loaded" << std::endl;
-    std::cout << "Maze entrance coords: " << maze->mazeEntrance[0] << ", " << maze->mazeEntrance[1] << ", " << maze->mazeEntrance[2] << ", " << maze->mazeEntrance[3] << std::endl;
-    std::cout << "Maze exit coords: " << maze->mazeExit[0] << ", " << maze->mazeExit[1] << ", " << maze->mazeExit[2] << ", " << maze->mazeExit[3] << std::endl;
+    std::cout << "Maze entrance coords: " << maze->mazeEntrance.x() << ", " << maze->mazeEntrance.y() << ", " << maze->mazeEntrance.z() << ", " << maze->mazeEntrance.w() << std::endl;
+    std::cout << "Maze exit coords: " << maze->mazeExit.x() << ", " << maze->mazeExit.y() << ", " << maze->mazeExit.z() << ", " << maze->mazeExit.w() << std::endl;
 }
 
 std::shared_ptr<Maze> MazeMain::loadMazeFromFile(std::string path) {

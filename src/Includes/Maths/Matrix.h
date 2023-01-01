@@ -179,7 +179,7 @@ public:
 
 		for (int row = 0; row < input.rows; row++) {
 			for (int col = 0; col < input.columns; col++) {
-				out[row][col] = 1 / (1 + std::pow(M_E, -input[row][col]));
+				out[row][col] = 1 / (1 + std::pow(Consts::M_E, -input[row][col]));
 			}
 		}
 

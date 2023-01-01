@@ -9,6 +9,7 @@ class MazePathRenderProgress
 public:
 	MazePathRenderProgress(MazePath& path);
 	MazePathRenderProgress& incrementProgress();
-	MazePath currentPath();
+	MazePath currentPath() const;
+	size_t size() const;
 };
 

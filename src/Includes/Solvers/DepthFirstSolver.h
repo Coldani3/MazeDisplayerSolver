@@ -2,6 +2,7 @@
 #include <Solvers/Solver.h>
 #include <stack>
 #include <vector>
+#include "../Maths/Consts.h"
 
 class DepthFirstSolver :
     public Solver
@@ -20,13 +21,13 @@ public:
 
     DepthFirstSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager);
     void solve();
-    bool canGoAnywhereFrom(std::vector<int> from);
-    bool visitedCell(std::vector<int> cell);
+    bool canGoAnywhereFrom(const Coordinate<int>& from);
+    bool visitedCell(const Coordinate<int>& cell);
     void clear();
-    std::vector<int> pickNextCellFrom(std::vector<int> from);
+    Coordinate<int> pickNextCellFrom(const Coordinate<int>& from);
 
 private:
-    std::stack<std::vector<int>> navStack;
-    std::vector<std::vector<int>> visited;
+    std::stack<Coordinate<int>> navStack;
+    std::vector<Coordinate<int>> visited;
 };
 

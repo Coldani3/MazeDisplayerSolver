@@ -23,8 +23,8 @@ public:
      * The path that describes what is being shown to the user and is highlighted gradually. 
      */
     std::shared_ptr<MazePathRenderProgress> renderedPathProgress = nullptr;
-    bool hasActiveRenderedPath = false;
-    double lastPathAddTime = 0;
+    //bool hasActiveRenderedPath = false;
+    double lastPathAddTime = 0.0;
     //Index of selected path to be rendered.
     int selectedPathIndex = 0;
     /* Describes how many times the path 'updates' (ie. is copied from the result to the output gradually)
@@ -246,5 +246,14 @@ private:
     void prepMazeDrawUniforms(const glm::vec3& cellColour, const glm::mat4& model, const glm::mat3& normalTransform);
     inline float calculateAdjustedScale(unsigned char prevWData, unsigned char mazeCellData, unsigned char bitChecking, int i, float transitionScale) const;
     inline bool hasCellPathBit(unsigned char mazeCellData, unsigned char bitChecking) const;
+
+    void setupShaders(unsigned int& pathShaderVert, unsigned int& pathShaderFrag, unsigned int& cellCenterShaderVert, unsigned int& cellCenterShaderFrag);
+    void setupPathShaders(unsigned int& pathShaderVert, unsigned int& pathShaderFrag);
+    void setupCellCenterShaders(unsigned int& cellCenterShaderVert, unsigned int& cellCenterShaderFrag);
+    void createOpenGLPrograms(unsigned int pathShaderVert, unsigned int pathShaderFrag, unsigned int cellCenterShaderVert, unsigned int cellCenterShaderFrag);
+    void cleanupShaderAddresses(std::vector<unsigned int> shaderAddresses);
+    void createBuffers();
+    void createCubeBuffers();
+    void createPathBuffers();
 };
 

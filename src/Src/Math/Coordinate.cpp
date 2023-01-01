@@ -45,6 +45,10 @@ Coordinate<T>::Coordinate(const Coordinate<T>& copying) {
 }
 
 template<class T>
+Coordinate<T>::~Coordinate() {
+}
+
+template<class T>
 Coordinate<T> Coordinate<T>::operator+(const Coordinate<T>& coord2) const {
 	Coordinate<T> out(this->coords);
 
@@ -97,35 +101,45 @@ Coordinate<T> Coordinate<T>::operator=(Coordinate<T>&& coord) {
 }
 
 template<class T>
-bool Coordinate<T>::operator==(const Coordinate<T>& coord) {
-	return this == &coord || (coord.size() == size() && std::equal(coords.begin(), coords.end(), coord.coords.begin()));
+bool Coordinate<T>::operator==(const Coordinate<T>& coord) const {
+	return this == &coord || (coord.dimensions() == dimensions() && std::equal(coords.begin(), coords.end(), coord.coords.begin()));
 }
 
 template<class T>
-size_t Coordinate<T>::size() const {
+bool Coordinate<T>::operator!=(const Coordinate<T>& coord) const {
+	return !(*this == coord);
+}
+
+template<class T>
+size_t Coordinate<T>::dimensions() const {
 	return coords.size();
 }
 
-template<class T>
-T& Coordinate<T>::operator[](int index) {
-	if (index < coords.size() && index > -1) {
-		return coords[index];
-	} else {
-		throw std::out_of_range("Index out of bounds for coordinate (received index of " + std::to_string(index) + ").");
-	}
-}
-
-template<class T>
-T Coordinate<T>::operator[](int index) const {
-	if (index < coords.size() && index > -1) {
-		return coords[index];
-	} else {
-		throw std::out_of_range("Index out of bounds for coordinate (received index of " + std::to_string(index) + ").");
-	}
-}
+//template<class T>
+//T& Coordinate<T>::operator[](int index) {
+//	if (index < coords.size() && index > -1) {
+//		return coords[index];
+//	} else {
+//		throw std::out_of_range("Index out of bounds for coordinate (received index of " + std::to_string(index) + ").");
+//	}
+//}
+//
+//template<class T>
+//T Coordinate<T>::operator[](int index) const {
+//	if (index < coords.size() && index > -1) {
+//		return coords[index];
+//	} else {
+//		throw std::out_of_range("Index out of bounds for coordinate (received index of " + std::to_string(index) + ").");
+//	}
+//}
 
 template<class T>
 T Coordinate<T>::x() const noexcept {
+	return coords[0];
+}
+
+template<class T>
+T& Coordinate<T>::x() {
 	return coords[0];
 }
 
@@ -135,12 +149,27 @@ T Coordinate<T>::y() const noexcept {
 }
 
 template<class T>
+T& Coordinate<T>::y() {
+	return coords[1];
+}
+
+template<class T>
 T Coordinate<T>::z() const noexcept {
 	return coords[2];
 }
 
 template<class T>
+T& Coordinate<T>::z() {
+	return coords[2];
+}
+
+template<class T>
 T Coordinate<T>::w() const noexcept {
+	return coords[3];
+}
+
+template<class T>
+T& Coordinate<T>::w() {
 	return coords[3];
 }
 

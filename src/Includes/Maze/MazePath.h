@@ -7,6 +7,8 @@ class MazePath {
 public:
 	MazePath();
 	MazePath(int mazeWidth, int mazeHeight, int mazeDepth, int mazeHyperDepth);
+	MazePath(const MazePath& path) noexcept;
+	MazePath(MazePath&& path) noexcept;
 	~MazePath();
 	bool visitedCell(const Coordinate<int>& coords) const;
 	void markCellVisited(const Coordinate<int>& coords);

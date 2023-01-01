@@ -24,7 +24,7 @@ NeuralNetwork::NeuralNetwork(std::vector<unsigned int> nodesForLayers, float lea
 
 		for (int row = 0; row < weightsBetweenLayers[i].rows; row++) {
 			for (int col = 0; col < weightsBetweenLayers[i].columns; col++) {
-				weightsBetweenLayers[i][row][col] = ((float)rand() / (float)(RAND_MAX + 1.0)) - 0.5;
+				weightsBetweenLayers[i][row][col] = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX + 1.0f)) - 0.5;
 			}
 		}
 	}
@@ -70,7 +70,7 @@ void NeuralNetwork::train(std::vector<float> inputs, std::vector<float> expected
 	Matrix<float> errors = targetdOutputsMatrix - finalOutput;
 
 	std::vector<std::unique_ptr<Matrix<float>>> errorPerLayer(weightsBetweenLayers.size());
-	int index = weightsBetweenLayers.size() - 1;
+	size_t index = weightsBetweenLayers.size() - 1;
 
 	/*calculate each layer's errors by multiplying that layer's weights by the total errors
 	  (TODO: should we be using the previous layer's error per layer? this feels like it shouldn't work with matrix multiplication because
@@ -85,7 +85,7 @@ void NeuralNetwork::train(std::vector<float> inputs, std::vector<float> expected
 	//+= doesn't work for some reason so we do this instead
 	weightsBetweenLayers.back() = weightsBetweenLayers.back() + (learnRate * errors * (1 - (finalOutput * finalOutput))/*finalOutput * (1.0 - finalOutput)*/ * Matrix<float>::transpose(*layerOutputs[layerOutputs.size() - 2]));
 
-	for (int i = weightsBetweenLayers.size() - 2; i > 0; i--) {
+	for (size_t i = weightsBetweenLayers.size() - 2; i > 0; i--) {
 		weightsBetweenLayers[i] = weightsBetweenLayers[i] + (learnRate * layerErrors * (1- (*layerOutputs[i] * *layerOutputs[i]))/**layerOutputs[i] * (1.0 - *layerOutputs[i])*/ * Matrix<float>::transpose(*layerOutputs[i - 1]));
 		layerErrors = *errorPerLayer[i];
 	}
@@ -166,7 +166,7 @@ std::vector<int> NeuralNetwork::normalize(std::vector<float> output)
 	std::vector<int> out(output.size());
 
 	for (int i = 0; i < output.size(); i++) {
-		out.push_back((int)roundf(output[i]));
+		out.push_back(static_cast<int>(roundf(output[i])));
 	}
 
 	return out;

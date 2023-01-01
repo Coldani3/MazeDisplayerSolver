@@ -8,6 +8,7 @@
 #pragma once
 class MazePathManager {
 	//Keyed by the AI solver.
+	//TODO: have this grouped by the active Maze? mismatching paths could get really wonky
 	std::map<std::string, std::vector<MazePath>> mazePaths;
 
 

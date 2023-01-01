@@ -5,20 +5,20 @@ Solver::Solver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> path
 	this->pathManager = pathManager;
 }
 
-float Solver::distanceBetween(std::vector<int> coords1, std::vector<int> coords2) {
+float Solver::distanceBetween(const Coordinate<int>& coords1, const Coordinate<int>& coords2) {
 	//4D pythagoras = sqrt(a^2 + b^2 + c^2 + d^2)
 	return sqrtf(
 			pow(
-				abs(coords2[0] - coords1[0]), 
+				abs(coords2.x() - coords1.x()), 
 				2
 			) + pow(
-				abs(coords2[2] - coords1[1]), 
+				abs(coords2.y() - coords1.y()),
 				2
 			) + pow(
-				abs(coords2[2] - coords1[2]), 
+				abs(coords2.z() - coords1.z()), 
 				2
 			) + pow(
-				abs(coords2[3] - coords1[3]), 
+				abs(coords2.w() - coords1.w()), 
 				2
 			)
 	);
@@ -28,48 +28,8 @@ void Solver::solve() {
 
 }
 
-std::vector<int> Solver::addCoords(std::vector<int> coords1, std::vector<int> coords2) const {
-	std::vector<int> out;
-
-	for (int i = 0; i < 4; i++) {
-		out.push_back(coords1[i] + coords2[i]);
-	}
-
-	return out;
-}
-
-std::vector<float> Solver::floatify(std::vector<int> vec) {
-	std::vector<float> out(vec.size());
-
-	for (int i = 0; i < vec.size(); i++) {
-		out[i] = static_cast<float>(vec[i]);
-	}
-
-	return out;
-}
-
-std::vector<int> Solver::intify(std::vector<float> vec) {
-	std::vector<int> out(vec.size());
-
-	for (int i = 0; i < vec.size(); i++) {
-		out[i] = static_cast<int>(vec[i]);
-	}
-
-	return out;
-}
-
-std::vector<int> Solver::minusCoords(std::vector<int> coords1, std::vector<int> coords2) {
-	std::vector<int> out(4);
-
-	for (int i = 0; i < 4; i++) {
-		out[i] = coords1[i] - coords2[i];
-	}
-
-	return out;
-}
-
-bool Solver::canAccessFrom(std::vector<int> fromCoords, std::vector<int> targetCoords) {
-	std::vector<int> difference = minusCoords(targetCoords, fromCoords);
+bool Solver::canAccessFrom(const Coordinate<int>& fromCoords, const Coordinate<int>& targetCoords) {
+	std::vector<int> difference = (targetCoords - fromCoords).toVector();
 	unsigned int side = 0;
 
 	for (int i = 0; i < difference.size(); i++) {

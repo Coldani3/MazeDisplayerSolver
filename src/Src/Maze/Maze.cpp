@@ -29,17 +29,11 @@ unsigned char Maze::operator[](const Coordinate<int>& coordinates) const {
 }
 
 unsigned char& Maze::operator[](const Coordinate<int>& coordinates) {
-	std::array<int, 4> coordsToFour = { 0, 0, 0, 0 };
-
-	for (int i = 0; i < coordinates.size(); i++) {
-		coordsToFour[i] = coordinates[i];
-	}
-
 	return mazeData[(height * width * depth * coordinates.w()) + (height * width * coordinates.z()) + (height * coordinates.y()) + coordinates.x()];
 }
 
 bool Maze::inBounds(const Coordinate<int>& coordinates) {
-	if (coordinates.size() != 4) {
+	if (coordinates.dimensions() != 4) {
 		return false;
 	}
 

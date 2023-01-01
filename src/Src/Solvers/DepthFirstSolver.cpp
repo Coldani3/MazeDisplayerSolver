@@ -2,8 +2,8 @@
 #include <algorithm>
 
 DepthFirstSolver::DepthFirstSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager) : Solver(maze, pathManager) {
-	visited = std::vector<std::vector<int>>();
-	navStack = std::stack<std::vector<int>>();
+	visited = std::vector<Coordinate<int>>();
+	navStack = std::stack<Coordinate<int>>();
 }
 
 void DepthFirstSolver::solve() {
@@ -15,7 +15,7 @@ void DepthFirstSolver::solve() {
 
 	while (!navStack.empty()) {
 		if (canGoAnywhereFrom(navStack.top())) {
-			std::vector<int> next = pickNextCellFrom(navStack.top());
+			Coordinate<int> next = pickNextCellFrom(navStack.top());
 
 			visited.push_back(next);
 			pathManager->activePath->markCellVisited(next);
@@ -39,25 +39,27 @@ void DepthFirstSolver::solve() {
 	}
 }
 
-std::vector<int> DepthFirstSolver::pickNextCellFrom(std::vector<int> from) {
+Coordinate<int> DepthFirstSolver::pickNextCellFrom(const Coordinate<int>& from) {
 	//prefer positive coordinates first
 
-	for (int i = 0; i < touchingSides.size(); i++) {
-		std::vector<int> trying = addCoords(touchingSides[i], from);
+	for (Coordinate<int> touchingSide : Consts::TouchingSides) {
+		Coordinate<int> trying = touchingSide + from;//addCoords(touchingSides[i], from);
 
-		if (maze->inBounds(trying) && !pathManager->activePath->visitedCell(trying) && canAccessFrom(from, trying)) {
+		if (maze->inBounds(trying) && 
+			!pathManager->activePath->visitedCell(trying) && 
+			canAccessFrom(from, trying)) {
 			return trying;
 		}
 	}
 
-	return { -1 };
+	return Coordinate<int>({ 0, 0, 0, -1 });
 }
 
-bool DepthFirstSolver::canGoAnywhereFrom(std::vector<int> from) {
-	return pickNextCellFrom(from) != std::vector<int> {-1};
+bool DepthFirstSolver::canGoAnywhereFrom(const Coordinate<int>& from) {
+	return pickNextCellFrom(from).w() != -1;
 }
 
-bool DepthFirstSolver::visitedCell(std::vector<int> cell) {
+bool DepthFirstSolver::visitedCell(const Coordinate<int>& cell) {
 	return std::find(visited.begin(), visited.end(), cell) != visited.end();
 }
 

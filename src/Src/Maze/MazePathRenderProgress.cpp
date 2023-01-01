@@ -9,6 +9,11 @@ MazePathRenderProgress& MazePathRenderProgress::incrementProgress() {
 	return *this;
 }
 
-MazePath MazePathRenderProgress::currentPath() {
-	return progressedPath;
+MazePath MazePathRenderProgress::currentPath() const {
+	MazePath pathCopy = progressedPath;
+	return pathCopy;
+}
+
+size_t MazePathRenderProgress::size() const {
+	return progressedPath.pathSize();
 }

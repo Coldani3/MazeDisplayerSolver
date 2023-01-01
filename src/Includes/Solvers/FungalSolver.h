@@ -6,8 +6,8 @@ class FungalSolver :
 public:
     FungalSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager, int maxSpreadPerNode);
     void solve();
-    void spreadFrom(std::vector<int> from);
-    std::vector<int> selectNewSpreadFromPoint(std::vector<int> previous);
+    void spreadFrom(const Coordinate<int>& from);
+    Coordinate<int> selectNewSpreadFromPoint(const Coordinate<int>& previous);
 
 private:
     std::vector<std::vector<int>> visited;
