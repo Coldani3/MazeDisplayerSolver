@@ -10,6 +10,7 @@
 #include "../Maze/MazePathManager.h"
 #include "../Maze/MazePathRenderProgress.h"
 #include "../Maths/Coordinate.h"
+#include "ShaderProgram.h"
 //#include <glm/gtx/transform.hpp>
 
 class MazeRenderer : public Renderer {
@@ -182,8 +183,6 @@ public:
 	void setup();
     void precomputeCellPathTransformations();
 	void cleanup();
-	void setMazeCenterProgram(int program);
-	void setMazePathProgram(int program);
 	void setShowPath(bool showPath);
     void changeShownPathTo(const MazePath& newPath);
     virtual void getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) override;
@@ -229,8 +228,10 @@ private:
     };
 
 #pragma region GL_Vars
-	int cellCenterProgram;
-	int mazePathProgram;
+    ShaderProgram cellCenterProgram = ShaderProgram("Maze Cell Center");
+    ShaderProgram mazePathProgram = ShaderProgram("Maze path");
+	//int cellCenterProgram;
+	//int mazePathProgram;
 
 	unsigned int mazeCenterVBO;
 	unsigned int mazePathVBO;
@@ -247,11 +248,7 @@ private:
     inline float calculateAdjustedScale(unsigned char prevWData, unsigned char mazeCellData, unsigned char bitChecking, int i, float transitionScale) const;
     inline bool hasCellPathBit(unsigned char mazeCellData, unsigned char bitChecking) const;
 
-    void setupShaders(unsigned int& pathShaderVert, unsigned int& pathShaderFrag, unsigned int& cellCenterShaderVert, unsigned int& cellCenterShaderFrag);
-    void setupPathShaders(unsigned int& pathShaderVert, unsigned int& pathShaderFrag);
-    void setupCellCenterShaders(unsigned int& cellCenterShaderVert, unsigned int& cellCenterShaderFrag);
-    void createOpenGLPrograms(unsigned int pathShaderVert, unsigned int pathShaderFrag, unsigned int cellCenterShaderVert, unsigned int cellCenterShaderFrag);
-    void cleanupShaderAddresses(std::vector<unsigned int> shaderAddresses);
+    void setupShaders();
     void createBuffers();
     void createCubeBuffers();
     void createPathBuffers();

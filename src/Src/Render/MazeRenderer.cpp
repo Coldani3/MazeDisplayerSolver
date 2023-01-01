@@ -73,18 +73,7 @@ void MazeRenderer::progressPath(double now, MazeRenderInfo& mazeRenderInfo) {
 void MazeRenderer::setup() {
     //create shaders
     std::cout << "Initialising Shaders..." << '\n';
-    unsigned int pathShaderVert, pathShaderFrag, cellCenterShaderVert, cellCenterShaderFrag;
-    setupShaders(pathShaderVert, pathShaderFrag, cellCenterShaderVert, cellCenterShaderFrag);
-    std::cout << "Done." << '\n';
-
-    //create programs
-    std::cout << "Creating OpenGL Programs..." << '\n';
-    createOpenGLPrograms(pathShaderVert, pathShaderFrag, cellCenterShaderVert, cellCenterShaderFrag);
-    std::cout << "Done." << '\n';
-
-    std::cout << "Cleaning up Shaders..." << '\n';
-    //clean up unecessary shaders
-    cleanupShaderAddresses({pathShaderVert, pathShaderFrag, cellCenterShaderVert, cellCenterShaderFrag});
+    setupShaders();
     std::cout << "Done." << '\n';
 
     std::cout << "Creating and populating buffers..." << '\n';
@@ -112,24 +101,17 @@ void MazeRenderer::precomputeCellPathTransformations() {
 }
 
 void MazeRenderer::cleanup() {
-    std::cout << "Cleaning up Maze Renderer..." << std::endl;
+    /*std::cout << "Cleaning up Maze Renderer..." << std::endl;
 
     if (cellCenterProgram != 0) {
-        deleteProgramIfExists(cellCenterProgram, "cellCenterProgram");
+        deleteProgramIfExists(cellCenterProgram.getProgram(), "cellCenterProgram");
     }
 
     if (mazePathProgram != 0) {
-        deleteProgramIfExists(mazePathProgram, "mazePathProgram");
-    }
-}
+        deleteProgramIfExists(mazePathProgram.getProgram(), "mazePathProgram");
+    }*/
 
-//TODO: what is the point of these?
-void MazeRenderer::setMazeCenterProgram(int program) {
-    cellCenterProgram = program;
-}
-
-void MazeRenderer::setMazePathProgram(int program) {
-    mazePathProgram = program;
+    //TODO: Unused, the destructor of the programs should take care of this.
 }
 
 void MazeRenderer::setShowPath(bool showPath) {
@@ -263,7 +245,6 @@ void MazeRenderer::drawMazeCellCenter(const Coordinate<int>& coords) {
 }
 
 void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, const Coordinate<int>& mazeCoords, int lastW, float transitionScale) {
-    //Coordinate<int> mazeCoords({ mazeX, mazeY, mazeZ, mazeW });
     unsigned char prevWData = (*maze)[Coordinate<int>({mazeCoords.x(), mazeCoords.y(), mazeCoords.z(), lastW})];
     glm::vec3 modelCoords = coordsFromMazeCenter(mazeCoords.x(), mazeCoords.y(), mazeCoords.z());
     //translation to get it to the same modelCoords as the center piece, from which we then translate it again into the proper position
@@ -380,27 +361,29 @@ glm::vec3 MazeRenderer::coordsFromMazeCenter(int mazeX, int mazeY, int mazeZ) co
 }
 
 void MazeRenderer::prepMazeCenterDraw(const glm::mat4& model, const glm::mat4& view, const glm::vec3& cellColour) {
-    glUseProgram(cellCenterProgram);
+    unsigned int cellCenterProgramID = cellCenterProgram.getProgram();
+    glUseProgram(cellCenterProgramID);
 
-    glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-    glUniformMatrix4fv(glGetUniformLocation(cellCenterProgram, "projection"), 1, GL_FALSE, glm::value_ptr(camera->getProjection()));
+    glUniformMatrix4fv(glGetUniformLocation(cellCenterProgramID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(glGetUniformLocation(cellCenterProgramID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(cellCenterProgramID, "projection"), 1, GL_FALSE, glm::value_ptr(camera->getProjection()));
 
-    glUniform3fv(glGetUniformLocation(cellCenterProgram, "cellColour"), 1, glm::value_ptr(cellColour));
-    glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightPos"), 1, glm::value_ptr(camera->getCoords()));
-    glUniform3fv(glGetUniformLocation(cellCenterProgram, "lightColour"), 1, glm::value_ptr(defaultLightColour));
+    glUniform3fv(glGetUniformLocation(cellCenterProgramID, "cellColour"), 1, glm::value_ptr(cellColour));
+    glUniform3fv(glGetUniformLocation(cellCenterProgramID, "lightPos"), 1, glm::value_ptr(camera->getCoords()));
+    glUniform3fv(glGetUniformLocation(cellCenterProgramID, "lightColour"), 1, glm::value_ptr(defaultLightColour));
 
     glBindVertexArray(mazeCenterVAO);
 }
 
 void MazeRenderer::useMazePathProgram(const glm::vec3& lightPos, const glm::vec3& lightColour) {
-    glUseProgram(mazePathProgram);
+    unsigned int mazePathProgramID = mazePathProgram.getProgram();
+    glUseProgram(mazePathProgramID);
 
-    glUniform3fv(glGetUniformLocation(mazePathProgram, "lightPos"), 1, glm::value_ptr(lightPos));
-    glUniform3fv(glGetUniformLocation(mazePathProgram, "lightColour"), 1, glm::value_ptr(defaultLightColour));
+    glUniform3fv(glGetUniformLocation(mazePathProgramID, "lightPos"), 1, glm::value_ptr(lightPos));
+    glUniform3fv(glGetUniformLocation(mazePathProgramID, "lightColour"), 1, glm::value_ptr(defaultLightColour));
 
-    glUniformMatrix4fv(glGetUniformLocation(mazePathProgram, "view"), 1, GL_FALSE, glm::value_ptr(camera->getView()));
-    glUniformMatrix4fv(glGetUniformLocation(mazePathProgram, "projection"), 1, GL_FALSE, glm::value_ptr(camera->getProjection()));
+    glUniformMatrix4fv(glGetUniformLocation(mazePathProgramID, "view"), 1, GL_FALSE, glm::value_ptr(camera->getView()));
+    glUniformMatrix4fv(glGetUniformLocation(mazePathProgramID, "projection"), 1, GL_FALSE, glm::value_ptr(camera->getProjection()));
 }
 
 glm::mat3 MazeRenderer::calculateNormalTransform(const glm::mat4& model) const {
@@ -409,10 +392,11 @@ glm::mat3 MazeRenderer::calculateNormalTransform(const glm::mat4& model) const {
 }
 
 void MazeRenderer::prepMazeDrawUniforms(const glm::vec3& cellColour, const glm::mat4& model, const glm::mat3& normalTransform) {
-    glUniform3fv(glGetUniformLocation(mazePathProgram, "cellColour"), 1, glm::value_ptr(cellColour));
+    unsigned int mazePathProgramID = mazePathProgram.getProgram();
+    glUniform3fv(glGetUniformLocation(mazePathProgramID, "cellColour"), 1, glm::value_ptr(cellColour));
 
-    glUniformMatrix4fv(glGetUniformLocation(mazePathProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix3fv(glGetUniformLocation(mazePathProgram, "normalTransform"), 1, GL_FALSE, glm::value_ptr(normalTransform));
+    glUniformMatrix4fv(glGetUniformLocation(mazePathProgramID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix3fv(glGetUniformLocation(mazePathProgramID, "normalTransform"), 1, GL_FALSE, glm::value_ptr(normalTransform));
 }
 
 inline float MazeRenderer::calculateAdjustedScale(unsigned char cell1, unsigned char cell2, unsigned char bitChecking, int direction, float transitionScale) const {
@@ -440,57 +424,17 @@ inline bool MazeRenderer::hasCellPathBit(unsigned char mazeCellData, unsigned ch
     return (mazeCellData & bitChecking) > 0;
 }
 
-void MazeRenderer::setupShaders(unsigned int& pathShaderVert, unsigned int& pathShaderFrag, unsigned int& cellCenterShaderVert, unsigned int& cellCenterShaderFrag) {
-    setupPathShaders(pathShaderVert, pathShaderFrag);
-    setupCellCenterShaders(cellCenterShaderVert, cellCenterShaderFrag);
-}
-
-void MazeRenderer::setupPathShaders(unsigned int& pathShaderVert, unsigned int& pathShaderFrag) {
-    std::cout << "genericCubeShaderVert..." << '\n';
-    pathShaderVert = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(pathShaderVert, 1, &mazeCellPathVertexShader, NULL);
-    glCompileShader(pathShaderVert);
-    checkShaderCompileSuccess(pathShaderVert);
-
-    std::cout << "genericCubeShaderFrag..." << '\n';
-    pathShaderFrag = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(pathShaderFrag, 1, &mazeCellPathFragmentShader, NULL);
-    glCompileShader(pathShaderFrag);
-    checkShaderCompileSuccess(pathShaderFrag);
-}
-
-void MazeRenderer::setupCellCenterShaders(unsigned int& cellCenterShaderVert, unsigned int& cellCenterShaderFrag) {
-    std::cout << "cellCenterCubeShaderVert..." << '\n';
-    cellCenterShaderVert = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(cellCenterShaderVert, 1, &mazeCellCenterCubeVertexShader, NULL);
-    glCompileShader(cellCenterShaderVert);
-    checkShaderCompileSuccess(cellCenterShaderVert);
-
-    std::cout << "cellCenterCubeShaderFrag..." << '\n';
-    cellCenterShaderFrag = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(cellCenterShaderFrag, 1, &mazeCellCenterCubeFragmentShader, NULL);
-    glCompileShader(cellCenterShaderFrag);
-    checkShaderCompileSuccess(cellCenterShaderFrag);
-}
-
-void MazeRenderer::createOpenGLPrograms(unsigned int pathShaderVert, unsigned int pathShaderFrag, unsigned int cellCenterShaderVert, unsigned int cellCenterShaderFrag) {
-    mazePathProgram = glCreateProgram();
-    glAttachShader(mazePathProgram, pathShaderVert);
-    glAttachShader(mazePathProgram, pathShaderFrag);
-    glLinkProgram(mazePathProgram);
-    checkProgramCompileSuccess(mazePathProgram);
-
-    cellCenterProgram = glCreateProgram();
-    glAttachShader(cellCenterProgram, cellCenterShaderVert);
-    glAttachShader(cellCenterProgram, cellCenterShaderFrag);
-    glLinkProgram(cellCenterProgram);
-    checkProgramCompileSuccess(cellCenterProgram);
-}
-
-void MazeRenderer::cleanupShaderAddresses(std::vector<unsigned int> shaderAddresses) {
-    for (unsigned int shaderAddress : shaderAddresses) {
-        glDeleteShader(shaderAddress);
-    }
+void MazeRenderer::setupShaders() {
+    cellCenterProgram
+        .loadVertexShader(mazeCellCenterCubeVertexShader)
+        .loadFragmentShader(mazeCellCenterCubeFragmentShader)
+        .createProgram();
+    mazePathProgram
+        .loadVertexShader(mazeCellPathVertexShader)
+        .loadFragmentShader(mazeCellPathFragmentShader)
+        .createProgram();
+    //setupPathShaders(pathShaderVert, pathShaderFrag);
+    //setupCellCenterShaders(cellCenterShaderVert, cellCenterShaderFrag);
 }
 
 void MazeRenderer::createBuffers() {
