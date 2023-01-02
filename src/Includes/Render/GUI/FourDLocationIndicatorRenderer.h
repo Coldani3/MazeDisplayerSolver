@@ -4,6 +4,7 @@
 #include <Maze/Maze.h>
 #include <Render/PerspectiveCamera.h>
 #include <Render/GUI/TwoDCamera.h>
+#include "../ShaderProgram.h"
 
 class FourDLocationIndicatorRenderer : public GUIRenderer {
 private:
@@ -29,7 +30,8 @@ private:
 	unsigned int squareVBO;
 	unsigned int squareVAO;
 
-	unsigned int indicatorProgram;
+	//unsigned int indicatorProgram;
+	ShaderProgram indicatorProgram = ShaderProgram("4D Location Indicator");
 
 private:
 	std::shared_ptr<Maze> maze = nullptr;
@@ -38,9 +40,11 @@ public:
 	FourDLocationIndicatorRenderer(std::shared_ptr<TwoDCamera> camera, std::shared_ptr<Maze> maze);
 	~FourDLocationIndicatorRenderer();
 	void setup();
+	void setupShaders();
 	void render(std::shared_ptr<MazeRenderInfo> mazeRendererInfo);
 	void cleanup();
 	void updatePosition();
+	glm::mat4 getSliceTranslate(float xTransPerSlice, float yTransPerSlice, float translateScale, const glm::mat4& initialTranslate);
 
 	virtual std::shared_ptr<Camera> getCamera() const override;
 

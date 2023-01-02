@@ -1,5 +1,7 @@
 #include <glad/glad.h>
 #include <glfw3/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -7,7 +9,7 @@
 
 #pragma once
 class ShaderProgram {
-	unsigned int vertShaderAddress, fragShaderAddress;
+	unsigned int vertShaderAddress, fragShaderAddress, geometryShaderAddress;
 	unsigned int program;
 	std::vector<unsigned int> createdShaders;
 	bool created;
@@ -24,11 +26,22 @@ public:
 
 	ShaderProgram& loadVertexShader(const char* vertShader);
 	ShaderProgram& loadFragmentShader(const char* fragShader);
+	ShaderProgram& loadGeometryShader(const char* geometryShader);
+	//TODO: Tesselation, evaluation and compute shaders (OpenGL 4.0 and 4.3 respectively)
 	ShaderProgram& createProgram();
 	~ShaderProgram();
 
-	unsigned int getProgram() const;
-	unsigned int getVertShader() const;
-	unsigned int getFragShader() const;
+	constexpr unsigned int getProgram() const;
+	constexpr unsigned int getVertShader() const;
+	constexpr unsigned int getFragShader() const;
+	constexpr unsigned int getGeometryShader() const;
+	GLint getUniform(const std::string& uniform);
+	void uniform(const std::string& uniformName, const glm::mat4& mat, int matCount = 1, GLboolean transpose = GL_FALSE);
+	void uniform(const std::string& uniformName, const glm::mat3& mat, int matCount = 1, GLboolean transpose = GL_FALSE);
+	void uniform(const std::string& uniformName, const glm::vec3& vec, int vecCount = 1);
+	void uniform(const std::string& uniformName, const glm::ivec3& vec, int vecCount = 1);
+	void uniform(const std::string& uniformName, const glm::vec4& vec, int vecCount = 1);
+	void uniform(const std::string& uniformName, const glm::ivec4& vec, int vecCount = 1);
+	void use();
 };
 

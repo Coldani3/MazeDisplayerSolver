@@ -31,6 +31,8 @@ ShaderProgram::ShaderProgram(std::string name) {
 ShaderProgram::ShaderProgram(ShaderProgram&& moving) noexcept {
 	vertShaderAddress = std::exchange(moving.vertShaderAddress, 0);
 	fragShaderAddress = std::exchange(moving.fragShaderAddress, 0);
+	geometryShaderAddress = std::exchange(moving.geometryShaderAddress, 0);
+
 	program = std::exchange(moving.program, 0);
 	createdShaders = std::move(moving.createdShaders);
 	created = std::move(moving.created);
@@ -40,6 +42,7 @@ ShaderProgram::ShaderProgram(ShaderProgram&& moving) noexcept {
 ShaderProgram::ShaderProgram(const ShaderProgram& copying) noexcept {
 	vertShaderAddress = copying.vertShaderAddress;
 	fragShaderAddress = copying.fragShaderAddress;
+	geometryShaderAddress = copying.geometryShaderAddress;
 
 	program = copying.program;
 	createdShaders = copying.createdShaders;
@@ -54,6 +57,11 @@ ShaderProgram& ShaderProgram::loadVertexShader(const char* vertShader) {
 ShaderProgram& ShaderProgram::loadFragmentShader(const char* fragShader) {
 	// TODO: insert return statement here
 	return loadShader(fragShader, fragShaderAddress, GL_FRAGMENT_SHADER);
+}
+
+ShaderProgram& ShaderProgram::loadGeometryShader(const char* geometryShader) {
+	// TODO: insert return statement here
+	return loadShader(geometryShader, geometryShaderAddress, GL_GEOMETRY_SHADER);
 }
 
 ShaderProgram& ShaderProgram::createProgram() {
@@ -87,14 +95,50 @@ ShaderProgram::~ShaderProgram() {
 	}
 }
 
-unsigned int ShaderProgram::getProgram() const {
+constexpr unsigned int ShaderProgram::getProgram() const {
 	return program;
 }
 
-unsigned int ShaderProgram::getVertShader() const {
+constexpr unsigned int ShaderProgram::getVertShader() const {
 	return vertShaderAddress;
 }
 
-unsigned int ShaderProgram::getFragShader() const {
+constexpr unsigned int ShaderProgram::getFragShader() const {
 	return fragShaderAddress;
+}
+
+constexpr unsigned int ShaderProgram::getGeometryShader() const {
+	return geometryShaderAddress;
+}
+
+GLint ShaderProgram::getUniform(const std::string& uniform) {
+	return glGetUniformLocation(program, uniform.c_str());
+}
+
+void ShaderProgram::uniform(const std::string& uniformName, const glm::mat4& mat, int matCount = 1, GLboolean transpose = GL_FALSE) {
+	glUniformMatrix4fv(getUniform(uniformName), matCount, transpose, glm::value_ptr(mat));
+}
+
+void ShaderProgram::uniform(const std::string& uniformName, const glm::mat3& mat, int matCount, GLboolean transpose) {
+	glUniformMatrix3fv(getUniform(uniformName), matCount, transpose, glm::value_ptr(mat));
+}
+
+void ShaderProgram::uniform(const std::string& uniformName, const glm::vec3& vec, int vecCount = 1) {
+	glUniform3fv(getUniform(uniformName), vecCount, glm::value_ptr(vec));
+}
+
+void ShaderProgram::uniform(const std::string& uniformName, const glm::ivec3& vec, int vecCount = 1) {
+	glUniform3iv(getUniform(uniformName), vecCount, glm::value_ptr(vec));
+}
+
+void ShaderProgram::uniform(const std::string& uniformName, const glm::vec4& vec, int vecCount = 1) {
+	glUniform4fv(getUniform(uniformName), vecCount, glm::value_ptr(vec));
+}
+
+void ShaderProgram::uniform(const std::string& uniformName, const glm::ivec4& vec, int vecCount = 1) {
+	glUniform4iv(getUniform(uniformName), vecCount, glm::value_ptr(vec));
+}
+
+void ShaderProgram::use() {
+	glUseProgram(program);
 }

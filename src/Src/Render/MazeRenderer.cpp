@@ -361,29 +361,27 @@ glm::vec3 MazeRenderer::coordsFromMazeCenter(int mazeX, int mazeY, int mazeZ) co
 }
 
 void MazeRenderer::prepMazeCenterDraw(const glm::mat4& model, const glm::mat4& view, const glm::vec3& cellColour) {
-    unsigned int cellCenterProgramID = cellCenterProgram.getProgram();
-    glUseProgram(cellCenterProgramID);
+    cellCenterProgram.use();
 
-    glUniformMatrix4fv(glGetUniformLocation(cellCenterProgramID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(glGetUniformLocation(cellCenterProgramID, "view"), 1, GL_FALSE, glm::value_ptr(view));
-    glUniformMatrix4fv(glGetUniformLocation(cellCenterProgramID, "projection"), 1, GL_FALSE, glm::value_ptr(camera->getProjection()));
+    cellCenterProgram.uniform("model", model);
+    cellCenterProgram.uniform("view", view);
+    cellCenterProgram.uniform("projection", camera->getProjection());
 
-    glUniform3fv(glGetUniformLocation(cellCenterProgramID, "cellColour"), 1, glm::value_ptr(cellColour));
-    glUniform3fv(glGetUniformLocation(cellCenterProgramID, "lightPos"), 1, glm::value_ptr(camera->getCoords()));
-    glUniform3fv(glGetUniformLocation(cellCenterProgramID, "lightColour"), 1, glm::value_ptr(defaultLightColour));
+    cellCenterProgram.uniform("cellColour", cellColour);
+    cellCenterProgram.uniform("lightPos", camera->getCoords());
+    cellCenterProgram.uniform("lightColour", defaultLightColour);
 
     glBindVertexArray(mazeCenterVAO);
 }
 
 void MazeRenderer::useMazePathProgram(const glm::vec3& lightPos, const glm::vec3& lightColour) {
-    unsigned int mazePathProgramID = mazePathProgram.getProgram();
-    glUseProgram(mazePathProgramID);
+    mazePathProgram.use();
 
-    glUniform3fv(glGetUniformLocation(mazePathProgramID, "lightPos"), 1, glm::value_ptr(lightPos));
-    glUniform3fv(glGetUniformLocation(mazePathProgramID, "lightColour"), 1, glm::value_ptr(defaultLightColour));
+    mazePathProgram.uniform("lightPos", lightPos);
+    mazePathProgram.uniform("lightColour", defaultLightColour);
 
-    glUniformMatrix4fv(glGetUniformLocation(mazePathProgramID, "view"), 1, GL_FALSE, glm::value_ptr(camera->getView()));
-    glUniformMatrix4fv(glGetUniformLocation(mazePathProgramID, "projection"), 1, GL_FALSE, glm::value_ptr(camera->getProjection()));
+    mazePathProgram.uniform("view", camera->getView());
+    mazePathProgram.uniform("projection", camera->getProjection());
 }
 
 glm::mat3 MazeRenderer::calculateNormalTransform(const glm::mat4& model) const {
@@ -392,11 +390,10 @@ glm::mat3 MazeRenderer::calculateNormalTransform(const glm::mat4& model) const {
 }
 
 void MazeRenderer::prepMazeDrawUniforms(const glm::vec3& cellColour, const glm::mat4& model, const glm::mat3& normalTransform) {
-    unsigned int mazePathProgramID = mazePathProgram.getProgram();
-    glUniform3fv(glGetUniformLocation(mazePathProgramID, "cellColour"), 1, glm::value_ptr(cellColour));
+    mazePathProgram.uniform("cellColour", cellColour);
 
-    glUniformMatrix4fv(glGetUniformLocation(mazePathProgramID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix3fv(glGetUniformLocation(mazePathProgramID, "normalTransform"), 1, GL_FALSE, glm::value_ptr(normalTransform));
+    mazePathProgram.uniform("model", model);
+    mazePathProgram.uniform("normalTransform", normalTransform);
 }
 
 inline float MazeRenderer::calculateAdjustedScale(unsigned char cell1, unsigned char cell2, unsigned char bitChecking, int direction, float transitionScale) const {

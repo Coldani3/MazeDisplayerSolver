@@ -224,6 +224,7 @@
     <ClCompile Include="src\Src\Render\GUI\TwoDCamera.cpp" />
     <ClCompile Include="src\Src\Render\Renderer.cpp" />
     <ClCompile Include="src\Src\Render\RenderManager.cpp" />
+    <ClCompile Include="src\Src\Render\ShaderProgram.cpp" />
     <ClCompile Include="src\Src\Solvers\DepthFirstSolver.cpp" />
     <ClCompile Include="src\Src\Solvers\FloodFillSolver.cpp" />
     <ClCompile Include="src\Src\Solvers\FungalSolver.cpp" />
@@ -258,6 +259,7 @@
     <ClInclude Include="src\Includes\Render\GUI\TwoDCamera.h" />
     <ClInclude Include="src\Includes\Render\Renderer.h" />
     <ClInclude Include="src\Includes\Render\RenderManager.h" />
+    <ClInclude Include="src\Includes\Render\ShaderProgram.h" />
     <ClInclude Include="src\Includes\Solvers\DepthFirstSolver.h" />
     <ClInclude Include="src\Includes\Solvers\FloodFillSolver.h" />
     <ClInclude Include="src\Includes\Solvers\FungalSolver.h" />
