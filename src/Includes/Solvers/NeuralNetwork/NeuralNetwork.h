@@ -1,3 +1,6 @@
+#ifndef CD3_MAZE_NEURAL_NETWORK
+#define CD3_MAZE_NEURAL_NETWORK
+
 #include <vector>
 #include <memory>
 #include <Maths/Matrix.h>
@@ -22,3 +25,4 @@ private:
 	std::vector<unsigned int> nodesForLayers;
 };
 
+#endif

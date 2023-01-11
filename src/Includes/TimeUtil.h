@@ -1,3 +1,6 @@
+#ifndef CD3_TIME_UTIL
+#define CD3_TIME_UTIL
+
 #pragma once
 
 #include <chrono>
@@ -11,3 +14,4 @@ public:
 		).count();
 	}
 };
+#endif

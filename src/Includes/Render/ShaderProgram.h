@@ -1,3 +1,6 @@
+#ifndef CD3_MAZE_SHADER_PROGRAM
+#define CD3_MAZE_SHADER_PROGRAM
+
 #include <glad/glad.h>
 #include <glfw3/glfw3.h>
 #include <glm/glm.hpp>
@@ -28,6 +31,7 @@ public:
 	ShaderProgram& loadFragmentShader(const char* fragShader);
 	ShaderProgram& loadGeometryShader(const char* geometryShader);
 	//TODO: Tesselation, evaluation and compute shaders (OpenGL 4.0 and 4.3 respectively)
+	//TODO: Is it necessary to add these shaders to this? They're from a newer version than ours so we can't use them anyways.
 	ShaderProgram& createProgram();
 	~ShaderProgram();
 
@@ -42,6 +46,8 @@ public:
 	void uniform(const std::string& uniformName, const glm::ivec3& vec, int vecCount = 1);
 	void uniform(const std::string& uniformName, const glm::vec4& vec, int vecCount = 1);
 	void uniform(const std::string& uniformName, const glm::ivec4& vec, int vecCount = 1);
+	void uniform(const std::string& uniformName, float num);
+	void uniform(const std::string& uniformName, int num);
 	void use();
 };
-
+#endif

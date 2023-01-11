@@ -101,16 +101,6 @@ void MazeRenderer::precomputeCellPathTransformations() {
 }
 
 void MazeRenderer::cleanup() {
-    /*std::cout << "Cleaning up Maze Renderer..." << std::endl;
-
-    if (cellCenterProgram != 0) {
-        deleteProgramIfExists(cellCenterProgram.getProgram(), "cellCenterProgram");
-    }
-
-    if (mazePathProgram != 0) {
-        deleteProgramIfExists(mazePathProgram.getProgram(), "mazePathProgram");
-    }*/
-
     //TODO: Unused, the destructor of the programs should take care of this.
 }
 
@@ -241,7 +231,7 @@ void MazeRenderer::drawMazeCellCenter(const Coordinate<int>& coords) {
     prepMazeCenterDraw(model, view, getCellColour(coords));
     glDrawArrays(GL_TRIANGLES, 0, 36);
     //unbind VA
-    glBindVertexArray(0);
+    VAO<float>::unbindVAOs();
 }
 
 void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, const Coordinate<int>& mazeCoords, int lastW, float transitionScale) {
@@ -254,7 +244,7 @@ void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, const Coordinat
 
     useMazePathProgram(lightPos, defaultLightColour);
 
-    glBindVertexArray(mazePathVAO);
+    mazePathVAO.bind();
 
     for (unsigned int i = 0; i < 8; i++) {
         if (!drawMazeCellPath(
@@ -269,7 +259,7 @@ void MazeRenderer::drawMazeCellPaths(unsigned char mazeCellData, const Coordinat
         }
     }
 
-    glBindVertexArray(0);
+    VAO<float>::unbindVAOs();
 }
 
 bool MazeRenderer::drawMazeCellPath(unsigned char mazeCellData, unsigned char prevWData, unsigned int cellPath, const glm::mat4& initialTranslate, const glm::vec3& modelCoords, const Coordinate<int>& mazeCoords, float transitionScale) {
@@ -337,14 +327,13 @@ void MazeRenderer::updateTransition(const unsigned char data, float& scale, doub
                 //TODO: something here I think, not sure if I actually need this though? I think I do though
             }
         }
-    }
-    else if (!mazeRenderInfo.wTransitioning && wasTransitioning) {
+    } else if (!mazeRenderInfo.wTransitioning && wasTransitioning) {
         wasTransitioning = false;
         mazeRenderInfo.finishWTransitionAnim();
     }
 }
 
-float MazeRenderer::calculateScale(float endTransitionTime, float now, float mazeTransitionAnimationSpeed) const {
+constexpr float MazeRenderer::calculateScale(float endTransitionTime, float now, float mazeTransitionAnimationSpeed) const {
     return std::clamp<float>(
         1.0f - ((endTransitionTime - now) / mazeTransitionAnimationSpeed), 
         0.0f, 
@@ -371,7 +360,7 @@ void MazeRenderer::prepMazeCenterDraw(const glm::mat4& model, const glm::mat4& v
     cellCenterProgram.uniform("lightPos", camera->getCoords());
     cellCenterProgram.uniform("lightColour", defaultLightColour);
 
-    glBindVertexArray(mazeCenterVAO);
+    mazeCenterVAO.bind();
 }
 
 void MazeRenderer::useMazePathProgram(const glm::vec3& lightPos, const glm::vec3& lightColour) {
@@ -440,29 +429,17 @@ void MazeRenderer::createBuffers() {
 }
 
 void MazeRenderer::createCubeBuffers() {
-    glGenBuffers(1, &mazeCenterVBO);
-    glGenVertexArrays(1, &mazeCenterVAO);
-
-    glBindVertexArray(mazeCenterVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, mazeCenterVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVerticesNormals), cubeVerticesNormals, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    mazeCenterVBO
+        .addConfiguration(VBOConfiguration(3))
+        .addConfiguration(VBOConfiguration(3))
+        .loadData(mazeCenterVAO, cubeVerticesNormals, GL_STATIC_DRAW)
+        .initialise();
 }
 
 void MazeRenderer::createPathBuffers() {
-    glGenBuffers(1, &mazePathVBO);
-    glGenVertexArrays(1, &mazePathVAO);
-
-    glBindVertexArray(mazePathVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, mazePathVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(mazePathVerticesNormals), mazePathVerticesNormals, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    mazePathVBO
+        .addConfiguration(VBOConfiguration(3))
+        .addConfiguration(VBOConfiguration(3))
+        .loadData(mazePathVAO, mazePathVerticesNormals, GL_STATIC_DRAW)
+        .initialise();
 }

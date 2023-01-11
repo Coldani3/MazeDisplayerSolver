@@ -5,17 +5,21 @@
 #include <Render/PerspectiveCamera.h>
 #include <Render/GUI/TwoDCamera.h>
 #include "../ShaderProgram.h"
+#include "../Buffers/VBO.h"
+#include "../Buffers/VBOConfiguration.h"
+#include "../Buffers/VAO.h"
+#include "../Buffers/EBO.h"
 
 class FourDLocationIndicatorRenderer : public GUIRenderer {
 private:
-	const float guiSquare[12] = {
+	const std::vector<float> guiSquare = {
 		1.0f, 1.0f, 0.0f, // top right
 		0.0f, 1.0f, 0.0f, // top left
 		0.0f, 0.0f, 0.0f, // bottom left
 		1.0f, 0.0f, 0.0f // bottom right
 	};
 
-	const unsigned int guiSquareIndices[6] = {
+	const std::vector<int> guiSquareIndices = {
 		0, 1, 2,
 		2, 3, 0
 	};
@@ -26,9 +30,9 @@ private:
 	glm::vec3 position = screenRelativeCoords(0.9f, -0.9f);
 	glm::vec3 squareSize = glm::vec3(100.0f, 100.0f, 1.0f);
 
-	unsigned int squareEBO;
-	unsigned int squareVBO;
-	unsigned int squareVAO;
+	EBO squareEBO;
+	VBOf squareVBO;
+	VAO<float> squareVAO;
 
 	//unsigned int indicatorProgram;
 	ShaderProgram indicatorProgram = ShaderProgram("4D Location Indicator");

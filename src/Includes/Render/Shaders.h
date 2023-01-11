@@ -1,5 +1,5 @@
-#ifndef MAZE_SHADERS
-#define MAZE_SHADERS
+#ifndef CD3_MAZE_SHADERS
+#define CD3_MAZE_SHADERS
 
 #pragma region Maze
 #pragma region Vertex Shaders
@@ -52,45 +52,6 @@ void main() {
 #pragma endregion
 
 #pragma region Geometry Shaders
-
-//normalization code from: https://learnopengl.com/Advanced-OpenGL/Geometry-Shader (accessed 08/04/2022)
-/*const char* normalsGeometryShader = R"glsl(
-#version 330 core
-
-layout (triangles) in;
-layout (triangle_strip, max_vertices = 3) out;
-
-in VS_OUT {
-	vec3 modelVertex;
-} gs_in[];
-
-out vec3 vecNormal;
-out vec3 modelVertexPassed;
-
-vec3 getNormal() {
-	//get parallel lines to triangle surface with vector subtraction
-	vec3 a = vec3(gl_in[0].gl_Position) - vec3(gl_in[1].gl_Position);
-	vec3 b = vec3(gl_in[2].gl_Position) - vec3(gl_in[1].gl_Position);
-
-	//use cross product to get normal and normalize it into a unit vector
-	return normalize(cross(a, b));
-}
-
-void main() {
-	vecNormal = getNormal();
-
-	//pass through, we only want to calculate the normal
-	gl_Position = gl_in[0].gl_Position;
-	modelVertexPassed = gs_in[0].modelVertex;
-	EmitVertex();
-	gl_Position = gl_in[1].gl_Position;
-	modelVertexPassed = gs_in[1].modelVertex;
-	EmitVertex();
-	gl_Position = gl_in[2].gl_Position;
-	modelVertexPassed = gs_in[2].modelVertex;
-	EmitVertex();
-	EndPrimitive();
-})glsl";*/
 
 #pragma endregion
 

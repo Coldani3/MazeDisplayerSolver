@@ -12,18 +12,12 @@ void FourDLocationIndicatorRenderer::setup() {
 	setupShaders();
 
 	std::cout << "[FourDLocationManager] Genning buffers..." << '\n';
-	glGenBuffers(1, &squareVBO);
-	glGenVertexArrays(1, &squareVAO);
-	glGenBuffers(1, &squareEBO);
 
-	glBindVertexArray(squareVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, squareVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(guiSquare), &guiSquare, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, squareEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(guiSquareIndices), &guiSquareIndices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	squareVBO
+		.addConfiguration(VBOConfiguration(3))
+		.loadData(squareVAO, guiSquare, GL_STATIC_DRAW)
+		.loadEBOData(squareEBO, guiSquareIndices, GL_STATIC_DRAW)
+		.initialise();
 
 	std::cout << "[FourDLocationManager] Done." << std::endl;
 }
@@ -38,7 +32,7 @@ void FourDLocationIndicatorRenderer::setupShaders() {
 
 void FourDLocationIndicatorRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
 	indicatorProgram.use();
-	glBindVertexArray(squareVAO);
+	squareVAO.bind();
 
 	float hyperDepth = static_cast<float>(maze->hyperDepth);
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), squareSize);
@@ -59,10 +53,7 @@ void FourDLocationIndicatorRenderer::render(std::shared_ptr<MazeRenderInfo> maze
 		//
 		float translateScale = hyperDepth - i;
 
-		//glm::translate(glm::mat4(1.0f), glm::vec3(-0.01f, -0.005f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(3000.0f, 3000.0f, 1.0f)) * translateScale;
-
 		//TODO: scale translation by how many slices there are (max 200pxX80px?).
-		//glm::mat4 translate = ;
 
 		glm::mat4 model = getSliceTranslate(xTransPerSlice, yTransPerSlice, translateScale, initialTranslate) * scale;
 
@@ -72,7 +63,7 @@ void FourDLocationIndicatorRenderer::render(std::shared_ptr<MazeRenderInfo> maze
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	}
 
-	glBindVertexArray(0);
+	VAO<float>::unbindVAOs();
 }
 
 void FourDLocationIndicatorRenderer::cleanup() {

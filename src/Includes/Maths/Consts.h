@@ -1,3 +1,6 @@
+#ifndef CD3_MAZE_CONSTS
+#define CD3_MAZE_CONSTS
+
 #include <cmath>
 #include <array>
 #include "Coordinate.h"
@@ -28,3 +31,4 @@ namespace Consts {
     };
 };
 
+#endif

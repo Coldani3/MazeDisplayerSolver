@@ -115,7 +115,7 @@ GLint ShaderProgram::getUniform(const std::string& uniform) {
 	return glGetUniformLocation(program, uniform.c_str());
 }
 
-void ShaderProgram::uniform(const std::string& uniformName, const glm::mat4& mat, int matCount = 1, GLboolean transpose = GL_FALSE) {
+void ShaderProgram::uniform(const std::string& uniformName, const glm::mat4& mat, int matCount, GLboolean transpose) {
 	glUniformMatrix4fv(getUniform(uniformName), matCount, transpose, glm::value_ptr(mat));
 }
 
@@ -123,20 +123,28 @@ void ShaderProgram::uniform(const std::string& uniformName, const glm::mat3& mat
 	glUniformMatrix3fv(getUniform(uniformName), matCount, transpose, glm::value_ptr(mat));
 }
 
-void ShaderProgram::uniform(const std::string& uniformName, const glm::vec3& vec, int vecCount = 1) {
+void ShaderProgram::uniform(const std::string& uniformName, const glm::vec3& vec, int vecCount) {
 	glUniform3fv(getUniform(uniformName), vecCount, glm::value_ptr(vec));
 }
 
-void ShaderProgram::uniform(const std::string& uniformName, const glm::ivec3& vec, int vecCount = 1) {
+void ShaderProgram::uniform(const std::string& uniformName, const glm::ivec3& vec, int vecCount) {
 	glUniform3iv(getUniform(uniformName), vecCount, glm::value_ptr(vec));
 }
 
-void ShaderProgram::uniform(const std::string& uniformName, const glm::vec4& vec, int vecCount = 1) {
+void ShaderProgram::uniform(const std::string& uniformName, const glm::vec4& vec, int vecCount) {
 	glUniform4fv(getUniform(uniformName), vecCount, glm::value_ptr(vec));
 }
 
-void ShaderProgram::uniform(const std::string& uniformName, const glm::ivec4& vec, int vecCount = 1) {
+void ShaderProgram::uniform(const std::string& uniformName, const glm::ivec4& vec, int vecCount) {
 	glUniform4iv(getUniform(uniformName), vecCount, glm::value_ptr(vec));
+}
+
+void ShaderProgram::uniform(const std::string& uniformName, float num) {
+	glUniform1f(getUniform(uniformName), num);
+}
+
+void ShaderProgram::uniform(const std::string& uniformName, int num) {
+	glUniform1i(getUniform(uniformName), num);
 }
 
 void ShaderProgram::use() {

@@ -1,3 +1,6 @@
+#ifndef CD3_MAZE_BASE_RENDERER
+#define CD3_MAZE_BASE_RENDERER
+
 #pragma once
 #include <glad/glad.h>
 #include <glfw3/glfw3.h>
@@ -43,3 +46,4 @@ public:
 	void deleteProgramIfExists(unsigned int program, std::string name);
 };
 
+#endif

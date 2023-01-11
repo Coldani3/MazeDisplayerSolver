@@ -10,6 +10,9 @@
 #include "../Maze/MazePathManager.h"
 #include "../Maze/MazePathRenderProgress.h"
 #include "../Maths/Coordinate.h"
+#include "Buffers/VBO.h"
+#include "Buffers/VAO.h"
+#include "Buffers/VBOConfiguration.h"
 #include "ShaderProgram.h"
 //#include <glm/gtx/transform.hpp>
 
@@ -41,7 +44,7 @@ public:
 	float mazeCenterZ = 500.0f;
 
 #pragma region GL_Consts
-    const float cubeVerticesNormals[216] = {
+    const std::vector<float> mazePathVerticesNormals = {
         //back face
         -0.0625f, -0.0625f, -0.0625f, 0.0f, 0.0f, -1.0f,
         0.0625f, 0.0625f, -0.0625f, 0.0f, 0.0f, -1.0f,
@@ -99,7 +102,7 @@ public:
       1 - 0.125 = 0.875 = length of path in total
       0.875 / 2 = 0.4375 = length of each individual path piece
       0.4375 / 2 = 0.21875*/
-    const float mazePathVerticesNormals[216] = {
+    const std::vector<float> cubeVerticesNormals = {
         //right
         0.0625f, -0.0625f, -0.21875f, 1.0f, 0.0f, 0.0f,
         0.0625f, 0.0625f, -0.21875f, 1.0f, 0.0f, 0.0f,
@@ -196,7 +199,7 @@ public:
     bool drawMazeCellPath(unsigned char mazeCellData, unsigned char prevWData, unsigned int cellPath, const glm::mat4& initialTranslate, const glm::vec3& modelCoords, const Coordinate<int>& mazeCoords, float transitionScale);
 
     void updateTransition(const unsigned char data, float& scale, double now, MazeRenderInfo& mazeRenderInfo, const Coordinate<int>& coords);
-    float calculateScale(float endTransitionTime, float now, float mazeTransitionAnimationSpeed) const;
+    constexpr float calculateScale(float endTransitionTime, float now, float mazeTransitionAnimationSpeed) const;
 
 private:
     std::shared_ptr<Maze> maze = nullptr;
@@ -233,11 +236,17 @@ private:
 	//int cellCenterProgram;
 	//int mazePathProgram;
 
-	unsigned int mazeCenterVBO;
+    VBOf mazeCenterVBO;
+    VAO<float> mazeCenterVAO;
+
+    VBOf mazePathVBO;
+    VAO<float> mazePathVAO;
+
+	/*unsigned int mazeCenterVBO;
 	unsigned int mazePathVBO;
 
 	unsigned int mazeCenterVAO;
-	unsigned int mazePathVAO;
+	unsigned int mazePathVAO;*/
 #pragma endregion
 
     glm::vec3 coordsFromMazeCenter(int mazeX, int mazeY, int mazeZ) const;
