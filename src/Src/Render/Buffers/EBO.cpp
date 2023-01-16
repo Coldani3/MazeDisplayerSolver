@@ -15,3 +15,7 @@ void EBO::bind() {
 void EBO::loadData(std::vector<int> data, GLenum usage) {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.size() * sizeof(int), data.data(), usage);
 }
+
+bool EBO::operator==(const EBO& ebo) {
+	return ebo.ebo == this->ebo;
+}

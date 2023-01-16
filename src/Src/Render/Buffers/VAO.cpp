@@ -14,3 +14,8 @@ template <typename T>
 constexpr unsigned int VAO<T>::getVAO() const noexcept {
 	return vao;
 }
+
+template<typename T>
+bool VAO<T>::operator==(const VAO& vao) {
+	return vao.vao == this->vao;
+}

@@ -26,6 +26,8 @@ public:
 	VBO<T, DataType>& initialise();
 	void bind();
 
+	bool operator==(const VBO& vbo);
+
 	constexpr unsigned int getVbo() const noexcept;
 };
 

@@ -13,6 +13,7 @@ public:
 	VAO();
 	void bind() const;
 	constexpr unsigned int getVAO() const noexcept;
+	bool operator==(const VAO& vao);
 
 	static void unbindVAOs() {
 		glBindVertexArray(0);

@@ -58,6 +58,12 @@ void VBO<T, DataType>::bind() {
 }
 
 template<typename T, GLenum DataType>
+bool VBO<T, DataType>::operator==(const VBO<T, DataType>& vbo) {
+	return vbo.vbo == this->vbo && 
+		std::equal(vbo.config.begin(), vbo.config.end(), this->config.begin(), this->config.end());
+}
+
+template<typename T, GLenum DataType>
 constexpr unsigned int VBO<T, DataType>::getVbo() const noexcept {
 	return vbo;
 }

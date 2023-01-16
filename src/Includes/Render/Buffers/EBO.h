@@ -15,6 +15,8 @@ public:
 	constexpr unsigned int getEBO() const noexcept;
 	void bind();
 	void loadData(std::vector<int> data, GLenum usage);
+
+	bool operator==(const EBO& ebo);
 };
 
 #endif
