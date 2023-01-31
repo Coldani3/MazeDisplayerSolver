@@ -4,7 +4,9 @@
 int MazeMain::main() {
     loadMaze();
     setupGLFW();
-    setupMonitor();
+    GLFWmonitor* monitor = setupMonitor();
+
+    getScreenInfoForWindow(monitor, windowWidth, windowHeight);
 
     window = std::make_shared<Window>(windowWidth, windowHeight, "Maze Displayer and Solver");
     inputManager = std::make_shared<InputManager>(window);
@@ -79,7 +81,7 @@ void MazeMain::setupGLFW() noexcept {
     glfwInit();
 }
 
-void MazeMain::setupMonitor() noexcept {
+GLFWmonitor* MazeMain::setupMonitor() noexcept {
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
@@ -94,6 +96,10 @@ void MazeMain::setupMonitor() noexcept {
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
+    return monitor;
+}
+
+void MazeMain::getScreenInfoForWindow(GLFWmonitor* monitor, int& windowWidth, int& windowHeight) noexcept {
     glfwGetMonitorWorkarea(monitor, &windowXPos, &windowYPos, &windowWidth, &windowHeight);
 }
 

@@ -1,4 +1,5 @@
 #include "MazePath.h"
+#include <memory>
 
 #pragma once
 class MazePathRenderProgress

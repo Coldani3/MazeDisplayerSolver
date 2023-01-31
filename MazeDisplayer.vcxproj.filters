@@ -114,6 +114,9 @@
     <ClCompile Include="src\Src\Render\Buffers\EBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Includes\Render\Buffers\VBOConfiguration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw3\glfw3.lib" />

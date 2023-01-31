@@ -40,7 +40,8 @@ public:
 	//do what it wants
 	std::shared_ptr<Maze> loadMazeFromFile(std::string path);
 	void setupGLFW() noexcept;
-	void setupMonitor() noexcept;
+	GLFWmonitor* setupMonitor() noexcept;
+	void getScreenInfoForWindow(GLFWmonitor* monitor, int& windowWidth, int& windowHeight) noexcept;
 	void setupRenderers() noexcept;
 
 	bool initialiseGLAD();
