@@ -1,5 +1,5 @@
-#include <Render/GUI/GUIRenderManager.h>
-#include <Render/GUI/TwoDCamera.h>
+#include "GUIRenderManager.h"
+#include "TwoDCamera.h"
 
 GUIRenderManager::GUIRenderManager(std::shared_ptr<Maze> maze, int width, int height) {
 	camera = std::make_shared<TwoDCamera>(width, height);

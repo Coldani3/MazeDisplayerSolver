@@ -1,4 +1,4 @@
-#include <Maze/MazePath.h>
+#include "MazePath.h"
 
 MazePath::MazePath() {
 }

@@ -1,4 +1,4 @@
-#include <Solvers/SimpleNeuralNetworkSolver.h>
+#include "SimpleNeuralNetworkSolver.h"
 #include <algorithm>
 
 SimpleNeuralNetworkSolver::SimpleNeuralNetworkSolver(std::vector<unsigned int> nodesPerLayer, int networks, float learnRate, std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager) : Solver(maze, pathManager) {

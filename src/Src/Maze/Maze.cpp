@@ -1,4 +1,4 @@
-#include <Maze/Maze.h>
+#include "Maze.h"
 #include <string>
 #include <iostream>
 #include <fstream>

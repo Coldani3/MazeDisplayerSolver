@@ -1,5 +1,5 @@
-#include <Solvers/NeuralNetwork/NeuralNetwork.h>
-#include <Maths/Matrix.h>
+#include "NeuralNetwork.h"
+#include "../../Math/Matrix.h"
 
 #include <vector>
 #include <memory>

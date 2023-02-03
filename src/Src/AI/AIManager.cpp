@@ -1,4 +1,4 @@
-#include "AI/AIManager.h"
+#include "AIManager.h"
 
 AIManager::AIManager(std::shared_ptr<Window> window, std::shared_ptr<MazePathManager> mazePaths) {
     this->window = window;

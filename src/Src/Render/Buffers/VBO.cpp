@@ -1,4 +1,4 @@
-#include <Render/Buffers/VBO.h>
+#include "VBO.h"
 
 template<typename T, GLenum DataType>
 VBO<T, DataType>::VBO() {

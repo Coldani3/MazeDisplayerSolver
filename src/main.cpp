@@ -1,4 +1,4 @@
-#include "Includes/MazeMain.h"
+#include "Src/MazeMain.h"
 
 #pragma once
 

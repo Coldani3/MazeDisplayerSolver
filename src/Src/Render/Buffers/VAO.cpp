@@ -1,4 +1,4 @@
-#include <Render/Buffers/VAO.h>
+#include "VAO.h"
 
 template <typename T>
 VAO<T>::VAO() {

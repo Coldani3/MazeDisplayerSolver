@@ -1,5 +1,5 @@
-#include <Render/MainRenderManager.h>
-#include <Render/MazeRenderer.h>
+#include "MainRenderManager.h"
+#include "MazeRenderer.h"
 
 #pragma region Class Methods
 MainRenderManager::MainRenderManager(std::shared_ptr<Window> window, std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager) {

@@ -1,11 +1,10 @@
-#include <Render/MazeRenderer.h>
+#include "MazeRenderer.h"
 
 #include <algorithm>
 
 MazeRenderer::MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager, int centerX, int centerY, int centerZ) {
     this->pathManager = pathManager;
-    MazePath& path = *(pathManager->activePath);
-    renderedPathProgress = std::make_shared<MazePathRenderProgress>(path);
+    renderedPathProgress = std::make_shared<MazePathRenderProgress>(*(pathManager->activePath));
     mazeCenterX = static_cast<float>(centerX);
     mazeCenterY = static_cast<float>(centerY);
     mazeCenterZ = static_cast<float>(centerZ);
@@ -109,7 +108,7 @@ void MazeRenderer::setShowPath(bool showPath) {
     this->showPath = showPath;
 }
 
-void MazeRenderer::changeShownPathTo(const MazePath& newPath) {
+void MazeRenderer::changeShownPathTo(MazePath& newPath) {
     renderedPathProgress = std::make_shared<MazePathRenderProgress>(newPath);
 }
 

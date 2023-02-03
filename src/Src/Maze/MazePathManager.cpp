@@ -1,4 +1,4 @@
-#include "Maze/MazePathManager.h"
+#include "MazePathManager.h"
 
 //We actually want to copy the path here.
 void MazePathManager::setActivePath(MazePath path) noexcept {

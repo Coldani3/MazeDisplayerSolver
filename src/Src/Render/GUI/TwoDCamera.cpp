@@ -1,4 +1,4 @@
-#include <Render/GUI/TwoDCamera.h>
+#include "TwoDCamera.h"
 
 TwoDCamera::TwoDCamera(int screenWidth, int screenHeight) {
     projection = glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f, -1.0f, 1.0f);

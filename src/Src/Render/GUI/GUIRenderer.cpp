@@ -1,4 +1,4 @@
-#include <Render/GUI/GUIRenderer.h>
+#include "GUIRenderer.h"
 
 GUIRenderer::GUIRenderer(std::shared_ptr<TwoDCamera> camera) {
     this->camera = camera;

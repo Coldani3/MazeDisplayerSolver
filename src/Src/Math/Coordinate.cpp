@@ -1,20 +1,20 @@
-#include <Maths/Coordinate.h>
+#include "Coordinate.h"
 #pragma once
 
 
-template<class T>
+template <typename T>
 void Coordinate<T>::fillEmptyCoordsWithZeroes() {
 	while (this->coords.size() < 4) {
 		this->coords.push_back(0);
 	}
 }
 
-template<class T>
+template <typename T>
 Coordinate<T>::Coordinate() {
 	coords = { 0, 0, 0, 0 };
 }
 
-template<class T>
+template <typename T>
 Coordinate<T>::Coordinate(const std::vector<T>& coords) {
 	if (coords.size() <= 4) {
 		std::copy(coords.begin(), coords.end(), std::back_inserter(this->coords));
@@ -24,7 +24,7 @@ Coordinate<T>::Coordinate(const std::vector<T>& coords) {
 	}
 }
 
-template<class T>
+template <typename T>
 Coordinate<T>::Coordinate(std::vector<T>&& coords) {
 	if (coords.size() <= 4) {
 		this->coords = std::move(coords);
@@ -34,21 +34,21 @@ Coordinate<T>::Coordinate(std::vector<T>&& coords) {
 	}
 }
 
-template<class T>
+template <typename T>
 Coordinate<T>::Coordinate(Coordinate<T>&& moving) : coords(moving.coords) {
 	moving.coords = nullptr;
 }
 
-template<class T>
+template <typename T>
 Coordinate<T>::Coordinate(const Coordinate<T>& copying) {
 	coords = copying.coords;
 }
 
-template<class T>
+template <typename T>
 Coordinate<T>::~Coordinate() {
 }
 
-template<class T>
+template <typename T>
 Coordinate<T> Coordinate<T>::operator+(const Coordinate<T>& coord2) const {
 	Coordinate<T> out(this->coords);
 
@@ -59,7 +59,7 @@ Coordinate<T> Coordinate<T>::operator+(const Coordinate<T>& coord2) const {
 	return out;
 }
 
-template<class T>
+template <typename T>
 Coordinate<T> Coordinate<T>::operator+=(const Coordinate<T>& coord2) {
 	//shouldn't really *need* to do this but just in case I do drugs
 	//and allocate a Coordinate on the heap we should do this anyways
@@ -69,7 +69,7 @@ Coordinate<T> Coordinate<T>::operator+=(const Coordinate<T>& coord2) {
 	return *this;
 }
 
-template<class T>
+template <typename T>
 Coordinate<T> Coordinate<T>::operator-(const Coordinate<T>& coord2) const {
 	Coordinate<T> out(this->coords);
 
@@ -80,7 +80,7 @@ Coordinate<T> Coordinate<T>::operator-(const Coordinate<T>& coord2) const {
 	return out;
 }
 
-template<class T>
+template <typename T>
 Coordinate<T> Coordinate<T>::operator-=(const Coordinate<T>& coord2) {
 	//shouldn't really *need* to do this but just in case I do drugs
 	//and allocate a Coordinate on the heap we should do this anyways
@@ -90,27 +90,27 @@ Coordinate<T> Coordinate<T>::operator-=(const Coordinate<T>& coord2) {
 	return *this;
 }
 
-template<class T>
+template <typename T>
 Coordinate<T> Coordinate<T>::operator=(const Coordinate<T>& coord) {
 	coords = coord.coords;
 }
 
-template<class T>
+template <typename T>
 Coordinate<T> Coordinate<T>::operator=(Coordinate<T>&& coord) {
 	coords = std::move(coord.coords);
 }
 
-template<class T>
+template <typename T>
 bool Coordinate<T>::operator==(const Coordinate<T>& coord) const {
 	return this == &coord || (coord.dimensions() == dimensions() && std::equal(coords.begin(), coords.end(), coord.coords.begin()));
 }
 
-template<class T>
+template <typename T>
 bool Coordinate<T>::operator!=(const Coordinate<T>& coord) const {
 	return !(*this == coord);
 }
 
-template<class T>
+template <typename T>
 size_t Coordinate<T>::dimensions() const {
 	return coords.size();
 }
@@ -133,47 +133,47 @@ size_t Coordinate<T>::dimensions() const {
 //	}
 //}
 
-template<class T>
+template <typename T>
 T Coordinate<T>::x() const noexcept {
 	return coords[0];
 }
 
-template<class T>
+template <typename T>
 T& Coordinate<T>::x() {
 	return coords[0];
 }
 
-template<class T>
+template <typename T>
 T Coordinate<T>::y() const noexcept {
 	return coords[1];
 }
 
-template<class T>
+template <typename T>
 T& Coordinate<T>::y() {
 	return coords[1];
 }
 
-template<class T>
+template <typename T>
 T Coordinate<T>::z() const noexcept {
 	return coords[2];
 }
 
-template<class T>
+template <typename T>
 T& Coordinate<T>::z() {
 	return coords[2];
 }
 
-template<class T>
+template <typename T>
 T Coordinate<T>::w() const noexcept {
 	return coords[3];
 }
 
-template<class T>
+template <typename T>
 T& Coordinate<T>::w() {
 	return coords[3];
 }
 
-template<class T>
+template <typename T>
 std::vector<T> Coordinate<T>::toVector() const {
 	//copy to prevent weirdness
 	std::vector<T> out = coords;

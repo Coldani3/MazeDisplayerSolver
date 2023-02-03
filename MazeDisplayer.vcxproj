@@ -106,7 +106,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)/include;$(ProjectDir)/src/Includes;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
@@ -154,7 +154,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -209,7 +209,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Includes\Render\Buffers\VBOConfiguration.cpp" />
+    <ClCompile Include="src\Src\Render\Buffers\VBOConfiguration.cpp" />
     <ClCompile Include="src\Src\AI\AIManager.cpp" />
     <ClCompile Include="src\Src\InputManager.cpp" />
     <ClCompile Include="src\Src\Math\Coordinate.cpp" />
@@ -248,46 +248,46 @@
     <Library Include="lib\glfw3\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Includes\AI\AIManager.h" />
-    <ClInclude Include="src\Includes\InputManager.h" />
-    <ClInclude Include="src\Includes\Maths\Coordinate.h" />
-    <ClInclude Include="src\Includes\MazeMain.h" />
-    <ClInclude Include="src\Includes\Maze\MazePathManager.h" />
-    <ClInclude Include="src\Includes\Maze\MazePathRenderProgress.h" />
-    <ClInclude Include="src\Includes\Render\Buffers\EBO.h" />
-    <ClInclude Include="src\Includes\Render\Buffers\VAO.h" />
-    <ClInclude Include="src\Includes\Render\Buffers\VBO.h" />
-    <ClInclude Include="src\Includes\Render\Buffers\VBOConfiguration.h" />
-    <ClInclude Include="src\Includes\Render\MazeRenderInfo.h" />
-    <ClInclude Include="src\Includes\Maze\MazePath.h" />
-    <ClInclude Include="src\Includes\Render\Camera.h" />
-    <ClInclude Include="src\Includes\Render\GUI\FourDLocationIndicatorRenderer.h" />
-    <ClInclude Include="src\Includes\Render\GUI\GUIRenderer.h" />
-    <ClInclude Include="src\Includes\Render\GUI\GUIRenderManager.h" />
-    <ClInclude Include="src\Includes\Render\GUI\TwoDCamera.h" />
-    <ClInclude Include="src\Includes\Render\Renderer.h" />
-    <ClInclude Include="src\Includes\Render\RenderManager.h" />
-    <ClInclude Include="src\Includes\Render\ShaderProgram.h" />
-    <ClInclude Include="src\Includes\Solvers\DepthFirstSolver.h" />
-    <ClInclude Include="src\Includes\Solvers\FloodFillSolver.h" />
-    <ClInclude Include="src\Includes\Solvers\FungalSolver.h" />
-    <ClInclude Include="src\Includes\Solvers\SimpleNeuralNetworkSolver.h" />
-    <ClInclude Include="src\Includes\Render\PerspectiveCamera.h" />
+    <ClInclude Include="src\Src\AI\AIManager.h" />
+    <ClInclude Include="src\Src\InputManager.h" />
+    <ClInclude Include="src\Src\Math\Coordinate.h" />
+    <ClInclude Include="src\Src\MazeMain.h" />
+    <ClInclude Include="src\Src\Maze\MazePathManager.h" />
+    <ClInclude Include="src\Src\Maze\MazePathRenderProgress.h" />
+    <ClInclude Include="src\Src\Render\Buffers\EBO.h" />
+    <ClInclude Include="src\Src\Render\Buffers\VAO.h" />
+    <ClInclude Include="src\Src\Render\Buffers\VBO.h" />
+    <ClInclude Include="src\Src\Render\Buffers\VBOConfiguration.h" />
+    <ClInclude Include="src\Src\Render\MazeRenderInfo.h" />
+    <ClInclude Include="src\Src\Maze\MazePath.h" />
+    <ClInclude Include="src\Src\Render\Camera.h" />
+    <ClInclude Include="src\Src\Render\GUI\FourDLocationIndicatorRenderer.h" />
+    <ClInclude Include="src\Src\Render\GUI\GUIRenderer.h" />
+    <ClInclude Include="src\Src\Render\GUI\GUIRenderManager.h" />
+    <ClInclude Include="src\Src\Render\GUI\TwoDCamera.h" />
+    <ClInclude Include="src\Src\Render\Renderer.h" />
+    <ClInclude Include="src\Src\Render\RenderManager.h" />
+    <ClInclude Include="src\Src\Render\ShaderProgram.h" />
+    <ClInclude Include="src\Src\Solvers\DepthFirstSolver.h" />
+    <ClInclude Include="src\Src\Solvers\FloodFillSolver.h" />
+    <ClInclude Include="src\Src\Solvers\FungalSolver.h" />
+    <ClInclude Include="src\Src\Solvers\SimpleNeuralNetworkSolver.h" />
+    <ClInclude Include="src\Src\Render\PerspectiveCamera.h" />
     <ClInclude Include="include\glad\glad.h" />
     <ClInclude Include="include\glfw3\glfw3.h" />
     <ClInclude Include="include\glfw3\glfw3native.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
-    <ClInclude Include="src\Includes\Render\MazeRenderer.h" />
-    <ClInclude Include="src\Includes\Maths\Consts.h" />
-    <ClInclude Include="src\Includes\Render\Shaders.h" />
-    <ClInclude Include="src\Includes\Solvers\NeuralNetwork\NeuralNetwork.h" />
-    <ClInclude Include="src\Includes\Maths\Matrix.h" />
-    <ClInclude Include="src\Includes\Solvers\NeuralNetworkSolver.h" />
-    <ClInclude Include="src\Includes\Solvers\Solver.h" />
-    <ClInclude Include="src\Includes\Render\MainRenderManager.h" />
-    <ClInclude Include="src\Includes\Maze\Maze.h" />
-    <ClInclude Include="src\Includes\TimeUtil.h" />
-    <ClInclude Include="src\Includes\Window.h" />
+    <ClInclude Include="src\Src\Render\MazeRenderer.h" />
+    <ClInclude Include="src\Src\Math\Consts.h" />
+    <ClInclude Include="src\Src\Render\Shaders.h" />
+    <ClInclude Include="src\Src\Solvers\NeuralNetwork\NeuralNetwork.h" />
+    <ClInclude Include="src\Src\Math\Matrix.h" />
+    <ClInclude Include="src\Src\Solvers\NeuralNetworkSolver.h" />
+    <ClInclude Include="src\Src\Solvers\Solver.h" />
+    <ClInclude Include="src\Src\Render\MainRenderManager.h" />
+    <ClInclude Include="src\Src\Maze\Maze.h" />
+    <ClInclude Include="src\Src\TimeUtil.h" />
+    <ClInclude Include="src\Src\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="maze.cd3mazs" />

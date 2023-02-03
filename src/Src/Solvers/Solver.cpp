@@ -1,4 +1,4 @@
-#include <Solvers/Solver.h>
+#include "Solver.h"
 
 Solver::Solver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager) {
 	this->maze = maze;

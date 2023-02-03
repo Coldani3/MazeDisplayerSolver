@@ -1,4 +1,4 @@
-#include <Render/GUI/FourDLocationIndicatorRenderer.h>
+#include "FourDLocationIndicatorRenderer.h"
 
 FourDLocationIndicatorRenderer::FourDLocationIndicatorRenderer(std::shared_ptr<TwoDCamera> camera, std::shared_ptr<Maze> maze) : GUIRenderer(camera) {
 	this->maze = maze;

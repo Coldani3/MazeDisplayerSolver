@@ -1,4 +1,4 @@
-#include <Render/Buffers/EBO.h>
+#include "EBO.h"
 
 EBO::EBO() {
 	glGenBuffers(1, &ebo);

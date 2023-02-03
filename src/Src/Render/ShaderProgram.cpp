@@ -1,4 +1,4 @@
-#include "Render/ShaderProgram.h"
+#include "ShaderProgram.h"
 
 ShaderProgram& ShaderProgram::loadShader(const char* shaderCode, unsigned int& shaderAddress, int shaderType) {
 	if (!created) {

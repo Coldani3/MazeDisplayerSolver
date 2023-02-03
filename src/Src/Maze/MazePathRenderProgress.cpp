@@ -1,4 +1,4 @@
-#include "Maze/MazePathRenderProgress.h"
+#include "MazePathRenderProgress.h"
 
 MazePathRenderProgress::MazePathRenderProgress(MazePath& path) : startingPath(path){
 }

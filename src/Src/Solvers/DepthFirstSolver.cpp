@@ -1,4 +1,4 @@
-#include <Solvers/DepthFirstSolver.h>
+#include "DepthFirstSolver.h"
 #include <algorithm>
 
 DepthFirstSolver::DepthFirstSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager) : Solver(maze, pathManager) {

@@ -1,4 +1,4 @@
-#include <Solvers/FungalSolver.h>
+#include "FungalSolver.h"
 
 FungalSolver::FungalSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager, int maxSpreadPerNode) : Solver(maze, pathManager) {
 	this->maxSpreadPerNode = maxSpreadPerNode;

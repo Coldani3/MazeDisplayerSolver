@@ -1,4 +1,4 @@
-#include <Render/MazeRenderInfo.h>
+#include "MazeRenderInfo.h"
 
 MazeRenderInfo::MazeRenderInfo(int startW) {
 	this->wViewing = startW;

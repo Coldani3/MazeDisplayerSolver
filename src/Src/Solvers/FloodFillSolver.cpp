@@ -1,4 +1,4 @@
-#include <Solvers/FloodFillSolver.h>
+#include "FloodFillSolver.h"
 
 FloodFillSolver::FloodFillSolver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager) : Solver(maze, pathManager) {
 	navQueue = std::queue<Coordinate<int>>();

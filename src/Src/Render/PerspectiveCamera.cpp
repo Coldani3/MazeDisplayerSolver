@@ -1,6 +1,4 @@
-#include <Render/PerspectiveCamera.h>
-#include <cmath>
-#include <iostream>
+#include "PerspectiveCamera.h"
 
 PerspectiveCamera::PerspectiveCamera() {
 }

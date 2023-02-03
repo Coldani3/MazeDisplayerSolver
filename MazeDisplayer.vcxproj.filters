@@ -114,7 +114,7 @@
     <ClCompile Include="src\Src\Render\Buffers\EBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Includes\Render\Buffers\VBOConfiguration.cpp">
+    <ClCompile Include="src\Src\Render\Buffers\VBOConfiguration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -134,112 +134,112 @@
     <ClInclude Include="include\KHR\khrplatform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Maze\Maze.h">
+    <ClInclude Include="src\Src\Maze\Maze.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\MainRenderManager.h">
+    <ClInclude Include="src\Src\Render\MainRenderManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Solvers\Solver.h">
+    <ClInclude Include="src\Src\Solvers\Solver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Solvers\NeuralNetworkSolver.h">
+    <ClInclude Include="src\Src\Solvers\NeuralNetworkSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Maths\Matrix.h">
+    <ClInclude Include="src\Src\Math\Matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Solvers\NeuralNetwork\NeuralNetwork.h">
+    <ClInclude Include="src\Src\Solvers\NeuralNetwork\NeuralNetwork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Maths\Consts.h">
+    <ClInclude Include="src\Src\Math\Consts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\Shaders.h">
+    <ClInclude Include="src\Src\Render\Shaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\MazeRenderer.h">
+    <ClInclude Include="src\Src\Render\MazeRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\PerspectiveCamera.h">
+    <ClInclude Include="src\Src\Render\PerspectiveCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Solvers\SimpleNeuralNetworkSolver.h">
+    <ClInclude Include="src\Src\Solvers\SimpleNeuralNetworkSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Solvers\FungalSolver.h">
+    <ClInclude Include="src\Src\Solvers\FungalSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Solvers\FloodFillSolver.h">
+    <ClInclude Include="src\Src\Solvers\FloodFillSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Solvers\DepthFirstSolver.h">
+    <ClInclude Include="src\Src\Solvers\DepthFirstSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Maze\MazePath.h">
+    <ClInclude Include="src\Src\Maze\MazePath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\GUI\GUIRenderManager.h">
+    <ClInclude Include="src\Src\Render\GUI\GUIRenderManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\RenderManager.h">
+    <ClInclude Include="src\Src\Render\RenderManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\Renderer.h">
+    <ClInclude Include="src\Src\Render\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\GUI\FourDLocationIndicatorRenderer.h">
+    <ClInclude Include="src\Src\Render\GUI\FourDLocationIndicatorRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\GUI\TwoDCamera.h">
+    <ClInclude Include="src\Src\Render\GUI\TwoDCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\Camera.h">
+    <ClInclude Include="src\Src\Render\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\GUI\GUIRenderer.h">
+    <ClInclude Include="src\Src\Render\GUI\GUIRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\MazeRenderInfo.h">
+    <ClInclude Include="src\Src\Render\MazeRenderInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Maths\Coordinate.h">
+    <ClInclude Include="src\Src\Math\Coordinate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\MazeMain.h">
+    <ClInclude Include="src\Src\MazeMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\AI\AIManager.h">
+    <ClInclude Include="src\Src\AI\AIManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\TimeUtil.h">
+    <ClInclude Include="src\Src\TimeUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Window.h">
+    <ClInclude Include="src\Src\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Maze\MazePathManager.h">
+    <ClInclude Include="src\Src\Maze\MazePathManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\InputManager.h">
+    <ClInclude Include="src\Src\InputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Maze\MazePathRenderProgress.h">
+    <ClInclude Include="src\Src\Maze\MazePathRenderProgress.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\ShaderProgram.h">
+    <ClInclude Include="src\Src\Render\ShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\Buffers\VBO.h">
+    <ClInclude Include="src\Src\Render\Buffers\VBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\Buffers\VBOConfiguration.h">
+    <ClInclude Include="src\Src\Render\Buffers\VBOConfiguration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\Buffers\VAO.h">
+    <ClInclude Include="src\Src\Render\Buffers\VAO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Includes\Render\Buffers\EBO.h">
+    <ClInclude Include="src\Src\Render\Buffers\EBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
