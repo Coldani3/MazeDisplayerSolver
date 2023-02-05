@@ -39,16 +39,16 @@ ShaderProgram::ShaderProgram(ShaderProgram&& moving) noexcept {
 	name = std::move(moving.name);
 }
 
-ShaderProgram::ShaderProgram(const ShaderProgram& copying) noexcept {
-	vertShaderAddress = copying.vertShaderAddress;
-	fragShaderAddress = copying.fragShaderAddress;
-	geometryShaderAddress = copying.geometryShaderAddress;
-
-	program = copying.program;
-	createdShaders = copying.createdShaders;
-	created = copying.created;
-	name = copying.name;
-}
+//ShaderProgram::ShaderProgram(const ShaderProgram& copying) noexcept {
+//	vertShaderAddress = copying.vertShaderAddress;
+//	fragShaderAddress = copying.fragShaderAddress;
+//	geometryShaderAddress = copying.geometryShaderAddress;
+//
+//	program = copying.program;
+//	createdShaders = copying.createdShaders;
+//	created = copying.created;
+//	name = copying.name;
+//}
 
 ShaderProgram& ShaderProgram::loadVertexShader(const char* vertShader) {
 	return loadShader(vertShader, vertShaderAddress, GL_VERTEX_SHADER);
@@ -149,4 +149,19 @@ void ShaderProgram::uniform(const std::string& uniformName, int num) {
 
 void ShaderProgram::use() {
 	glUseProgram(program);
+}
+
+ShaderProgram& ShaderProgram::operator=(ShaderProgram&& moving) noexcept {
+	if (this != &moving) {
+		vertShaderAddress = std::exchange(moving.vertShaderAddress, 0);
+		fragShaderAddress = std::exchange(moving.fragShaderAddress, 0);
+		geometryShaderAddress = std::exchange(moving.geometryShaderAddress, 0);
+
+		program = std::exchange(moving.program, 0);
+		createdShaders = std::move(moving.createdShaders);
+		created = std::move(moving.created);
+		name = std::move(moving.name);
+	}
+
+	return *this;
 }

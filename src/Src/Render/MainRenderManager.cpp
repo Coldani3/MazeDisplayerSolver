@@ -40,15 +40,6 @@ MainRenderManager::MainRenderManager(std::shared_ptr<Window> window, std::shared
     );
 }
 
-MainRenderManager::~MainRenderManager() {
-    std::cout << "Beginning Renderer Cleanup..." << std::endl;
-    std::cout << "Clearing GL Programs..." << std::endl;
-
-    mazeRenderer->cleanup();
-
-    std::cout << "Renderer Cleanup done." << std::endl;
-}
-
 void MainRenderManager::setMazeUsing(std::shared_ptr<Maze> maze) {
     this->maze = maze;
 }

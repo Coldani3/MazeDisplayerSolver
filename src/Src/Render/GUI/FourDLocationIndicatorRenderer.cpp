@@ -4,9 +4,6 @@ FourDLocationIndicatorRenderer::FourDLocationIndicatorRenderer(std::shared_ptr<T
 	this->maze = maze;
 }
 
-FourDLocationIndicatorRenderer::~FourDLocationIndicatorRenderer() {
-	cleanup();
-}
 
 void FourDLocationIndicatorRenderer::setup() {
 	setupShaders();
@@ -42,8 +39,8 @@ void FourDLocationIndicatorRenderer::render(std::shared_ptr<MazeRenderInfo> maze
 	float yTransPerSlice = 80.0f / hyperDepth;
 
 	//draw layer 0 on top and at the bottom left of the others by starting with the last layer
-	for (int i = maze->hyperDepth - 1; i >= 0; i--) {
-		if (i == mazeRenderInfo->wViewing) {
+	for (int w = maze->hyperDepth - 1; w >= 0; w--) {
+		if (w == mazeRenderInfo->wViewing) {
 			indicatorProgram.uniform("squareColour", glm::vec4(inColour, 0.9f));
 		} else {
 			indicatorProgram.uniform("squareColour", glm::vec4(notInColour, 0.6f));
@@ -51,7 +48,7 @@ void FourDLocationIndicatorRenderer::render(std::shared_ptr<MazeRenderInfo> maze
 
 		//remember it is SCREEN coordinates, ie. 1 to -1 both axes.
 		//
-		float translateScale = hyperDepth - i;
+		float translateScale = hyperDepth - w;
 
 		//TODO: scale translation by how many slices there are (max 200pxX80px?).
 
@@ -64,13 +61,6 @@ void FourDLocationIndicatorRenderer::render(std::shared_ptr<MazeRenderInfo> maze
 	}
 
 	VAO<float>::unbindVAOs();
-}
-
-void FourDLocationIndicatorRenderer::cleanup() {
-	std::cout << "Cleaning up 4D indicator renderer..." << '\n';
-	deleteProgramIfExists(indicatorProgram.getProgram(), "indicatorProgram");
-
-	std::cout << "Done." << std::endl;
 }
 
 void FourDLocationIndicatorRenderer::updatePosition() {

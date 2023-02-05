@@ -45,16 +45,14 @@ private:
 
 public:
 	FourDLocationIndicatorRenderer(std::shared_ptr<TwoDCamera> camera, std::shared_ptr<Maze> maze);
-	~FourDLocationIndicatorRenderer();
 	void setup();
 	void setupShaders();
 	void render(std::shared_ptr<MazeRenderInfo> mazeRendererInfo);
-	void cleanup();
 	void updatePosition();
 	glm::mat4 getSliceTranslate(float xTransPerSlice, float yTransPerSlice, float translateScale, const glm::mat4& initialTranslate);
 
-	virtual std::shared_ptr<Camera> getCamera() const override;
+	std::shared_ptr<Camera> getCamera() const override final;
 
-	void getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) override;
+	void getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) override final;
 };
 

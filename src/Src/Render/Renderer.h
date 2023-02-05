@@ -30,7 +30,7 @@ public:
 	 * Cleanup your OpenGL stuff here. You can use deleteProgramIfExists to help with this, especially given you will
 	 * probably want to call this in your destructor to stay in line with RAII but also potentially manually call it.
 	 */
-	virtual void cleanup() = 0;
+	//virtual void cleanup() = 0;
 
 	virtual std::shared_ptr<Camera> getCamera() const = 0;
 

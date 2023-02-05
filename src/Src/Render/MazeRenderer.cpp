@@ -15,8 +15,7 @@ MazeRenderer::MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::share
 }
 
 MazeRenderer::~MazeRenderer() {
-    //I think openGL deletes these automatically but it's better to be safe than sorry
-    cleanup();
+    
 }
 
 void MazeRenderer::render(std::shared_ptr<MazeRenderInfo> mazeRenderInfo) {
@@ -98,10 +97,6 @@ void MazeRenderer::precomputeCellPathTransformations() {
 
         cellPathTransformations[i] = translate * rotateX * rotateY;
     }
-}
-
-void MazeRenderer::cleanup() {
-    //TODO: Unused, the destructor of the programs should take care of this.
 }
 
 void MazeRenderer::setShowPath(bool showPath) {

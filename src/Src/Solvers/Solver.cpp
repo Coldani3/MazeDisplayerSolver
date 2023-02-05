@@ -8,16 +8,16 @@ Solver::Solver(std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> path
 float Solver::distanceBetween(const Coordinate<int>& coords1, const Coordinate<int>& coords2) {
 	//4D pythagoras = sqrt(a^2 + b^2 + c^2 + d^2)
 	return sqrtf(
-			pow(
+			powf(
 				abs(coords2.x() - coords1.x()), 
 				2
-			) + pow(
+			) + powf(
 				abs(coords2.y() - coords1.y()),
 				2
-			) + pow(
+			) + powf(
 				abs(coords2.z() - coords1.z()), 
 				2
-			) + pow(
+			) + powf(
 				abs(coords2.w() - coords1.w()), 
 				2
 			)

@@ -188,7 +188,6 @@ public:
     void progressPath(double now, MazeRenderInfo& mazeRenderInfo);
 	void setup();
     void precomputeCellPathTransformations();
-	void cleanup();
 	void setShowPath(bool showPath);
     void changeShownPathTo(MazePath& newPath);
     virtual void getRenderPollInput(GLFWwindow* window, double delta, const InputManager& inputManager) override;

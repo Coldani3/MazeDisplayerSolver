@@ -11,17 +11,6 @@ int MazeMain::main() {
     window = std::make_shared<Window>(windowWidth, windowHeight, "Maze Displayer and Solver");
     inputManager = std::make_shared<InputManager>(window);
 
-    setupRenderers();
-
-    mazePathManager = std::make_shared<MazePathManager>();
-
-    //Add a default path to avoid wonkiness with empty paths.
-    MazePath defaultPath(maze->width, maze->height, maze->depth, maze->hyperDepth);
-    defaultPath.markCellVisited(maze->mazeEntrance);
-    mazePathManager->setActivePath(defaultPath);
-
-    aiManager = std::make_shared<AIManager>(window, mazePathManager);//std::make_unique<AIManager>(maze, running);
-
     bool terminate = false;
 
     if (!window->initialised()) {
@@ -38,6 +27,17 @@ int MazeMain::main() {
         glfwTerminate();
         return -1;
     }
+
+    mazePathManager = std::make_shared<MazePathManager>();
+
+    setupRenderers();
+
+    //Add a default path to avoid wonkiness with empty paths.
+    MazePath defaultPath(maze->width, maze->height, maze->depth, maze->hyperDepth);
+    defaultPath.markCellVisited(maze->mazeEntrance);
+    mazePathManager->setActivePath(defaultPath);
+
+    aiManager = std::make_shared<AIManager>(window, mazePathManager);//std::make_unique<AIManager>(maze, running);
 
     setupViewport();
     setupFramebufferCallback(*window);
@@ -62,18 +62,12 @@ int MazeMain::main() {
 void MazeMain::loadMaze() {
     //Mazes can be several kilos of memory on their own - if not stored as pointers they may end up being inadvertently 
     //copied and eating memory
-    maze = loadMazeFromFile("maze.cd3mazs");
+    maze = std::make_shared<Maze>();//loadMazeFromFile("maze.cd3mazs");
+    maze->loadFromFile("maze.cd3mazs");
 
     std::cout << "Maze loaded" << std::endl;
     std::cout << "Maze entrance coords: " << maze->mazeEntrance.x() << ", " << maze->mazeEntrance.y() << ", " << maze->mazeEntrance.z() << ", " << maze->mazeEntrance.w() << std::endl;
     std::cout << "Maze exit coords: " << maze->mazeExit.x() << ", " << maze->mazeExit.y() << ", " << maze->mazeExit.z() << ", " << maze->mazeExit.w() << std::endl;
-}
-
-std::shared_ptr<Maze> MazeMain::loadMazeFromFile(std::string path) {
-    std::shared_ptr<Maze> out = std::make_shared<Maze>();
-    out->loadFromFile(path);
-
-    return maze;
 }
 
 void MazeMain::setupGLFW() noexcept {

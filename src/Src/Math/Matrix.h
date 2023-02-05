@@ -174,7 +174,7 @@ public:
 		return out;
 	}
 
-	static Matrix<T> sigmoid(Matrix<T> input) {
+	static Matrix<T> sigmoid(const Matrix<T>& input) {
 		Matrix out(input.rows, input.columns);
 
 		for (int row = 0; row < input.rows; row++) {

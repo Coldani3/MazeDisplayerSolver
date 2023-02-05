@@ -212,13 +212,9 @@
     <ClCompile Include="src\Src\Render\Buffers\VBOConfiguration.cpp" />
     <ClCompile Include="src\Src\AI\AIManager.cpp" />
     <ClCompile Include="src\Src\InputManager.cpp" />
-    <ClCompile Include="src\Src\Math\Coordinate.cpp" />
     <ClCompile Include="src\Src\MazeMain.cpp" />
     <ClCompile Include="src\Src\Maze\MazePathManager.cpp" />
     <ClCompile Include="src\Src\Maze\MazePathRenderProgress.cpp" />
-    <ClCompile Include="src\Src\Render\Buffers\EBO.cpp" />
-    <ClCompile Include="src\Src\Render\Buffers\VAO.cpp" />
-    <ClCompile Include="src\Src\Render\Buffers\VBO.cpp" />
     <ClCompile Include="src\Src\Render\MazeRenderInfo.cpp" />
     <ClCompile Include="src\Src\Render\Camera.cpp" />
     <ClCompile Include="src\Src\Render\GUI\FourDLocationIndicatorRenderer.cpp" />

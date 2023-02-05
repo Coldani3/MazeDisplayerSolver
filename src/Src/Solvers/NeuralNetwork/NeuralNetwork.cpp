@@ -130,7 +130,7 @@ NeuralNetwork NeuralNetwork::load(std::string fileName) {
 	std::ifstream inStream;
 	inStream.open(fileName);
 	char currentChar;
-	char* readBytes;
+	//char* readBytes;
 	inStream.get(currentChar);
 
 	int layers = currentChar;

@@ -25,7 +25,9 @@ public:
 
 	ShaderProgram(std::string name);
 	ShaderProgram(ShaderProgram&& moving) noexcept;
-	ShaderProgram(const ShaderProgram& copying) noexcept;
+	//while the shader destructor checks if it has already been deleted, this could cause
+	//problems with the other copies being used later, so do not copy.
+	ShaderProgram(const ShaderProgram& copying) noexcept = delete;
 
 	ShaderProgram& loadVertexShader(const char* vertShader);
 	ShaderProgram& loadFragmentShader(const char* fragShader);
@@ -49,5 +51,7 @@ public:
 	void uniform(const std::string& uniformName, float num);
 	void uniform(const std::string& uniformName, int num);
 	void use();
+
+	ShaderProgram& operator=(ShaderProgram&& moving) noexcept;
 };
 #endif
