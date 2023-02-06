@@ -230,6 +230,9 @@
     <ClInclude Include="src\Src\Render\Buffers\EBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Src\Render\CellPathTransformation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="maze.cd3mazs" />

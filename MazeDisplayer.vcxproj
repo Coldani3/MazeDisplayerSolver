@@ -254,6 +254,7 @@
     <ClInclude Include="src\Src\Render\Buffers\VAO.h" />
     <ClInclude Include="src\Src\Render\Buffers\VBO.h" />
     <ClInclude Include="src\Src\Render\Buffers\VBOConfiguration.h" />
+    <ClInclude Include="src\Src\Render\CellPathTransformation.h" />
     <ClInclude Include="src\Src\Render\MazeRenderInfo.h" />
     <ClInclude Include="src\Src\Maze\MazePath.h" />
     <ClInclude Include="src\Src\Render\Camera.h" />

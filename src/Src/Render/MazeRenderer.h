@@ -17,12 +17,13 @@
 #include "Buffers/VBOConfiguration.h"
 #include "ShaderProgram.h"
 #include "Shaders.h"
+#include "CellPathTransformation.h"
 //#include <glm/gtx/transform.hpp>
 
 class MazeRenderer : public Renderer {
 public:
     /*
-     * The path that has been selected to be gradually displayed (ie. NOT the one that is displayed) 
+     * The path manager for the path that has been selected to be gradually displayed (ie. NOT the one that is displayed) 
      */
     std::shared_ptr<MazePathManager> pathManager;
 
@@ -153,18 +154,18 @@ public:
 
     //xRot, yRot, xTrans, yTrans, zTrans - front = 0 deg
 //0.0625 + 0.21875 = 0.28125
-    const std::vector<std::array<float, 5>> cellPathTransformationsValues = {
-        {0.0f, 90.0f, 0.0f, 0.28125f, 0.0f},  //up 
-        {0.0f, -90.0f, 0.0f, -0.28125f, 0.0f}, //down  
-        {270.0f, 0.0f, -0.28125f, 0.0f, 0.0f}, //left
-        {90.0f, 0.0f, 0.28125f, 0.0f, 0.0f}, //right
-        {180.0f, 0.0f, 0.0f, 0.0f, 0.28125f},//back
-        {0.0f, 0.0f, 0.0f, 0.0f, -0.28125f}, //front
+    const std::array<CellPathTransformation, 8> cellPathTransformationsValues = {
+        CellPathTransformation(0.0f, 90.0f, 0.0f, 0.28125f, 0.0f),  //up 
+        CellPathTransformation(0.0f, -90.0f, 0.0f, -0.28125f, 0.0f), //down  
+        CellPathTransformation(270.0f, 0.0f, -0.28125f, 0.0f, 0.0f), //left
+        CellPathTransformation(90.0f, 0.0f, 0.28125f, 0.0f, 0.0f), //right
+        CellPathTransformation(180.0f, 0.0f, 0.0f, 0.0f, 0.28125f),//back
+        CellPathTransformation(0.0f, 0.0f, 0.0f, 0.0f, -0.28125f), //front
         //to corner of cube = 0.0625 in all directions
         //0.8 * 0.21875 = 0.175
         //
-        {45.0f, 35.0f, 0.0625, 0.0625f, -0.0625f}, //ana
-        {-135.0f, -35.0f, -0.0625, -0.0625f, 0.0625f} //kata
+        CellPathTransformation(45.0f, 35.0f, 0.0625, 0.0625f, -0.0625f), //ana
+        CellPathTransformation(-135.0f, -35.0f, -0.0625, -0.0625f, 0.0625f) //kata
 
     };
 

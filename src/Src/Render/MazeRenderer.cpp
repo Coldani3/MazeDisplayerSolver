@@ -82,20 +82,29 @@ void MazeRenderer::setup() {
 
 void MazeRenderer::precomputeCellPathTransformations() {
     glm::mat4 identity = glm::mat4(1.0f);
+    int precomputeIndex = 0;
 
-    for (int i = 0; i < cellPathTransformations.size(); i++) {
+    for (const CellPathTransformation& transform : cellPathTransformationsValues) {
+        glm::mat4 rotateY = glm::rotate(
+            identity, 
+            glm::radians(transform.rotateAngleY), 
+            glm::vec3(1.0f, 0.0f, 0.0f)
+        );
+        glm::mat4 rotateX = glm::rotate(
+            identity, 
+            glm::radians(transform.rotateAngleX), 
+            glm::vec3(0.0f, 1.0f, 0.0f)
+        );
+        glm::mat4 translate = glm::translate(
+            identity, 
+            glm::vec3(
+                transform.translateX, 
+                transform.translateY, 
+                transform.translateZ
+            )
+        );
 
-        float rotateAngleX = cellPathTransformationsValues[i][0];
-        float rotateAngleY = cellPathTransformationsValues[i][1];
-        float translateX = cellPathTransformationsValues[i][2];
-        float translateY = cellPathTransformationsValues[i][3];
-        float translateZ = cellPathTransformationsValues[i][4];
-
-        glm::mat4 rotateY = glm::rotate(identity, glm::radians(rotateAngleY), glm::vec3(1.0f, 0.0f, 0.0f));
-        glm::mat4 rotateX = glm::rotate(identity, glm::radians(rotateAngleX), glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 translate = glm::translate(identity, glm::vec3(translateX, translateY, translateZ));
-
-        cellPathTransformations[i] = translate * rotateX * rotateY;
+        cellPathTransformations[precomputeIndex++] = translate * rotateX * rotateY;
     }
 }
 
@@ -219,9 +228,6 @@ void MazeRenderer::drawMazeCellCenter(const Coordinate<int>& coords) {
     glm::vec3 coordsFromMazeCenter = glm::vec3(coords.x(), coords.y(), coords.z());
     glm::mat4 model = glm::translate(glm::mat4(1.0f), coordsFromMazeCenter);
     glm::mat4 view = camera->getView();
-
-    glm::vec3 lightPos = camera->getCoords();
-    glm::vec3 lightColour = defaultLightColour;
 
     prepMazeCenterDraw(model, view, getCellColour(coords));
     glDrawArrays(GL_TRIANGLES, 0, 36);
