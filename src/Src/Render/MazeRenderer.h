@@ -50,7 +50,7 @@ public:
 	float mazeCenterZ = 500.0f;
 
 #pragma region GL_Consts
-    const std::vector<float> mazePathVerticesNormals = {
+    const std::vector<float> cubeVerticesNormals = {
         //back face
         -0.0625f, -0.0625f, -0.0625f, 0.0f, 0.0f, -1.0f,
         0.0625f, 0.0625f, -0.0625f, 0.0f, 0.0f, -1.0f,
@@ -108,7 +108,7 @@ public:
       1 - 0.125 = 0.875 = length of path in total
       0.875 / 2 = 0.4375 = length of each individual path piece
       0.4375 / 2 = 0.21875*/
-    const std::vector<float> cubeVerticesNormals = {
+    const std::vector<float> mazePathVerticesNormals = {
         //right
         0.0625f, -0.0625f, -0.21875f, 1.0f, 0.0f, 0.0f,
         0.0625f, 0.0625f, -0.21875f, 1.0f, 0.0f, 0.0f,
@@ -172,7 +172,7 @@ public:
     };
 
     std::array<glm::mat4, 8> cellPathTransformations;
-    const bool showAllDirectionColours = true;
+    const bool showAllDirectionColours = false;
     const std::map<unsigned char, glm::vec3> directionColourMap{
         {UP, MazeColours::up},
         {DOWN, MazeColours::down},
