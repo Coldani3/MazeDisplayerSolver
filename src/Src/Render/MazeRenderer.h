@@ -1,23 +1,25 @@
 #pragma once
 
+#include <vector>
+#include <map>
+#include <array>
+
 #include "../Maze/Maze.h"
 #include "../Maze/MazePath.h"
+#include "../Maze/MazePathManager.h"
+#include "../Maze/MazePathRenderProgress.h"
+#include "../Math/Coordinate.h"
 #include "PerspectiveCamera.h"
 #include "Renderer.h"
 #include "MazeRenderInfo.h"
 #include "Camera.h"
-
-#include <vector>
-#include <array>
-#include "../Maze/MazePathManager.h"
-#include "../Maze/MazePathRenderProgress.h"
-#include "../Math/Coordinate.h"
 #include "Buffers/VBO.h"
 #include "Buffers/VAO.h"
 #include "Buffers/VBOConfiguration.h"
 #include "ShaderProgram.h"
 #include "Shaders.h"
 #include "CellPathTransformation.h"
+#include "MazeColours.h"
 //#include <glm/gtx/transform.hpp>
 
 class MazeRenderer : public Renderer {
@@ -170,16 +172,18 @@ public:
     };
 
     std::array<glm::mat4, 8> cellPathTransformations;
+    const bool showAllDirectionColours = true;
+    const std::map<unsigned char, glm::vec3> directionColourMap{
+        {UP, MazeColours::up},
+        {DOWN, MazeColours::down},
+        {LEFT, MazeColours::left},
+        {RIGHT, MazeColours::right},
+        {FORWARD, MazeColours::forward},
+        {BACKWARD, MazeColours::backward},
+        {ANA, MazeColours::ana},
+        {KATA, MazeColours::kata}
+    };
 
-    const glm::vec3 defaultCellColour = glm::vec3(0.54f, 0.54f, 0.54f);
-    //177, 3, 252 - purpley
-    const glm::vec3 visitedCellColour = glm::vec3(0.694f, 0.0117f, 0.988f);
-    const glm::vec3 mazeEntranceColour = glm::vec3(0.0f, 1.0f, 0.0f);
-    const glm::vec3 mazeExitColour = glm::vec3(1.0f, 0.0f, 0.0f);
-    //229, 203, 85 - yellowy
-    const glm::vec3 anaColour = glm::vec3(0.901f, 0.796f, 0.333f);
-    //101, 106, 201 - bluey
-    const glm::vec3 kataColour = glm::vec3(0.396f, 0.415f, 0.788f);
     const glm::vec3 defaultLightColour = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	MazeRenderer(std::shared_ptr<PerspectiveCamera> camera, std::shared_ptr<Maze> maze, std::shared_ptr<MazePathManager> pathManager, int centerX, int centerY, int centerZ);
@@ -244,12 +248,6 @@ private:
 
     VBOf mazePathVBO;
     VAO<float> mazePathVAO;
-
-	/*unsigned int mazeCenterVBO;
-	unsigned int mazePathVBO;
-
-	unsigned int mazeCenterVAO;
-	unsigned int mazePathVAO;*/
 #pragma endregion
 
     glm::vec3 coordsFromMazeCenter(int mazeX, int mazeY, int mazeZ) const;

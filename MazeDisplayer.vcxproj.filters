@@ -233,6 +233,9 @@
     <ClInclude Include="src\Src\Render\CellPathTransformation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Src\Render\MazeColours.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="maze.cd3mazs" />

@@ -199,17 +199,17 @@ std::shared_ptr<Camera> MazeRenderer::getCamera() const {
 
 glm::vec3 MazeRenderer::getCellColour(const Coordinate<int>& coords) const {
     if (coords == maze->mazeEntrance) {
-        return mazeEntranceColour;
+        return MazeColours::entranceColour;
     } else if (coords == maze->mazeExit) {
-        return mazeExitColour;
+        return MazeColours::exitColour;
     } else {
         if (renderedPathProgress->size() > 0 && showPath) {
             if (renderedPathProgress->currentPath().visitedCell(coords)) {
-                return visitedCellColour;
+                return MazeColours::visitedColour;
             }
         }
 
-        return defaultCellColour;
+        return MazeColours::defaultColour;
     }
 }
 
@@ -225,8 +225,8 @@ glm::mat4 MazeRenderer::mazeCellPathTransform(const glm::vec3& initialCoords, co
 void MazeRenderer::drawMazeCellCenter(const Coordinate<int>& coords) {
     //TODO: store these vecs in a lookup buffer to save performance and memory?
 
-    glm::vec3 coordsFromMazeCenter = glm::vec3(coords.x(), coords.y(), coords.z());
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), coordsFromMazeCenter);
+    glm::vec3 fromMazeCenter = coordsFromMazeCenter(coords.x(), coords.y(), coords.z());//glm::vec3(coords.x(), coords.y(), coords.z());
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), fromMazeCenter);
     glm::mat4 view = camera->getView();
 
     prepMazeCenterDraw(model, view, getCellColour(coords));
@@ -277,12 +277,20 @@ bool MazeRenderer::drawMazeCellPath(unsigned char mazeCellData, unsigned char pr
         glm::vec3 cellColour = getCellColour(mazeCoords);
         glm::mat3 normalTransform = calculateNormalTransform(model);
 
+        if (showAllDirectionColours || cellPath >= 6) {
+            cellColour = directionColourMap.at(bitChecking);
+        }
+
         if (cellPath >= 6) {
             if (!show4DIndicators) {
                 return false;
             }
 
-            cellColour = bitChecking == ANA ? anaColour : kataColour;
+            /*if (showAllDirectionColours) {
+                cellColour = directionColourMap.at(bitChecking);
+            } else {
+                cellColour = bitChecking == ANA ? MazeColours::ana : MazeColours::kata;
+            }*/
         }
 
         prepMazeDrawUniforms(cellColour, model, normalTransform);
